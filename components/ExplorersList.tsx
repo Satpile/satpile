@@ -1,0 +1,54 @@
+import React from "react";
+import {Image, ScrollView, Text, TouchableOpacity, View} from "react-native";
+import {Headline, Subheading} from "react-native-paper";
+import {i18n} from "../translations/i18n";
+import Explorers from "../utils/explorers/Explorers";
+import * as WebBrowser from 'expo-web-browser';
+
+export default function ExplorerList({address}) {
+    return <View style={{backgroundColor: "white", paddingLeft: 50, display: "flex", flex: 1}}>
+        <Headline style={{
+            textTransform: 'uppercase',
+            fontSize: 19,
+            fontWeight: "bold",
+            marginVertical: 0
+        }}>{i18n.t('dont_trust_verify')}</Headline>
+        <Subheading style={{
+            color: "rgba(0,0,0,0.4)",
+            marginVertical: 0,
+            fontSize: 14
+        }}>{i18n.t('links_will_open')}</Subheading>
+
+        <ScrollView bounces={false}>
+            <View style={{paddingTop: 10}}>
+                {Explorers.map(explorer => <Explorer key={explorer.name} explorer={explorer} address={address}/>)}
+            </View>
+        </ScrollView>
+    </View>
+
+}
+
+function Explorer({explorer, address}) {
+    const onClick = () => {
+        WebBrowser.openBrowserAsync(generateURL());
+    }
+
+    const generateURL = () => {
+        return explorer.pattern.replace("{address}", address);
+    }
+
+    return <TouchableOpacity onPress={onClick}>
+        <View style={{
+            display: "flex",
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginVertical: 4
+        }}>
+            <Image source={explorer.icon || require('../assets/icon.png')} style={{
+                width: 24,
+                height: 24
+            }}/>
+            <Text style={{marginLeft: 6}}>{explorer.name}</Text>
+        </View>
+    </TouchableOpacity>
+}
