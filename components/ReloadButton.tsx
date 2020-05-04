@@ -16,10 +16,6 @@ export default connect(state => ({
 
 
     return <View style={{
-        position: 'absolute',
-        left: 0,
-        right: 0,
-        bottom: 0,
         padding: 10
     }}>
         <TouchableOpacity onPress={() => {

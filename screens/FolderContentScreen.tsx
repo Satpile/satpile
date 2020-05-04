@@ -1,4 +1,4 @@
-import {Alert, StyleSheet, View} from "react-native";
+import {StyleSheet, View} from "react-native";
 import React, {useState} from "react";
 import DynamicTitle from "../components/DynamicTitle";
 import {Appbar, FAB} from "react-native-paper";
@@ -11,7 +11,6 @@ import EmptyScreenContent from "../components/EmptyScreenContent";
 import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
 import store from "../store/store";
-import {Toast} from "../components/Toast";
 
 export default connect(state => ({
     folders: state.folders,
@@ -32,30 +31,8 @@ export default connect(state => ({
                                                 setShowRenameModal(true)
                                             }}/>,
         headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
-        headerRight: props => <View style={{display: 'flex', flexDirection: 'row'}}>
-            <Appbar.Action color="white" icon="trash-can" onPress={() => {
-                Alert.alert(i18n.t('delete'), i18n.t('delete_folder_sure'), [
-                    {
-                        text: i18n.t('cancel'),
-                        onPress: () => {},
-                        style: 'cancel',
-                    },
-                    {
-                        text: i18n.t('delete'),
-                        onPress: async () => {
-                            store.dispatch(Actions.removeFolder(folder));
-                            setTimeout(() => Toast.showToast({
-                                type: "top",
-                                message: i18n.t('successfully_deleted'),
-                                duration: 1500
-                            }), 300)
-                        },
-                        style: 'destructive',
-                    },
-                ], {cancelable: true});
-            }}/>
-            <Appbar.Action color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>
-        </View>,
+        headerRight: props => <Appbar.Action color="white" icon="plus"
+                                             onPress={() => navigation.navigate('Add', {folder})}/>,
         headerTitleContainerStyle: {
             width: '100%',
             paddingHorizontal: 80

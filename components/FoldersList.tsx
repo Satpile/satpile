@@ -1,10 +1,9 @@
 import React, {useState} from "react";
-import {Alert, RefreshControl, ScrollView} from "react-native";
-import {List} from 'react-native-paper';
-
+import {Alert} from "react-native";
 import FoldersListItem from "./FoldersListItem";
 import {useNavigation} from '@react-navigation/native';
 import {i18n} from "../translations/i18n";
+import {SwipeList} from "./SwipeList/SwipeList";
 
 function FoldersList({ folders, onRefresh, afterRefresh, onRemove }) {
 
@@ -18,39 +17,41 @@ function FoldersList({ folders, onRefresh, afterRefresh, onRemove }) {
 
     }
 
+    function beforeDelete(folder) {
+        Alert.alert(
+            i18n.t('delete'),
+            i18n.t('delete_folder_sure'),
+            [
+                {text: i18n.t('cancel'), style: 'cancel'},
+                {
+                    text: i18n.t('delete'), onPress: async () => {
+                        onRemove(folder)
+                    }, style: "destructive"
+                },
+            ],
+            {cancelable: true}
+        )
+    }
+
     const navigation = useNavigation();
 
-    return (
-        <ScrollView refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={() => {
-                refresh()
-            }}/>}>
-
-            {/*<Title style={{textAlign:'center'}}>Total {this.props.addresses.reduce((val, address) => address.value_fiat + val, 0)} €</Title>*/}
-            <List.Section>
-                {folders.map(folder =>
-                    <FoldersListItem key={folder.uid} folder={folder}
-                                     onClick={(folder) => navigation.navigate('FolderContent', {folder: folder})}
-                                     onLongPress={folder => {
-                                         Alert.alert(
-                                             i18n.t('delete'),
-                                             i18n.t('delete_folder_sure'),
-                                             [
-                                                 {text: i18n.t('cancel'), style: 'cancel'},
-                                                 {
-                                                     text: i18n.t('delete'), onPress: async () => {
-                                                     onRemove(folder)
-                                                     }, style:"destructive"},
-                                             ],
-                                             {cancelable: true}
-                                         )
-                                     }}
-                    />
-                )}
-
-            </List.Section>
-        </ScrollView>
-    )
+    return <SwipeList
+        data={folders}
+        render={row => <FoldersListItem folder={row.item}
+                                        onClick={(folder) => navigation.navigate('FolderContent', {folder: folder})}
+                                        onLongPress={() => beforeDelete(row.item)}/>}
+        keyExtractor={folder => folder.uid}
+        actions={[
+            {
+                text: i18n.t('delete'),
+                onclick: (row) => beforeDelete(row),
+                icon: 'trash',
+                color: 'white',
+                backgroundColor: 'red'
+            }
+        ]} refreshing={refreshing} onRefresh={() => refresh()} showClose={true}/>
 }
+
+
 
 export default FoldersList;

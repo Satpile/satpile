@@ -14,7 +14,6 @@ export default class Mempool implements Explorer {
 
             return {balance: result, status: AddressStatusType.OK};
         } catch (e) {
-            console.error(e);
             return {balance: addressContent.balance, status: AddressStatusType.ERROR};
         }
     }
