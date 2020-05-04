@@ -5,7 +5,7 @@
 
 * Install nodejs
 * Install expo-cli `npm install -g expo-cli`
-* Clone repository `git clone git@github.com:z-l-o-k/satpile.git`
+* Clone repository `git clone git@github.com:satpile/satpile.git`
 * Go inside satpile directory `cd satpile`
 * Install dependencies `npm i`
 * Start daemon `expo-cli start --lan`
