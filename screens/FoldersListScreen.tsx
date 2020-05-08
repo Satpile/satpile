@@ -12,12 +12,10 @@ import BalanceFetcher from "../utils/BalanceFetcher";
 import EmptyScreenContent from "../components/EmptyScreenContent";
 import {useI18n, useSettings} from "../utils/Settings";
 
-
 export default connect(state => ({
     folders: state.folders,
     lastReloadTime: state.lastReloadTime
 }))(function FoldersListScreen({navigation, folders, dispatch, lastReloadTime}) {
-
     const [totalBalance, setTotalBalance] = useState(0);
     const [showAddModal, setShowAddModal] = useState(false);
     const [settings] = useSettings();
@@ -48,7 +46,7 @@ export default connect(state => ({
 
     useEffect(() => {
         updateTotalBalance();
-    });
+    }, [folders]);
 
     useEffect(() => {
         if (settings.refresh > 0) {
@@ -88,9 +86,8 @@ export default connect(state => ({
                                           submitLabel={i18n.t('add_folder')}
                                           onClose={closeModal}
                                           onCancel={() => {
-                         }}
-                                          onValidate={submitModal}
-            />}
+                                          }}
+                                          onValidate={submitModal}/>}
             {folders.length > 0 ? <FoldersList
                 afterRefresh={() => {/*this.updateTotalBalance()*/
                 }}

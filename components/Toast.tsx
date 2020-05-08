@@ -3,9 +3,9 @@ import {Animated, Dimensions, Text} from "react-native";
 
 
 interface ToastOptions {
-    message: string,
-    duration: number,
-    type: "left" | "right" | "bottom" | "top"
+    message: string;
+    duration: number;
+    type: "left" | "right" | "bottom" | "top";
 }
 
 // Holds ref to show function from the current rendered ToastHolder
@@ -18,7 +18,7 @@ export function ToastHolder() {
     const [slideAnimation] = useState(new Animated.Value(0));
     const [slideType, setSlideType] = useState('none');
 
-    INTERNAL_showRef = ({message, duration, type}) => {
+    INTERNAL_showRef = ({message, duration, type}: ToastOptions) => {
         setVisible(false);
         slideAnimation.setValue(0);
 
@@ -36,6 +36,10 @@ export function ToastHolder() {
             slideAnimation.setValue(0);
         });
     };
+
+    if (Toast.awaitingToast) {
+        Toast._showAwaitingToast();
+    }
 
     if (!visible) {
         return null;
@@ -110,7 +114,17 @@ export function ToastHolder() {
 
 
 export class Toast {
+    static awaitingToast: ToastOptions = null;
     static showToast(options: ToastOptions) {
-        INTERNAL_showRef(options);
+        if (INTERNAL_showRef) {
+            INTERNAL_showRef(options);
+        } else {
+            this.awaitingToast = options;
+        }
+    }
+
+    static _showAwaitingToast() {
+        this.showToast(this.awaitingToast);
+        this.awaitingToast = null;
     }
 }
