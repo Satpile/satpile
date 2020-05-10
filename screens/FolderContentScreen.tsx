@@ -1,9 +1,9 @@
-import {StyleSheet, View} from "react-native";
+import {LayoutAnimation, StyleSheet, View} from "react-native";
 import React, {useState} from "react";
 import DynamicTitle from "../components/DynamicTitle";
-import {Appbar, FAB} from "react-native-paper";
+import {Appbar, FAB, useTheme} from "react-native-paper";
 import ReloadButton from "../components/ReloadButton";
-import {connect} from 'react-redux';
+import {connect, useDispatch} from 'react-redux';
 import AddressesList from "../components/AddressesList";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import {i18n} from '../translations/i18n';
@@ -18,8 +18,9 @@ export default connect(state => ({
 }))(function FolderContentScreen({navigation, route, folders, addressesBalance}) {
 
     const [showRenameModal, setShowRenameModal] = useState(false);
-
+    const theme = useTheme();
     const folder = folders.find(folder => folder.uid === route.params.folder.uid);
+    const dispatch = useDispatch();
 
     if (!folder) {
         navigation.goBack();
@@ -47,12 +48,18 @@ export default connect(state => ({
                                 balances={addressesBalance}
                                 onRefresh={async () => {
                                     await BalanceFetcher.filterAndFetchBalances();
-                                }} afterRefresh={() => {
-    }}
+                                }}
+                                afterRefresh={() => {
+                                }}
+                                onDelete={address => {
+                                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                                    dispatch(Actions.removeAddressFromFolder(address, folder))
+                                    dispatch(Actions.updateFoldersTotal(addressesBalance))
+                                }}
     />
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: theme.colors.background}}>
             {showRenameModal && <PromptModal title={i18n.t('rename_folder')} description={i18n.t('enter_folder_name')}
                                              inputPlaceholder={i18n.t('folder_name')} visible={showRenameModal}
                                              submitLabel={i18n.t('done')}

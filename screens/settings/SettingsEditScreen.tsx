@@ -1,20 +1,22 @@
 import {MainTitle} from "../../components/DynamicTitle";
 import {i18n, updateLocale} from "../../translations/i18n";
-import {Appbar, Headline} from "react-native-paper";
+import {Appbar, Headline, Text, useTheme} from "react-native-paper";
 import * as React from "react";
-import {StyleSheet, Text, View} from "react-native";
+import {StyleSheet, View} from "react-native";
 import {durationToText, useSettings} from "../../utils/Settings";
-import {SettingsData, SettingsScreen as SettingsScreenComponent} from "@taccolaa/react-native-settings-screen";
+import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
 import {Linking} from "expo";
 import {TWITTER_URL} from "../../utils/Constants";
 import {Legal} from "./Legal";
+import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
 export default function SettingsEditScreen({navigation, route}) {
 
     const {setting} = route.params;
     const [settings, updateSettings] = useSettings();
+    const theme = useTheme();
 
     navigation.setOptions({
         headerTitle: () => <MainTitle title={i18n.t('settings.title')}/>,
@@ -124,8 +126,8 @@ export default function SettingsEditScreen({navigation, route}) {
 
     }
 
-    return <View style={{flex: 1, backgroundColor: 'hsl(0, 0%, 97%)'}}>
-        <SettingsScreenComponent data={settingsData} style={{paddingTop: 20}}/>
+    return <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+        <CustomSettingsScreen settings={settingsData}/>
     </View>;
 
 }

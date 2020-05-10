@@ -1,15 +1,15 @@
 import React from "react";
 import {TouchableHighlight} from "react-native";
-import {List} from 'react-native-paper';
+import {List, useTheme} from 'react-native-paper';
 import SatoshiText from "./SatoshiText";
 
 declare type FoldersListItemProps = { folder, onClick: (folder) => void, onLongPress: (folder) => void }
 
 export default function FoldersListItem(props: FoldersListItemProps){
-
+    const theme = useTheme();
     return (
         <TouchableHighlight
-            underlayColor="rgb(229,229,229)"
+            underlayColor={theme.colors.background}
             onPress={() => {
                 props.onClick(props.folder)
             }}
@@ -17,7 +17,7 @@ export default function FoldersListItem(props: FoldersListItemProps){
             onLongPress={() => {
                 props.onLongPress(props.folder);
             }}
-            style={{backgroundColor: '#f1f1f1'}}
+            style={{backgroundColor: theme.colors.surface}}
         >
             <List.Item
                 title={props.folder.name}

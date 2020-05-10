@@ -49,7 +49,7 @@ function FoldersList({ folders, onRefresh, afterRefresh, onRemove }) {
                 color: 'white',
                 backgroundColor: 'red'
             }
-        ]} refreshing={refreshing} onRefresh={() => refresh()} showClose={false}/>
+        ]} refreshing={refreshing} onRefresh={() => refresh()} showClose={false} showPreview={true}/>
 }
 
 

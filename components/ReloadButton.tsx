@@ -19,7 +19,7 @@ export default connect(state => ({
         padding: 10
     }}>
         <TouchableOpacity onPress={() => {
-            BalanceFetcher.filterAndFetchBalances();
+            requestAnimationFrame(() => BalanceFetcher.filterAndFetchBalances());
         }}>
             <View style={{
                 display: 'flex',

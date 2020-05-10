@@ -1,8 +1,8 @@
-import {View} from "react-native";
+import {LayoutAnimation, View} from "react-native";
 import FoldersList from "../components/FoldersList";
 import React, {useEffect, useState} from "react";
 import DynamicTitle from "../components/DynamicTitle";
-import {Appbar} from "react-native-paper";
+import {Appbar, useTheme} from "react-native-paper";
 import {generateUid} from '../utils/Helper';
 import PromptModal from "../components/PromptModal";
 import ReloadButton from "../components/ReloadButton";
@@ -12,15 +12,14 @@ import BalanceFetcher from "../utils/BalanceFetcher";
 import EmptyScreenContent from "../components/EmptyScreenContent";
 import {useI18n, useSettings} from "../utils/Settings";
 
-
 export default connect(state => ({
     folders: state.folders,
     lastReloadTime: state.lastReloadTime
 }))(function FoldersListScreen({navigation, folders, dispatch, lastReloadTime}) {
-
     const [totalBalance, setTotalBalance] = useState(0);
     const [showAddModal, setShowAddModal] = useState(false);
     const [settings] = useSettings();
+    const theme = useTheme();
 
     const i18n = useI18n();
 
@@ -48,7 +47,7 @@ export default connect(state => ({
 
     useEffect(() => {
         updateTotalBalance();
-    });
+    }, [folders]);
 
     useEffect(() => {
         if (settings.refresh > 0) {
@@ -82,22 +81,24 @@ export default connect(state => ({
 
 
     return (
-        <View style={{flex: 1}}>
+        <View style={{flex: 1, backgroundColor: theme.colors.background}}>
             {showAddModal && <PromptModal title={i18n.t('new_folder')} description={i18n.t('enter_folder_name')}
                                           inputPlaceholder={i18n.t('folder_name')} visible={showAddModal}
                                           submitLabel={i18n.t('add_folder')}
                                           onClose={closeModal}
                                           onCancel={() => {
-                         }}
-                                          onValidate={submitModal}
-            />}
+                                          }}
+                                          onValidate={submitModal}/>}
             {folders.length > 0 ? <FoldersList
                 afterRefresh={() => {/*this.updateTotalBalance()*/
                 }}
                 onRefresh={async () => {
                     await BalanceFetcher.filterAndFetchBalances();
                 }}
-                onRemove={folder => dispatch(Actions.removeFolder(folder))}
+                onRemove={folder => {
+                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                    dispatch(Actions.removeFolder(folder))
+                }}
                 folders={folders}
             /> : <EmptyScreenContent text={i18n.t('no_folder')}/>}
 

@@ -1,8 +1,9 @@
 import React from "react";
-import {Text, TouchableHighlight, View} from "react-native";
+import {Dimensions, StyleSheet, Text, TouchableHighlight, View} from "react-native";
 import {FontAwesome} from "@expo/vector-icons";
 import {useI18n} from "../../utils/Settings";
 import {SwipeAction} from "./SwipeList";
+import {useTheme} from "react-native-paper";
 
 declare type SwipeButtonsProps = { onClose?: () => void, position: 'right' | 'left', actions: SwipeAction[], showClose: boolean, width?: number, item: any };
 
@@ -10,7 +11,7 @@ export function SwipeButtons(props: SwipeButtonsProps) {
 
     const {onClose, position, actions, showClose, width, item} = {width: 80, showClose: true, ...props};
     const i18n = useI18n();
-
+    const theme = useTheme();
 
     const closeButton = showClose &&
         <SwipeButton key={'close'} onClick={onClose} width={width} text={i18n.t('close')} icon={'chevron-' + position}
@@ -20,7 +21,11 @@ export function SwipeButtons(props: SwipeButtonsProps) {
         flex: 1,
         justifyContent: position === 'right' ? 'flex-end' : 'flex-start',
         backgroundColor: actions[0] ? actions[0].backgroundColor : '#444',
-        flexDirection: 'row'
+        flexDirection: 'row',
+        borderLeftColor: theme.colors.background,
+        borderLeftWidth: StyleSheet.hairlineWidth,
+        alignSelf: position === 'right' ? 'flex-end' : 'flex-start',
+        width: Dimensions.get('screen').width - 5 //Fixes glitch on screen change
     }}>
         {position === 'left' && closeButton}
         {actions.map(action => <SwipeButton key={action.text} onClick={() => action.onclick(item)} width={width}
