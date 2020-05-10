@@ -1,22 +1,24 @@
 import * as React from "react";
-import {Alert, Switch, Text, View} from "react-native";
-import {Appbar} from "react-native-paper";
-//https://github.com/jsoendermann/react-native-settings-screen
-import {SettingsData, SettingsScreen as SettingsScreenComponent} from '@taccolaa/react-native-settings-screen';
+import {View} from "react-native";
+import {Appbar, Switch, Text} from "react-native-paper";
+import {useTheme} from "../utils/Theme";
+import {SettingsData} from '@taccolaa/react-native-settings-screen'; //https://github.com/jsoendermann/react-native-settings-screen
 import {i18n} from "../translations/i18n";
 import {MainTitle} from "../components/DynamicTitle";
 import {durationToText, useSettings} from "../utils/Settings";
-import store from "../store/store";
 import {Ionicons} from '@expo/vector-icons';
 import {Linking} from "expo";
 import * as StoreReview from 'expo-store-review';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from "expo-constants";
 import {COMPANY, FEEDBACK_URL, TWITTER_URL} from "../utils/Constants";
+import {CustomSettingsScreen} from "../components/CustomSettingsScreen";
 
 export default function SettingsScreen({navigation}) {
 
     const [settings, updateSettings] = useSettings();
+
+    const theme = useTheme();
 
     navigation.setOptions({
         headerTitle: () => <MainTitle title={i18n.t('settings.title')}/>,
@@ -31,7 +33,7 @@ export default function SettingsScreen({navigation}) {
                 title: i18n.t`settings.refresh_every`,
                 showDisclosureIndicator: true,
                 renderAccessory: () => <SettingItemValue type={"refresh"} value={settings.refresh}/>,
-                onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh'})
+                onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh'}),
             }]
         },
         {
@@ -45,7 +47,8 @@ export default function SettingsScreen({navigation}) {
                 },
                 {
                     title: i18n.t`settings.dark_mode`,
-                    renderAccessory: () => <Switch value={false} disabled={true} onValueChange={() => {
+                    renderAccessory: () => <Switch value={settings.darkMode} onValueChange={(value) => {
+                        updateSettings({darkMode: value})
                     }}/>,
                 },
                 {
@@ -133,8 +136,8 @@ export default function SettingsScreen({navigation}) {
     ];
 
 
-    return <View style={{flex: 1, backgroundColor: 'hsl(0, 0%, 97%)'}}>
-        <SettingsScreenComponent data={settingsData} style={{paddingTop: 20}}/>
+    return <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+        <CustomSettingsScreen settings={settingsData}/>
     </View>;
 }
 
@@ -162,7 +165,8 @@ const ItemIcon = ({icon, color}) => {
 
 
 const SettingItemValue = ({value, type = null}) => {
-    const style = {color: '#999', marginRight: 6, fontSize: 18};
+    const theme = useTheme();
+    const style = {color: theme.settingsValue, marginRight: 6, fontSize: 18};
     let displayedValue = value;
     switch (type) {
         case 'refresh':

@@ -23,5 +23,6 @@ const styles = StyleSheet.create({
         alignContent: 'flex-end',
         marginTop: -4,
         marginRight: 20,
+        marginBottom: 4
     }
 });

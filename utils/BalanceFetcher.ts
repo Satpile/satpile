@@ -22,15 +22,15 @@ export default class BalanceFetcher {
         this.showNetworkActivity(false);
         if (networkState.isConnected) {
             this.showNetworkActivity(true);
-            await this.getExplorer().fetchAndUpdate(store.getState().addresses);
+            const diff = await this.getExplorer().fetchAndUpdate(store.getState().addresses);
             BalanceFetcher.afterBalanceFetch();
             this.showNetworkActivity(false);
-            return true;
+            return diff;
         } else if (showError) {
             Toast.showToast({type: 'top', message: i18n.t('no_network'), duration: 1500})
         }
 
-        return false;
+        return null;
     }
 
     private static getExplorer(): Explorer {
@@ -44,6 +44,16 @@ export default class BalanceFetcher {
     }
 
     static async backgroundFetch() {
-        return await BalanceFetcher.filterAndFetchBalances(false) ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.Failed;
+        const diffs = await BalanceFetcher.filterAndFetchBalances(false);
+        /*diffs.forEach((diff) => Notifications.presentLocalNotificationAsync({
+            title: `An address changed (${diff.address})`,
+            body: `From: ${diff.before.balance} \n To: ${diff.after.balance}`,
+            android:{
+                icon: require('../assets/icon.png')
+            },
+            data:diff,
+            categoryId: BALANCE_UPDATE
+        }));*/
+        return diffs.length ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.Failed;
     }
 }

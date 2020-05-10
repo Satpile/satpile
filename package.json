@@ -8,7 +8,7 @@
     "@react-native-community/netinfo": "5.5.0",
     "@react-navigation/native": "^5.1.1",
     "@react-navigation/stack": "^5.2.3",
-    "@taccolaa/react-native-settings-screen": "^2.2.5",
+    "@taccolaa/react-native-settings-screen": "^2.2.10",
     "bitcoin-address-validation": "^0.2.9",
     "buffer": "^5.4.3",
     "expo": "^37.0.0",

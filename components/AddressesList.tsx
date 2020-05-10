@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import {RefreshControl, ScrollView} from "react-native";
+import {Alert} from "react-native";
 import {List} from 'react-native-paper';
 import AddressesListItem from "./AddressesListItem";
 import {useNavigation} from '@react-navigation/native';
 import {i18n} from '../translations/i18n';
+import {SwipeList} from "./SwipeList/SwipeList";
 
-export default function AddressesList({addresses, onRefresh, afterRefresh, balances, folders, folder}) {
+export default function AddressesList({addresses, onRefresh, afterRefresh, onDelete, balances, folders, folder}) {
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -18,26 +19,50 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, balan
         afterRefresh()
     }
 
+    const deleteAddress = (address) => {
+        Alert.alert(i18n.t('delete'), i18n.t('delete_address_sure'), [
+            {
+                text: i18n.t('cancel'),
+                onPress: () => {
+                },
+                style: 'cancel',
+            },
+            {
+                text: i18n.t('delete'),
+                onPress: async () => {
+                    onDelete(address);
+
+                },
+                style: 'destructive',
+            }
+        ], {
+            cancelable: true
+        });
+    }
+
     return (
-        <ScrollView refreshControl={
-            <RefreshControl refreshing={refreshing} onRefresh={() => {
-                _onRefresh()
-            }}/>}>
-
-            <List.Section>
-                <List.Subheader>{i18n.t('addresses')} : </List.Subheader>
-                {addresses.map(address => (
-                    <AddressesListItem key={address.address} address={{...address, ...balances[address.address]}}
-                                       onClick={(address) => navigation.navigate('AddressDetails', {
-                                           folders,
-                                           addresses,
-                                           address,
-                                           folder
-                                       })}/>)
-                )}
-
-            </List.Section>
-        </ScrollView>
+        <>
+            <List.Subheader>{i18n.t('addresses')} : </List.Subheader>
+            <SwipeList
+                data={addresses}
+                render={row => <AddressesListItem address={{...row.item, ...balances[row.item.address]}}
+                                                  onClick={(address) => navigation.navigate('AddressDetails', {
+                                                      folders,
+                                                      addresses,
+                                                      address,
+                                                      folder
+                                                  })}/>}
+                keyExtractor={address => address.address}
+                actions={[
+                    {
+                        text: i18n.t('delete'),
+                        onclick: (address) => deleteAddress(address)/*beforeDelete(row)*/,
+                        icon: 'trash',
+                        color: 'white',
+                        backgroundColor: 'red'
+                    }
+                ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false}/>
+        </>
     )
 }
 

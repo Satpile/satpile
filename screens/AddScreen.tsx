@@ -1,13 +1,13 @@
 import React, {useState} from "react";
-import {Alert, Modal, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Modal, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
-import {Appbar, Button, HelperText, TextInput} from "react-native-paper";
+import {Appbar, Button, HelperText, Text, TextInput, useTheme} from "react-native-paper";
 import validate from 'bitcoin-address-validation';
 import QRCodeButton from "../components/QRCodeButton";
 import {MainTitle} from "../components/DynamicTitle";
 import {connect} from 'react-redux';
 import {addAddressToFolder} from "../store/actions";
-import QRCodeScanner from "../components/QRCodeScanner";
+import {QRCodeScanner} from "../components/QRCodeScanner";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import {Toast} from "../components/Toast";
 
@@ -16,6 +16,7 @@ export default connect(state => ({
     addresses: state.addresses
 }))(function AddScreen({navigation, dispatch, route, addresses, folders}) {
 
+    const theme = useTheme();
     const [showScanner, setShowScanner] = useState(false);
     const [saving, setSaving] = useState(false);
     const [addressInput, setAddressInput] = useState('');
@@ -71,7 +72,7 @@ export default connect(state => ({
     }
 
     return (
-        <View style={{flex: 1, paddingTop: 20, backgroundColor: 'white', flexDirection: 'column'}}>
+        <View style={{flex: 1, paddingTop: 20, backgroundColor: theme.colors.background, flexDirection: 'column'}}>
 
             <TextInput style={styles.textInput} label={i18n.t('name')} onChangeText={(text) => {
                 setNameInput(text)
@@ -96,7 +97,11 @@ export default connect(state => ({
 
             <Button style={{marginTop: 40}} onPress={() => saveAddress()}>{i18n.t('done')}</Button>
 
-            <Modal visible={showScanner} animated={true} animationType={"slide"}>
+            <Modal visible={showScanner}
+                   animated={true}
+                   animationType={"slide"}
+                   onDismiss={() => setShowScanner(false)}
+                   onRequestClose={() => setShowScanner(false)}>
                 <QRCodeScanner onAddressScanned={result => onScan(result)} onCancel={() => {
                     setShowScanner(false)
                 }}/>

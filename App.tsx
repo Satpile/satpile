@@ -1,23 +1,31 @@
 import React, {useEffect, useState} from 'react';
 import store, {loadStore} from "./store/store";
-import {AppState, StatusBar, StyleSheet, View} from 'react-native';
-import {Provider as PaperProvider} from 'react-native-paper';
+import {AppState, Platform, StatusBar, StyleSheet, UIManager, View} from 'react-native';
 import {Provider} from 'react-redux';
-import {SplashScreen} from "expo";
+import {AppLoading, SplashScreen} from "expo";
 import AnimatedSplashScreen from "./components/AnimatedSplashScreen";
 import {ToastHolder} from "./components/Toast";
-import theme from "./utils/Theme";
+import {ThemeHolder} from "./utils/Theme";
 import BalanceFetcher from "./utils/BalanceFetcher";
 import * as TaskManager from 'expo-task-manager';
+import {Ionicons} from '@expo/vector-icons';
 
 import {REFRESH_TASK} from "./utils/Settings";
 import {Navigator} from "./navigation/Navigator";
+import {Asset} from "expo-asset";
+import {Notifications} from "./utils/Notifications";
 
+if (Platform.OS === 'android') {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+        UIManager.setLayoutAnimationEnabledExperimental(true);
+    }
+}
 SplashScreen.preventAutoHide();
 TaskManager.defineTask(REFRESH_TASK, BalanceFetcher.backgroundFetch);
+Notifications.initNotifications();
 
 export default function App(){
-    const [loadingState, setLoadingState] = useState('none'); //none, loading, loaded
+    const [loadingState, setLoadingState] = useState<"loading" | "loaded" | "after_loaded">("loading");
     const [appState, setAppState] = useState(AppState.currentState);
 
     if (!TaskManager.isTaskDefined(REFRESH_TASK)) {
@@ -39,34 +47,47 @@ export default function App(){
         setAppState(nextAppState);
     };
 
-
-    switch (loadingState) {
-        case 'none':
-            setLoadingState('loading');
-            (async () => {
-                await loadStore();
-                setLoadingState('after_loaded');
-            })();
-            return null;
-        case 'after_loaded':
-            SplashScreen.hide();
-            BalanceFetcher.filterAndFetchBalances();
-        case 'loading':
-            return <AnimatedSplashScreen animate={loadingState === 'after_loaded'}
-                                         onAnimationDone={() => setLoadingState('loaded')}/>;
+    if (loadingState === 'loading') {
+        return <AppLoading
+            startAsync={preLoadAssets}
+            onFinish={() => {
+                BalanceFetcher.filterAndFetchBalances();
+                setLoadingState("loaded")
+            }}
+        />
     }
 
     return (
         <View style={styles.container}>
             <Provider store={store}>
-                <PaperProvider theme={theme}>
-                    <StatusBar animated={false} backgroundColor={"#f47c1c"}/>
-                    <Navigator/>
+                <ThemeHolder>
+                    {loadingState === 'loaded' &&
+                    <AnimatedSplashScreen onAnimationDone={() => setLoadingState('after_loaded')}
+                                          animate={loadingState === 'loaded'}/>}
+                    {loadingState === 'after_loaded' &&
+                    <>
+                        <StatusBar animated={true} backgroundColor={"#f47c1c"}/>
+                        <Navigator/>
+                    </>
+                    }
                     <ToastHolder/>
-                </PaperProvider>
+                </ThemeHolder>
             </Provider>
         </View>
     )
+}
+
+async function preLoadAssets() {
+
+    const assets = [
+        require('./assets/splash.png')
+    ];
+    const toLoad = [
+        ...assets.map(asset => Asset.fromModule(asset).downloadAsync()),
+        loadStore(),
+        Ionicons.loadFont()
+    ];
+    await Promise.all(toLoad);
 }
 
 const styles = StyleSheet.create({

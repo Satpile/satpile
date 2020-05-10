@@ -1,12 +1,4 @@
-import * as Localization from "expo-localization";
-
-const defaultSettings = () => {
-    return {
-        locale: Localization.locale,
-        refresh: -1
-    }
-};
-
+import {defaultSettings} from "../../utils/Settings";
 
 
 const settings = (state = {}, action) => {

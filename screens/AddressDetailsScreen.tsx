@@ -1,8 +1,7 @@
 import React, {useState} from "react";
-import {Alert, Clipboard, Modal, Platform, Share, StyleSheet, Text, TouchableOpacity, View} from "react-native";
+import {Alert, Clipboard, Modal, Platform, Share, StyleSheet, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
-import {Appbar, Button, Title} from "react-native-paper";
-import QRCode from 'react-native-qrcode-svg';
+import {Appbar, Button, Text, Title, useTheme} from "react-native-paper";
 import {useSelector, useStore} from 'react-redux';
 import DynamicTitle from "../components/DynamicTitle";
 import * as Actions from '../store/actions';
@@ -11,6 +10,7 @@ import {Toast} from "../components/Toast";
 import ExplorerList from "../components/ExplorersList";
 import ViewShot from "react-native-view-shot";
 import * as Sharing from 'expo-sharing'
+import {QRCodeAddress} from "../components/QRCodeAddress";
 
 export default function AddressDetailsScreen({navigation, route}) {
 
@@ -18,7 +18,7 @@ export default function AddressDetailsScreen({navigation, route}) {
     const [folders, addresses] = useSelector(state => [state.folders, state.addresses]);
     const [bigQRCode, setBigQRCode] = useState(false);
     const store = useStore();
-
+    const theme = useTheme();
     const folder = folders.find(folder => route.params.folder.uid === folder.uid);
     const address = folder.addresses.find(address => address.address === route.params.address.address);
 
@@ -73,11 +73,11 @@ export default function AddressDetailsScreen({navigation, route}) {
     let QRCodeRef = null;
 
     return (
-        <View style={{display: 'flex', flex: 1}}>
+        <View style={{display: 'flex', flex: 1, backgroundColor: theme.colors.background}}>
             <View style={{flex: 1}}>
-                <View style={{flexDirection: 'row', paddingVertical: 20, backgroundColor: 'white'}}>
+                <View style={{flexDirection: 'row', paddingVertical: 20}}>
                     <View style={{flex: 1, paddingLeft: 20}}>
-                        <Title style={{color: 'black'}}>{address.name}</Title>
+                        <Title>{address.name}</Title>
                         <Text selectable={true}>{address.address}</Text>
                         <View style={{
                             display: 'flex',
@@ -88,7 +88,7 @@ export default function AddressDetailsScreen({navigation, route}) {
                         }}>
                             <ActionButton text={i18n.t('copy')} onPress={() => copyAddress()}/>
                             <ActionButton text={i18n.t('export')} onPress={() => exportAddress()} icon={"export"}
-                                          color={"black"}/>
+                                          color={'black'}/>
                             <ActionButton text={i18n.t('delete')} onPress={() => deleteAddress()} color={"red"}/>
                         </View>
 
@@ -97,20 +97,14 @@ export default function AddressDetailsScreen({navigation, route}) {
                         <TouchableOpacity onPress={async () => {
                             setBigQRCode(true);
                         }}>
-
-                            <QRCode
-                                value={"bitcoin:" + address.address}
-                                size={150}
-                            />
+                            <QRCodeAddress address={address} size={150}/>
                         </TouchableOpacity>
                     </View>
                 </View>
                 <View style={{flex: 1}}>
                     <ExplorerList address={address.address}/>
                 </View>
-                <View style={{backgroundColor: 'white', height: 60}}>
-                    <ReloadButton/>
-                </View>
+                <ReloadButton/>
             </View>
 
             <Modal visible={bigQRCode} animated={true} onDismiss={() => setBigQRCode(false)}
@@ -121,16 +115,13 @@ export default function AddressDetailsScreen({navigation, route}) {
                     ...StyleSheet.absoluteFillObject,
                     justifyContent: 'center',
                     alignItems: 'center',
-                    //   backgroundColor: 'rgba(255,255,255,0.5)'
+                    backgroundColor: theme.colors.background
                 }}>
                     <TouchableOpacity onPress={() => {
                         setBigQRCode(false);
                     }}>
-                        <ViewShot ref={ref => QRCodeRef = ref} options={{format: 'png', result:'tmpfile'}} style={{padding:10, backgroundColor: 'white'}}>
-                            <QRCode
-                                value={"bitcoin:" + address.address}
-                                size={240}
-                            />
+                        <ViewShot ref={ref => QRCodeRef = ref} options={{format: 'png', result: 'tmpfile'}}>
+                            <QRCodeAddress address={address} size={280}/>
                         </ViewShot>
                     </TouchableOpacity>
                     <ActionButton text={i18n.t('share_qrcode')}  style={{marginTop: 10}}  color={'black'} icon={"export"} onPress={async () => {
@@ -147,6 +138,9 @@ export default function AddressDetailsScreen({navigation, route}) {
 
 
 let ActionButton = ({onPress, text, ...props}) => {
+    const theme = useTheme();
+    props.color = props.color === "black" ? theme.colors.text : props.color;
+
     return <Button
         contentStyle={{
             alignSelf: 'flex-start',

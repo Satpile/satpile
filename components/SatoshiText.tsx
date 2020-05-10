@@ -1,9 +1,9 @@
 import React from "react";
-import {Text} from "react-native";
 import {convertSatoshiToString} from '../utils/Helper';
+import {Text} from "react-native-paper";
 
 
-export default function SatoshiText({amount, ...props}){
+export default function SatoshiText({amount, style = {}, ...props}) {
     let currency = amount > 1 ? 'sats' : 'sat';
-    return <Text {...props}>{convertSatoshiToString(amount)} {currency}</Text>;
+    return <Text style={style} {...props}>{convertSatoshiToString(amount)} {currency}</Text>;
 }

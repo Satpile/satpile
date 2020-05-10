@@ -1,10 +1,12 @@
-import {Text, TouchableOpacity} from "react-native";
+import {TouchableOpacity} from "react-native";
 import React from "react";
 import {AntDesign} from '@expo/vector-icons';
 import {i18n} from "../translations/i18n";
+import {Text, useTheme} from "react-native-paper";
 
 
 export default function QRCodeButton({onPress}) {
+    const theme = useTheme();
         return (
             <TouchableOpacity activeOpacity={0.5} onPress={onPress}
                               style={{
@@ -15,8 +17,8 @@ export default function QRCodeButton({onPress}) {
                                   alignSelf: 'center'
                               }}>
 
-                <AntDesign size={34} name={"qrcode"}/>
-                        <Text> {i18n.t('scan_qr_code')}</Text>
+                <AntDesign size={34} name={"qrcode"} style={{color: theme.colors.text}}/>
+                <Text> {i18n.t('scan_qr_code')}</Text>
 
             </TouchableOpacity>
         )

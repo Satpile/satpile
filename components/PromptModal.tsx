@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import {Button, Dialog, Paragraph, Portal} from "react-native-paper";
-import {Keyboard, Platform, StatusBar, TextInput, View} from "react-native";
+import {Button, Dialog, Paragraph, Portal, TextInput} from "react-native-paper";
+import {Keyboard, LayoutAnimation, Platform, StatusBar, View} from "react-native";
 import {i18n} from "../translations/i18n";
 
 declare type PromptModalProps = {
@@ -55,10 +55,12 @@ export default function PromptModal(props: PromptModalProps){
         }, []);
 
         const _keyboardWillShow = (event) => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             updateKeyboardHeight(event.endCoordinates.height)
         };
 
         const _keyboardDidHide = (event) => {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
             updateKeyboardHeight(event.endCoordinates.height)
         };
     }
@@ -89,7 +91,7 @@ export default function PromptModal(props: PromptModalProps){
                             defaultValue={props.defaultValue}
                             onChangeText={setInput}
                             placeholder={props.inputPlaceholder}
-                            style={{borderBottomWidth: 1, height: 32}}
+                            style={{height: 32}}
                             autoFocus={true} blurOnSubmit={true} enablesReturnKeyAutomatically={true}
                             returnKeyType={"done"}
                             autoCompleteType={'off'}

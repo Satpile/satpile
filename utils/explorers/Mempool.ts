@@ -1,5 +1,5 @@
 import {AddressStatusType} from "../../components/AddressStatus";
-import {AddressesList, AddressValue, Explorer} from "../Types";
+import {AddressesBalanceDifference, AddressesList, AddressValue, Explorer} from "../Types";
 import * as Actions from "../../store/actions";
 import store from "../../store/store";
 
@@ -17,18 +17,32 @@ export default class Mempool implements Explorer {
         }
     }
 
-    async fetchAndUpdate(addresses: AddressesList) {
-        let dispatch = store.dispatch;
-        let queries = Object.entries(addresses).map(([address, addressContent]) => {
+    async fetchAndUpdate(addresses: AddressesList): Promise<AddressesBalanceDifference[]> {
+        const dispatch = store.dispatch;
+        const diff: AddressesBalanceDifference[] = [];
 
+        const queries = Object.entries(addresses).map(([address, addressContent]) => {
             return this.fetch(address, addressContent).then(result => {
-                dispatch(Actions.updateSingleAddressBalance(address, result));
+                if (addressContent.balance !== result.balance) { //We store all the differences
+                    diff.push({
+                        address: address,
+                        before: addressContent,
+                        after: result
+                    })
+                }
+
+                if (addressContent.balance !== result.balance || addressContent.status !== result.status) {
+                    //We only update the state if the result has changed
+                    dispatch(Actions.updateSingleAddressBalance(address, result));
+                }
+
                 return result;
             })
-
         });
 
-        let results = await Promise.all(queries);
+        await Promise.all(queries);
+
+        return diff;
 
     }
 
