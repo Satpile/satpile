@@ -66,7 +66,7 @@ export default function App(){
                                           animate={loadingState === 'loaded'}/>}
                     {loadingState === 'after_loaded' &&
                     <>
-                        <StatusBar animated={true} backgroundColor={"#f47c1c"}/>
+                        <StatusBar animated={true} backgroundColor={"#f47c1c"} barStyle={"light-content"}/>
                         <Navigator/>
                     </>
                     }

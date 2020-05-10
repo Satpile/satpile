@@ -28,7 +28,6 @@ export function useSettings(): [Settings, (settings: Partial<Settings>) => void]
     const dispatch = useDispatch();
     const settings = useSelector(state => ({settings: state.settings})).settings;
     const updateSettings = (newSettings: Partial<Settings>) => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         dispatch({type: 'UPDATE_SETTINGS', settings: newSettings});
     }
 

@@ -31,8 +31,6 @@ export default function SettingsEditScreen({navigation, route}) {
         case 'refresh':
             let refreshValues = [
                 {value: -1},
-                {value: 60 * 1},
-                {value: 60 * 5},
                 {value: 60 * 15},
                 {value: 60 * 30},
                 {value: 60 * 45},

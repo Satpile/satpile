@@ -1,6 +1,6 @@
 import * as React from "react";
-import {View} from "react-native";
-import {Appbar, Switch, Text} from "react-native-paper";
+import {View, Switch} from "react-native";
+import {Appbar, Text} from "react-native-paper";
 import {useTheme} from "../utils/Theme";
 import {SettingsData} from '@taccolaa/react-native-settings-screen'; //https://github.com/jsoendermann/react-native-settings-screen
 import {i18n} from "../translations/i18n";

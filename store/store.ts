@@ -44,7 +44,7 @@ store.subscribe(async () => {
                 }
             } else {
                 BackgroundFetch.registerTaskAsync(REFRESH_TASK, {
-                    minimumInterval: store.getState().settings.refresh,
+                    minimumInterval: Math.max(store.getState().settings.refresh, 15*60),
                     stopOnTerminate: false
                 });
             }
