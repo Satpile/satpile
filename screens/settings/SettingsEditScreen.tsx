@@ -3,13 +3,15 @@ import {i18n, updateLocale} from "../../translations/i18n";
 import {Appbar, Headline, Text, useTheme} from "react-native-paper";
 import * as React from "react";
 import {StyleSheet, View} from "react-native";
-import {durationToText, useSettings} from "../../utils/Settings";
+import {askPermission, durationToText, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
 import {Linking} from "expo";
 import {TWITTER_URL} from "../../utils/Constants";
 import {Legal} from "./Legal";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
+import * as Permissions from 'expo-permissions';
+
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
 export default function SettingsEditScreen({navigation, route}) {
@@ -40,7 +42,7 @@ export default function SettingsEditScreen({navigation, route}) {
             settingsData = [
                 {
                     type: 'SECTION',
-                    header: i18n.t`settings.refresh_every`,
+                    header: i18n.t("settings.refresh_every"),
                     rows: refreshValues.map(value => {
                         return {
                             title: durationToText(value.value),
@@ -51,7 +53,11 @@ export default function SettingsEditScreen({navigation, route}) {
                                 }
                                 return null;
                             },
-                            onPress: () => updateSettings({refresh: value.value})
+                            onPress: async () => {
+                                if(value.value === -1 || await askPermission(Permissions.NOTIFICATIONS, i18n.t())){
+                                    updateSettings({refresh: value.value})
+                                }
+                            }
                         }
                     })
                 }];
@@ -66,7 +72,7 @@ export default function SettingsEditScreen({navigation, route}) {
                     title: localeName,
                     showDisclosureIndicator: false,
                     renderAccessory: () => {
-                        if (settings.locale === locale || localeName === i18n.t`current_language`) {
+                        if (settings.locale === locale || localeName === i18n.t("current_language")) {
                             return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
                         }
                         return null;
@@ -81,7 +87,7 @@ export default function SettingsEditScreen({navigation, route}) {
             settingsData = [
                 {
                     type: 'SECTION',
-                    header: i18n.t`settings.locale`,
+                    header: i18n.t("settings.locale"),
                     rows: languages
                 }];
             break;
@@ -91,17 +97,17 @@ export default function SettingsEditScreen({navigation, route}) {
                     type: 'CUSTOM_VIEW',
                     render: () => {
                         return <View style={{padding: 32}}>
-                            <Headline>{i18n.t`settings.about`}</Headline>
+                            <Headline>{i18n.t("settings.about")}</Headline>
                             <Text style={styles.simpleText}>
-                                {i18n.t`settings.about_content.0`}
+                                {i18n.t("settings.about_content.0")}
                             </Text>
                             <Text style={styles.simpleText}>
-                                {i18n.t`settings.about_content.1`}
+                                {i18n.t("settings.about_content.1")}
                                 {"\u00A0" /* &nbsp */}
                                 <Text style={{color: '#f47c1c'}}
                                       onPress={() => Linking.openURL(TWITTER_URL)}>@satpile</Text>.
                                 {"\n"}
-                                {i18n.t`settings.about_content.2`}
+                                {i18n.t("settings.about_content.2")}
                             </Text>
                         </View>
                     }
@@ -114,7 +120,7 @@ export default function SettingsEditScreen({navigation, route}) {
                     type: 'CUSTOM_VIEW',
                     render: () => {
                         return <View style={{padding: 32}}>
-                            <Headline>{i18n.t`settings.legal`}</Headline>
+                            <Headline>{i18n.t("settings.legal")}</Headline>
                             <Text selectable={true} style={styles.simpleText}><Legal/></Text>
                         </View>
                     }

@@ -40,6 +40,12 @@
       "barStyle": "light-content",
       "backgroundColor": "#000000",
       "translucent": false
+    },
+    "notification": {
+      "iosDisplayInForeground": true,
+      "icon": "./assets/icon_notification.png",
+      "color": "#f47c1c",
+      "androidCollapsedTitle": "Satpile"
     }
   }
 }

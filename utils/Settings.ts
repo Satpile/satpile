@@ -1,7 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {i18n} from "../translations/i18n";
 import * as Localization from "expo-localization";
-import {LayoutAnimation} from "react-native";
+import { Appearance } from "react-native-appearance";
+import {PermissionType} from "expo-permissions";
+import * as Permissions from "expo-permissions";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -16,7 +18,7 @@ export function defaultSettings(): Settings {
     return {
         locale: Localization.locale,
         refresh: -1,
-        darkMode: false,
+        darkMode: Appearance.getColorScheme() === "dark",
     }
 }
 
@@ -34,6 +36,22 @@ export function useSettings(): [Settings, (settings: Partial<Settings>) => void]
     return [settings, updateSettings]
 };
 
+export async function askPermission(permission: PermissionType, errorMessage: string):Promise<boolean> {
+    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+        alert(errorMessage);
+        return false;
+    }
+
+    return true;
+}
+
+// use to force rerender when settings change
 export function useI18n() {
     const [settings] = useSettings();
     return i18n;
@@ -44,5 +62,5 @@ export function useI18n() {
  * @param duration
  */
 export function durationToText(duration) {
-    return duration === -1 ? i18n.t`settings.refresh_manual` : (Math.round(duration / 60) + ' ' + i18n.t`minutes`)
+    return duration === -1 ? i18n.t("settings.refresh_manual") : (Math.round(duration / 60) + ' ' + i18n.t("minutes"))
 }

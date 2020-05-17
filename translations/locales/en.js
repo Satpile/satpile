@@ -70,5 +70,20 @@ module.exports = {
             "We appreciate your feedback and comments."
         ],
     },
-    share_qrcode:'Export QRCode'
+    share_qrcode:'Export QRCode',
+    notification: {
+        permission:{
+            error: "You need to allow notifications for background refresh to work."
+        },
+        increase: {
+            title: "Balance increased",
+            diff: "Was credited: %{amount}",
+        },
+        decrease: {
+            title: "Balance decreased",
+            diff: "Was debited: %{amount}"
+        },
+        folder: "In folder: %{folder}",
+        total: "New total: %{total}"
+    }
 };

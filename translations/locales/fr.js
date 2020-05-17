@@ -61,5 +61,20 @@ module.exports = {
         clear_data: 'Effacer les données',
         clear_data_sure: 'Êtes-vous sûr de vouloir supprimer toutes les données ?'
     },
-    share_qrcode:'Exporter le QRCode'
+    share_qrcode:'Exporter le QRCode',
+    notification: {
+        permission: {
+            error: "Vous devez autoriser les notifications pour que le rafraichissement en arrière plan fonctionne."
+        },
+        increase: {
+            title: "La balance a augmenté",
+            diff: "A été crédité: %{amount}",
+        },
+        decrease: {
+            title: "La balance a diminué",
+            diff: "A été débité: %{amount}"
+        },
+        folder: "Dans le dossier: %{folder}",
+        total: "Nouveau total: %{total}"
+    }
 };

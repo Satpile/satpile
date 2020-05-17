@@ -13,16 +13,9 @@ import {Ionicons} from '@expo/vector-icons';
 import {REFRESH_TASK} from "./utils/Settings";
 import {Navigator} from "./navigation/Navigator";
 import {Asset} from "expo-asset";
-import {Notifications} from "./utils/Notifications";
+import {bootstrap} from "./utils/Bootstrap";
 
-if (Platform.OS === 'android') {
-    if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-    }
-}
-SplashScreen.preventAutoHide();
-TaskManager.defineTask(REFRESH_TASK, BalanceFetcher.backgroundFetch);
-Notifications.initNotifications();
+bootstrap();
 
 export default function App(){
     const [loadingState, setLoadingState] = useState<"loading" | "loaded" | "after_loaded">("loading");
