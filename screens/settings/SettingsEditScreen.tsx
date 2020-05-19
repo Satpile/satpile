@@ -54,7 +54,7 @@ export default function SettingsEditScreen({navigation, route}) {
                                 return null;
                             },
                             onPress: async () => {
-                                if(value.value === -1 || await askPermission(Permissions.NOTIFICATIONS, i18n.t())){
+                                if(value.value === -1 || await askPermission(Permissions.NOTIFICATIONS, i18n.t("permission.notification"))){
                                     updateSettings({refresh: value.value})
                                 }
                             }
