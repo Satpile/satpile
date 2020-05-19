@@ -61,5 +61,8 @@ module.exports = {
         clear_data: 'Effacer les données',
         clear_data_sure: 'Êtes-vous sûr de vouloir supprimer toutes les données ?'
     },
-    share_qrcode:'Exporter le QRCode'
+    share_qrcode:'Exporter le QRCode',
+    permission:{
+        camera: "L'accès à la Camera est désactivé. Pour scanner des QRCode, merci d'autoriser la caméra dans Paramètres > Satpile."
+    }
 };

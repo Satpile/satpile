@@ -6,6 +6,7 @@ import {Appbar, Subheading} from "react-native-paper";
 
 import validate from 'bitcoin-address-validation';
 import {i18n} from "../translations/i18n";
+import {askPermission} from "../utils/Settings";
 
 export function QRCodeScanner({onAddressScanned, onCancel}) {
 
@@ -16,8 +17,12 @@ export function QRCodeScanner({onAddressScanned, onCancel}) {
     }, [])
 
     const getPermissionsAsync = async () => {
-        const {status} = await Permissions.askAsync(Permissions.CAMERA);
-        setHasCameraPermission(status === 'granted');
+        const result = await askPermission(Permissions.CAMERA, i18n.t('permission.camera'))
+        if(!result){
+            onCancel();
+        }else{
+            setHasCameraPermission(result);
+        }
     };
 
     const onScan = (result) => {

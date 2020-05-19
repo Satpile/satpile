@@ -33,6 +33,10 @@
         ]
       }
     },
+    "locales": {
+      "fr": "./translations/permissions/fr.json",
+      "en": "./translations/permissions/en.json"
+    },
     "android": {
       "package": "com.satpile.app"
     },

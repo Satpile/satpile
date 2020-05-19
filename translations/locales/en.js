@@ -70,5 +70,8 @@ module.exports = {
             "We appreciate your feedback and comments."
         ],
     },
-    share_qrcode:'Export QRCode'
+    share_qrcode:'Export QRCode',
+    permission:{
+        camera: "Camera access is disabled. To scan a QR code, please allow camera access in Settings > Satpile."
+    }
 };

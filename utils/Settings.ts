@@ -1,7 +1,9 @@
 import {useDispatch, useSelector} from "react-redux";
 import {i18n} from "../translations/i18n";
 import * as Localization from "expo-localization";
-import {LayoutAnimation} from "react-native";
+import {Alert} from "react-native";
+import * as Permissions from "expo-permissions";
+import {PermissionType} from "expo-permissions";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -33,6 +35,34 @@ export function useSettings(): [Settings, (settings: Partial<Settings>) => void]
 
     return [settings, updateSettings]
 };
+
+/**
+ * Asks for permission and show error message on failure
+ * @param permission
+ * @param errorMessage
+ */
+export async function askPermission(permission: PermissionType, errorMessage: string):Promise<boolean> {
+    const { status: existingStatus } = await Permissions.getAsync(permission);
+    let finalStatus = existingStatus;
+    if (existingStatus !== 'granted') {
+        const { status } = await Permissions.askAsync(permission);
+        finalStatus = status;
+    }
+    if (finalStatus !== 'granted') {
+        await new Promise(resolve => { //Promisify Alert.alert
+            Alert.alert(i18n.t('error'), errorMessage, [{
+                onPress: resolve
+            }], {
+                cancelable: true,
+                onDismiss: resolve
+            });
+        })
+
+        return false;
+    }
+
+    return true;
+}
 
 export function useI18n() {
     const [settings] = useSettings();
