@@ -63,9 +63,6 @@ module.exports = {
     },
     share_qrcode:'Exporter le QRCode',
     notification: {
-        permission: {
-            error: "Vous devez autoriser les notifications pour que le rafraichissement en arrière plan fonctionne."
-        },
         increase: {
             title: "La balance a augmenté",
             diff: "A été crédité: %{amount}",
@@ -76,5 +73,9 @@ module.exports = {
         },
         folder: "Dans le dossier: %{folder}",
         total: "Nouveau total: %{total}"
+    },
+    permission:{
+        camera: "L'accès à la Camera est désactivé. Pour scanner des QRCode, merci d'autoriser la caméra dans Paramètres > Satpile.",
+        notification: "Vous devez autoriser les notifications pour que le rafraichissement en arrière plan fonctionne."
     }
 };

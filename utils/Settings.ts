@@ -1,9 +1,10 @@
 import {useDispatch, useSelector} from "react-redux";
 import {i18n} from "../translations/i18n";
 import * as Localization from "expo-localization";
-import { Appearance } from "react-native-appearance";
-import {PermissionType} from "expo-permissions";
+import {Alert} from "react-native";
 import * as Permissions from "expo-permissions";
+import {PermissionType} from "expo-permissions";
+import { Appearance } from "react-native-appearance";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -36,22 +37,34 @@ export function useSettings(): [Settings, (settings: Partial<Settings>) => void]
     return [settings, updateSettings]
 };
 
+/**
+ * Asks for permission and show error message on failure
+ * @param permission
+ * @param errorMessage
+ */
 export async function askPermission(permission: PermissionType, errorMessage: string):Promise<boolean> {
-    const { status: existingStatus } = await Permissions.getAsync(Permissions.NOTIFICATIONS);
+    const { status: existingStatus } = await Permissions.getAsync(permission);
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
-        const { status } = await Permissions.askAsync(Permissions.NOTIFICATIONS);
+        const { status } = await Permissions.askAsync(permission);
         finalStatus = status;
     }
     if (finalStatus !== 'granted') {
-        alert(errorMessage);
+        await new Promise(resolve => { //Promisify Alert.alert
+            Alert.alert(i18n.t('error'), errorMessage, [{
+                onPress: resolve
+            }], {
+                cancelable: true,
+                onDismiss: resolve
+            });
+        })
+
         return false;
     }
 
     return true;
 }
 
-// use to force rerender when settings change
 export function useI18n() {
     const [settings] = useSettings();
     return i18n;

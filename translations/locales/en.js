@@ -72,9 +72,6 @@ module.exports = {
     },
     share_qrcode:'Export QRCode',
     notification: {
-        permission:{
-            error: "You need to allow notifications for background refresh to work."
-        },
         increase: {
             title: "Balance increased",
             diff: "Was credited: %{amount}",
@@ -85,5 +82,9 @@ module.exports = {
         },
         folder: "In folder: %{folder}",
         total: "New total: %{total}"
+    },
+    permission:{
+        camera: "Camera access is disabled. To scan a QR code, please allow camera access in Settings > Satpile.",
+        notification: "You need to allow notifications for background refresh to work."
     }
 };
