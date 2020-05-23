@@ -86,5 +86,6 @@ module.exports = {
     permission:{
         camera: "Camera access is disabled. To scan a QR code, please allow camera access in Settings > Satpile.",
         notification: "You need to allow notifications for background refresh to work."
-    }
+    },
+    goto_settings: "Go to settings"
 };

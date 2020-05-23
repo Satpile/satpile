@@ -77,5 +77,6 @@ module.exports = {
     permission:{
         camera: "L'accès à la Camera est désactivé. Pour scanner des QRCode, merci d'autoriser la caméra dans Paramètres > Satpile.",
         notification: "Vous devez autoriser les notifications pour que le rafraichissement en arrière plan fonctionne."
-    }
+    },
+    goto_settings: "Accéder aux paramètres"
 };

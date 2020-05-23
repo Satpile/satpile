@@ -1,10 +1,11 @@
 import {useDispatch, useSelector} from "react-redux";
 import {i18n} from "../translations/i18n";
 import * as Localization from "expo-localization";
-import {Alert} from "react-native";
+import {Alert, Platform} from "react-native";
 import * as Permissions from "expo-permissions";
 import {PermissionType} from "expo-permissions";
-import { Appearance } from "react-native-appearance";
+import {Appearance} from "react-native-appearance";
+import {Linking} from "expo";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -42,18 +43,33 @@ export function useSettings(): [Settings, (settings: Partial<Settings>) => void]
  * @param permission
  * @param errorMessage
  */
-export async function askPermission(permission: PermissionType, errorMessage: string):Promise<boolean> {
-    const { status: existingStatus } = await Permissions.getAsync(permission);
+export async function askPermission(permission: PermissionType, errorMessage: string): Promise<boolean> {
+    const {status: existingStatus} = await Permissions.getAsync(permission);
     let finalStatus = existingStatus;
     if (existingStatus !== 'granted') {
-        const { status } = await Permissions.askAsync(permission);
+        const {status} = await Permissions.askAsync(permission);
         finalStatus = status;
     }
     if (finalStatus !== 'granted') {
         await new Promise(resolve => { //Promisify Alert.alert
-            Alert.alert(i18n.t('error'), errorMessage, [{
-                onPress: resolve
-            }], {
+            Alert.alert(i18n.t('error'), errorMessage, [
+                {
+                    text: i18n.t("goto_settings"),
+                    onPress: () => {
+                        resolve();
+                        if (Platform.OS === 'ios') {
+                            Linking.openURL("app-settings:");
+                        } else {
+                            Linking.openSettings();
+                        }
+                    }
+                },
+                {
+                    onPress: resolve,
+                    style: "destructive",
+                    text: i18n.t("cancel")
+                }
+            ], {
                 cancelable: true,
                 onDismiss: resolve
             });

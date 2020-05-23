@@ -31,7 +31,8 @@
         "UIBackgroundModes": [
           "fetch"
         ]
-      }
+      },
+      "appStoreUrl": "https://apps.apple.com/us/app/satpile/id1510284403"
     },
     "locales": {
       "fr": "./translations/permissions/fr.json",
