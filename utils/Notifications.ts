@@ -1,11 +1,9 @@
 import {ActionType, Channel} from "expo/build/Notifications/Notifications.types";
 import {Notifications as NotificationsManager} from 'expo';
 import {AddressesBalanceDifference, Folder, FolderAddress} from "./Types";
-import {Platform} from "react-native";
-import { Asset } from 'expo-asset';
+import {AppState, Platform} from "react-native";
 import {i18n} from "../translations/i18n";
 import {convertSatoshiToString, truncate} from "./Helper";
-import * as Permissions from 'expo-permissions';
 import store from "../store/store";
 
 
@@ -75,6 +73,8 @@ export class Notifications {
     }
 
     static async sendSingleUpdateNotification(diff: AddressesBalanceDifference){
+        if(AppState.currentState === "active"){ return; }
+
         const {folder, address, folderIndex} = this.findFolderAndAddressFromAddress(diff.address);
         console.log({folder, address, folderIndex});
         if(folderIndex === -1){

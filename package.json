@@ -40,7 +40,6 @@
     "react-navigation-animated-switch": "^0.3.2",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "rn-prompt": "^1.0.4",
     "runes": "^0.4.3"
   },
   "devDependencies": {
