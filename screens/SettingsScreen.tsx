@@ -13,8 +13,6 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants from "expo-constants";
 import {COMPANY, FEEDBACK_URL, TWITTER_URL} from "../utils/Constants";
 import {CustomSettingsScreen} from "../components/CustomSettingsScreen";
-import {Notifications} from "../utils/Notifications";
-import {AddressStatusType} from "../components/AddressStatus";
 
 export default function SettingsScreen({navigation}) {
 
@@ -103,40 +101,6 @@ export default function SettingsScreen({navigation}) {
                 },
                 {title: i18n.t("settings.version"), renderAccessory: () => <Text>{Constants.manifest.version}</Text>},
                 {title: i18n.t("settings.copyright"), renderAccessory: () => <Text>{COMPANY}</Text>},
-            ],
-        },
-        {
-            type: 'SECTION',
-            rows: [
-                {
-                    title: "test",
-                    showDisclosureIndicator: false,
-                    titleStyle: {
-                        color: 'red',
-                        textAlign: 'center',
-                    },
-                    onPress: () => {
-                        Notifications.sendUpdateNotification([
-                            {
-                                //TODO: delete
-                                address:"1LwpzfazVb9qDc4he6A4rPTPBCtC2c1tY1", //random address to test
-                                before: {balance:1500, status: AddressStatusType.OK},
-                                after: {balance:500, status: AddressStatusType.OK}
-                            },
-                           /* {
-                                address:"ABCDEFGHIJKKLM",
-                                before: {balance:1000, status: AddressStatusType.OK},
-                                after: {balance:8000, status: AddressStatusType.OK}
-                            },
-                            {
-                                address:"BCNSDHIZDHuodbazodb",
-                                before: {balance:4000, status: AddressStatusType.OK},
-                                after: {balance:4000, status: AddressStatusType.OK}
-                            },*/
-                        ])
-                    }
-
-                },
             ],
         },
     ];
