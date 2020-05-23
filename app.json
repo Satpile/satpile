@@ -16,7 +16,7 @@
       "backgroundColor": "#ffffff"
     },
     "updates": {
-      "fallbackToCacheTimeout": 0
+      "enabled": false
     },
     "assetBundlePatterns": [
       "**/*"
@@ -31,7 +31,8 @@
         "UIBackgroundModes": [
           "fetch"
         ]
-      }
+      },
+      "appStoreUrl": "https://apps.apple.com/us/app/satpile/id1510284403"
     },
     "locales": {
       "fr": "./translations/permissions/fr.json",
@@ -44,6 +45,11 @@
       "barStyle": "light-content",
       "backgroundColor": "#000000",
       "translucent": false
+    },
+    "notification": {
+      "icon": "./assets/icon_notification.png",
+      "color": "#f47c1c",
+      "androidCollapsedTitle": "Satpile"
     }
   }
 }

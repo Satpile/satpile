@@ -62,7 +62,21 @@ module.exports = {
         clear_data_sure: 'Êtes-vous sûr de vouloir supprimer toutes les données ?'
     },
     share_qrcode:'Exporter le QRCode',
+    notification: {
+        increase: {
+            title: "La balance a augmenté",
+            diff: "A été crédité: %{amount}",
+        },
+        decrease: {
+            title: "La balance a diminué",
+            diff: "A été débité: %{amount}"
+        },
+        folder: "Dans le dossier: %{folder}",
+        total: "Nouveau total: %{total}"
+    },
     permission:{
-        camera: "L'accès à la Camera est désactivé. Pour scanner des QRCode, merci d'autoriser la caméra dans Paramètres > Satpile."
-    }
+        camera: "L'accès à la Camera est désactivé. Pour scanner des QRCode, merci d'autoriser la caméra dans Paramètres > Satpile.",
+        notification: "Vous devez autoriser les notifications pour que le rafraichissement en arrière plan fonctionne."
+    },
+    goto_settings: "Accéder aux paramètres"
 };

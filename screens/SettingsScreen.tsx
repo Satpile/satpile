@@ -1,5 +1,5 @@
 import * as React from "react";
-import {View, Switch} from "react-native";
+import {Switch, View} from "react-native";
 import {Appbar, Text} from "react-native-paper";
 import {useTheme} from "../utils/Theme";
 import {SettingsData} from '@taccolaa/react-native-settings-screen'; //https://github.com/jsoendermann/react-native-settings-screen
@@ -30,7 +30,7 @@ export default function SettingsScreen({navigation}) {
         {
             type: 'SECTION',
             rows: [{
-                title: i18n.t`settings.refresh_every`,
+                title: i18n.t("settings.refresh_every"),
                 showDisclosureIndicator: true,
                 renderAccessory: () => <SettingItemValue type={"refresh"} value={settings.refresh}/>,
                 onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh'}),
@@ -40,19 +40,19 @@ export default function SettingsScreen({navigation}) {
             type: 'SECTION',
             rows: [
                 {
-                    title: i18n.t`settings.locale`,
+                    title: i18n.t("settings.locale"),
                     showDisclosureIndicator: true,
                     renderAccessory: () => <SettingItemValue value={i18n.t('current_language')}/>,
                     onPress: () => navigation.navigate('SettingsEdit', {setting: 'locale'})
                 },
                 {
-                    title: i18n.t`settings.dark_mode`,
+                    title: i18n.t("settings.dark_mode"),
                     renderAccessory: () => <Switch value={settings.darkMode} onValueChange={(value) => {
                         updateSettings({darkMode: value})
                     }}/>,
                 },
                 {
-                    title: i18n.t`settings.icloud`,
+                    title: i18n.t("settings.icloud"),
                     renderAccessory: () => <Switch value={false} disabled={true} onValueChange={() => {
                     }}/>,
                 }
@@ -62,12 +62,12 @@ export default function SettingsScreen({navigation}) {
             type: 'SECTION',
             rows: [
                 {
-                    title: i18n.t`settings.feedback`,
+                    title: i18n.t("settings.feedback"),
                     renderBeforeAccessory: () => <ItemIcon icon={"md-mail"} color={'#74b42e'}/>,
                     onPress: () => WebBrowser.openBrowserAsync(FEEDBACK_URL.replace('{version}', Constants.manifest.version))
                 },
                 {
-                    title: i18n.t`settings.rate`,
+                    title: i18n.t("settings.rate"),
                     renderBeforeAccessory: () => <ItemIcon icon={"md-heart"} color={"#cf021a"}/>,
                     onPress: () => {
                         let url = StoreReview.storeUrl();
@@ -79,7 +79,7 @@ export default function SettingsScreen({navigation}) {
                     }
                 },
                 {
-                    title: i18n.t`settings.twitter`,
+                    title: i18n.t("settings.twitter"),
                     renderBeforeAccessory: () => <ItemIcon icon={"logo-twitter"} color={"#53acee"}/>,
                     onPress: () => Linking.openURL(TWITTER_URL)
                 },
@@ -90,49 +90,19 @@ export default function SettingsScreen({navigation}) {
 
             rows: [
                 {
-                    title: i18n.t`settings.about`,
+                    title: i18n.t("settings.about"),
                     showDisclosureIndicator: true,
                     onPress: () => navigation.navigate('SettingsEdit', {setting: 'about'})
                 },
                 {
-                    title: i18n.t`settings.legal`,
+                    title: i18n.t("settings.legal"),
                     showDisclosureIndicator: true,
                     onPress: () => navigation.navigate('SettingsEdit', {setting: 'legal'})
                 },
-                {title: i18n.t`settings.version`, renderAccessory: () => <Text>{Constants.manifest.version}</Text>},
-                {title: i18n.t`settings.copyright`, renderAccessory: () => <Text>{COMPANY}</Text>},
+                {title: i18n.t("settings.version"), renderAccessory: () => <Text>{Constants.manifest.version}</Text>},
+                {title: i18n.t("settings.copyright"), renderAccessory: () => <Text>{COMPANY}</Text>},
             ],
         },
-       /* {
-            type: 'SECTION',
-            rows: [
-                {
-                    title: i18n.t('settings.clear_data'),
-                    showDisclosureIndicator: false,
-                    titleStyle: {
-                        color: 'red',
-                        textAlign: 'center',
-                    },
-                    onPress: () => {
-                        Alert.alert(
-                            i18n.t('settings.clear_data'),
-                            i18n.t('settings.clear_data_sure'),
-                            [
-                                {text: i18n.t('cancel'), style: 'cancel'},
-                                {
-                                    text: i18n.t('delete'), onPress: async () => {
-                                        store.dispatch({type: 'CLEAR'})
-                                    },
-                                    style: "destructive"
-                                },
-                            ],
-                            {cancelable: true}
-                        )
-                    }
-
-                },
-            ],
-        },*/
     ];
 
 

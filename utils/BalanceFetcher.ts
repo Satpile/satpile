@@ -7,6 +7,7 @@ import {i18n} from '../translations/i18n';
 import {Explorer} from "./Types";
 import * as BackgroundFetch from "expo-background-fetch";
 import {Platform, StatusBar} from "react-native";
+import {Notifications} from "./Notifications";
 
 export default class BalanceFetcher {
 
@@ -38,22 +39,18 @@ export default class BalanceFetcher {
     }
 
     private static afterBalanceFetch() {
-        //dispatch(Actions.updateBalances(addresses));
         store.dispatch(Actions.updateFoldersTotal(store.getState().addresses));
         store.dispatch(Actions.updateLastReloadTime());
     }
 
     static async backgroundFetch() {
-        const diffs = await BalanceFetcher.filterAndFetchBalances(false);
-        /*diffs.forEach((diff) => Notifications.presentLocalNotificationAsync({
-            title: `An address changed (${diff.address})`,
-            body: `From: ${diff.before.balance} \n To: ${diff.after.balance}`,
-            android:{
-                icon: require('../assets/icon.png')
-            },
-            data:diff,
-            categoryId: BALANCE_UPDATE
-        }));*/
-        return diffs.length ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.Failed;
+        try{
+            const diffs = await BalanceFetcher.filterAndFetchBalances(false);
+            await Notifications.sendUpdateNotification(diffs);
+
+            return diffs.length ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.Failed;
+        }catch(e){
+            return BackgroundFetch.Result.Failed;
+        }
     }
 }

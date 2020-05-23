@@ -10,6 +10,16 @@ export type AddressesBalanceDifference = {
     after: AddressValue;
 }
 
+export type FolderAddress = {
+    name: string,
+    address: string;
+}
+
+export type Folder = {
+    name: string;
+    addresses: FolderAddress[]
+}
+
 export interface Explorer {
     fetchAndUpdate(AddressesList): Promise<AddressesBalanceDifference[]>
 }
