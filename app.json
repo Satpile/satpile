@@ -30,7 +30,8 @@
       "infoPlist": {
         "UIBackgroundModes": [
           "fetch"
-        ]
+        ],
+        "NSCameraUsageDescription": "This app uses the camera to scan QR codes."
       },
       "appStoreUrl": "https://apps.apple.com/us/app/satpile/id1510284403"
     },
