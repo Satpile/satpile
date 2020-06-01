@@ -1,4 +1,4 @@
-import {AddressValue} from "../../utils/Types";
+import {AddressValue, ListOrderType} from "../../utils/Types";
 import AddressesStorage from "../../utils/AddressesStorage";
 
 export const loadData = async () => {
@@ -57,5 +57,19 @@ export const updateSingleAddressBalance = (address: string, addressContent: Addr
     return {
         type: 'UPDATE_SINGLE_ADDRESS',
         address, addressContent
+    }
+}
+
+export const swapFolders = ({folderA, folderB}) => {
+    return {
+        type: "SWAP_FOLDERS",
+        folderA, folderB
+    }
+}
+
+export const sortFolders = (foldersOrder: ListOrderType) => {
+    return {
+        type: "SORT_FOLDERS",
+        foldersOrder
     }
 }

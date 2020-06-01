@@ -1,4 +1,6 @@
-const folders = (state = [], action) => {
+import {Folder} from "../../utils/Types";
+
+const folders = (state: Folder[] = [], action) => {
 
     switch (action.type) {
         case 'CLEAR':
@@ -61,6 +63,23 @@ const folders = (state = [], action) => {
                 }
                 return folder;
             });
+        case 'SWAP_FOLDERS':
+            const {folderA, folderB} = action;
+
+            return state.map(value => {
+                if(value.uid === folderA.uid) return folderB;
+                if(value.uid === folderB.uid) return folderA;
+                return value;
+            })
+
+        case 'SORT_FOLDERS':
+            if(action.foldersOrder === "alphabetically"){
+                return state.sort(((a:Folder, b: Folder) => {
+                    if(a.name < b.name) return -1;
+                    if(a.name > b.name) return 1;
+                    return 0;
+                }))
+            }
     }
 
     return state;

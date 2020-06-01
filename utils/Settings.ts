@@ -6,6 +6,7 @@ import * as Permissions from "expo-permissions";
 import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
 import {Linking} from "expo";
+import {ListOrderType} from "./Types";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -13,6 +14,7 @@ export interface Settings {
     locale: string;
     refresh: number;
     darkMode: boolean;
+    foldersOrder: ListOrderType;
 }
 
 
@@ -21,6 +23,7 @@ export function defaultSettings(): Settings {
         locale: Localization.locale,
         refresh: -1,
         darkMode: Appearance.getColorScheme() === "dark",
+        foldersOrder: "custom"
     }
 }
 

@@ -15,9 +15,13 @@ export type FolderAddress = {
     address: string;
 }
 
+export type ListOrderType = "custom" | "alphabetically";
+
 export type Folder = {
+    uid: string;
     name: string;
-    addresses: FolderAddress[]
+    addresses: FolderAddress[];
+    orderAddresses: ListOrderType;
 }
 
 export interface Explorer {
