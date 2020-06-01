@@ -2,6 +2,8 @@ import {AddressStatusType} from "../../components/AddressStatus";
 import {AddressesBalanceDifference, AddressesList, AddressValue, Explorer} from "../Types";
 import * as Actions from "../../store/actions";
 import store from "../../store/store";
+import {generateUid} from "../Helper";
+import {requestsDebouncer} from "../RequestDebouncer";
 
 export default class Mempool implements Explorer {
 
@@ -22,7 +24,20 @@ export default class Mempool implements Explorer {
         const diff: AddressesBalanceDifference[] = [];
 
         const queries = Object.entries(addresses).map(([address, addressContent]) => {
+        //We map each address to a promise
+
+            const requestUniqId = generateUid();
+            requestsDebouncer[address] = requestUniqId;
+            //we set this request as the most recent request for this address
+
             return this.fetch(address, addressContent).then(result => {
+                if(requestUniqId !== requestsDebouncer[address]){
+                    // In the meantime, if the requestId coresponding to this address has changed,
+                    // it means this request is obsolete. We ignore it.
+                    return;
+                }
+                delete requestsDebouncer[address]; //clean debouncer
+
                 if (addressContent.balance !== result.balance) { //We store all the differences
                     diff.push({
                         address: address,

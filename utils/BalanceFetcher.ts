@@ -11,6 +11,13 @@ import {Notifications} from "./Notifications";
 
 export default class BalanceFetcher {
 
+    /**
+     * [address]: "unique request identifier"
+     */
+    static requestsDebouncer = {
+
+    }
+
     static showNetworkActivity(show: boolean) {
         if (Platform.OS === "ios") {
             StatusBar.setNetworkActivityIndicatorVisible(show);
