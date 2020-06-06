@@ -57,7 +57,10 @@ export default connect(state => ({
             display={showToolbar}
             onToggleArrows={() => setShowEditSort(!showEditSort)}
             onReorder={(type) => dispatch(Actions.sortFolderAddresses(type, folder))}
-            onHide={() => setShowToolbar(false)}
+            onHide={() => {
+                setShowEditSort(false);
+                setShowToolbar(false);
+            }}
         />
         <AddressesList
             addresses={folder.addresses}

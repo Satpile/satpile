@@ -104,7 +104,10 @@ export default connect(state => ({
                 display={showToolbar}
                 onToggleArrows={() => setShowEditSort(!showEditSort)}
                 onReorder={(type) => dispatch(Actions.sortFolders(type))}
-                onHide={() => setShowToolbar(false)}
+                onHide={() => {
+                    setShowEditSort(false);
+                    setShowToolbar(false);
+                }}
             />
 
             {folders.length > 0 ? <FoldersList
