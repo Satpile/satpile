@@ -1,4 +1,4 @@
-import {AddressValue, ListOrderType} from "../../utils/Types";
+import {AddressValue, Folder, ListOrderType} from "../../utils/Types";
 import AddressesStorage from "../../utils/AddressesStorage";
 
 export const loadData = async () => {
@@ -67,9 +67,23 @@ export const swapFolders = ({folderA, folderB}) => {
     }
 }
 
+export const swapFolderAddresses = ({folder, addressA, addressB}) => {
+    return {
+        type: "SWAP_FOLDER_ADDRESSES",
+        folder, addressA, addressB
+    }
+}
+
 export const sortFolders = (foldersOrder: ListOrderType) => {
     return {
         type: "SORT_FOLDERS",
         foldersOrder
+    }
+}
+
+export const sortFolderAddresses = (folderOrder: ListOrderType, folder: Folder) => {
+    return {
+        type: "SORT_FOLDER_ADDRESSES",
+        folderOrder, folder
     }
 }

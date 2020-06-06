@@ -5,7 +5,7 @@ import {useNavigation} from '@react-navigation/native';
 import {i18n} from "../translations/i18n";
 import {SwipeList} from "./SwipeList/SwipeList";
 import {useTheme} from "../utils/Theme";
-import {ReorderButton} from "./ReorderButton";
+import {ReorderButtons} from "./SwipeList/ReorderButtons";
 
 function FoldersList({ folders, onRefresh, afterRefresh, onRemove, showEditSort, onSort }) {
 
@@ -45,7 +45,7 @@ function FoldersList({ folders, onRefresh, afterRefresh, onRemove, showEditSort,
                 onClick={(folder) => navigation.navigate('FolderContent', {folder: folder})}
                 onLongPress={() => beforeDelete(row.item)}
             />
-            <ReorderButton
+            <ReorderButtons
                 show={showEditSort}
                 showUp={row.index > 0}
                 showDown={row.index < folders.length-1}

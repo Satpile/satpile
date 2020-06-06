@@ -11,7 +11,7 @@ import {connect} from 'react-redux';
 import BalanceFetcher from "../utils/BalanceFetcher";
 import EmptyScreenContent from "../components/EmptyScreenContent";
 import {useI18n, useSettings} from "../utils/Settings";
-import {Toolbar} from "../components/Toolbar";
+import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 
 export default connect(state => ({
     folders: state.folders,
@@ -31,11 +31,10 @@ export default connect(state => ({
         headerLeft: _ => <Appbar.Action color="white" icon="settings" onPress={() => { navigation.navigate('Settings') }}/>
         ,
         headerRight: _ => <View style={{display: "flex", flexDirection: "row"}}>
-            <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"} onPress={() => {
-                console.log("sort")
+            {folders.length > 1 && <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"} onPress={() => {
                 setShowToolbar(!showToolbar);
                 setShowEditSort(false);
-            }}/>
+            }}/>}
             {showToolbar  ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => {
                 setShowAddModal(true);
             }}/>}
@@ -51,6 +50,9 @@ export default connect(state => ({
 
     useEffect(() => {
         updateTotalBalance();
+        if(folders.length === 0){
+            setShowToolbar(false);
+        }
     }, [folders]);
 
     useEffect(() => {
@@ -98,17 +100,13 @@ export default connect(state => ({
                     onValidate={submitModal}
                 />)
             }
-            <Toolbar display={showToolbar}>
-                <Appbar.Action color={theme.colors.onBackground} icon="sort" onPress={() => {
-                    setShowEditSort(true);
-                }}/>
-                <Appbar.Action  color={theme.colors.onBackground} icon="sort-alphabetical" onPress={() => {
-                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut, () => {
-                        setShowToolbar(false);
-                    });
-                    dispatch(Actions.sortFolders("alphabetically"))
-                }}/>
-            </Toolbar>
+            <ReorderToolbar
+                display={showToolbar}
+                onToggleArrows={() => setShowEditSort(!showEditSort)}
+                onReorder={(type) => dispatch(Actions.sortFolders(type))}
+                onHide={() => setShowToolbar(false)}
+            />
+
             {folders.length > 0 ? <FoldersList
                 afterRefresh={() => {/*this.updateTotalBalance()*/
                 }}
