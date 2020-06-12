@@ -1,9 +1,9 @@
 import {LayoutAnimation, View} from "react-native";
 import FoldersList from "../components/FoldersList";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import DynamicTitle from "../components/DynamicTitle";
 import {Appbar, useTheme} from "react-native-paper";
-import {generateUid} from '../utils/Helper';
+import {generateUid, isSorted} from '../utils/Helper';
 import PromptModal from "../components/PromptModal";
 import ReloadButton from "../components/ReloadButton";
 import * as Actions from "../store/actions";
@@ -85,6 +85,9 @@ export default connect(state => ({
         dispatch(Actions.addFolder(folder));
     };
 
+    const isSortedAlphabetically = useMemo(() => {
+        return isSorted(folders);
+    }, [folders])
 
     return (
         <View style={{flex: 1, backgroundColor: theme.colors.background}}>
@@ -108,6 +111,7 @@ export default connect(state => ({
                     setShowEditSort(false);
                     setShowToolbar(false);
                 }}
+                alreadySorted={isSortedAlphabetically}
             />
 
             {folders.length > 0 ? <FoldersList

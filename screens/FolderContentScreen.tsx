@@ -1,5 +1,5 @@
 import {LayoutAnimation, StyleSheet, View} from "react-native";
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import DynamicTitle from "../components/DynamicTitle";
 import {Appbar, FAB, useTheme} from "react-native-paper";
 import ReloadButton from "../components/ReloadButton";
@@ -12,6 +12,8 @@ import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
 import store from "../store/store";
 import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
+import {Folder} from "../utils/Types";
+import {isSorted} from "../utils/Helper";
 
 export default connect(state => ({
     folders: state.folders,
@@ -20,7 +22,7 @@ export default connect(state => ({
 
     const [showRenameModal, setShowRenameModal] = useState(false);
     const theme = useTheme();
-    const folder = folders.find(folder => folder.uid === route.params.folder.uid);
+    const folder : Folder = folders.find(folder => folder.uid === route.params.folder.uid);
     const dispatch = useDispatch();
     const [showEditSort, setShowEditSort] = useState(false);
     const [showToolbar, setShowToolbar] = useState(false);
@@ -52,6 +54,10 @@ export default connect(state => ({
         store.dispatch(Actions.renameFolder(folder, newName));
     }
 
+   const isSortedAlphabetically = useMemo(() => {
+       return isSorted(folder.addresses);
+   }, [folder.addresses])
+
     const list = (<>
         <ReorderToolbar
             display={showToolbar}
@@ -61,6 +67,7 @@ export default connect(state => ({
                 setShowEditSort(false);
                 setShowToolbar(false);
             }}
+            alreadySorted={isSortedAlphabetically}
         />
         <AddressesList
             addresses={folder.addresses}

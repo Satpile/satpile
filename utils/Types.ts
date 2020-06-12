@@ -22,6 +22,7 @@ export type Folder = {
     name: string;
     addresses: FolderAddress[];
     orderAddresses: ListOrderType;
+    totalBalance: number;
 }
 
 export interface Explorer {

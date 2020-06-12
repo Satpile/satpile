@@ -36,3 +36,14 @@ export function truncate(string :string, maxSize, ellipsis: "end" | "middle" | "
             return chars.splice(0, maxSize/2).join('') + ellipsisUnicode + chars.splice(-maxSize/2, maxSize/2).join('');
     }
 }
+
+export function isSorted<T extends {name: string}>(array: T[]){
+    let last = "";
+    for(const element of array){
+        if(element.name < last){
+            return false;
+        }
+        last = element.name;
+    }
+    return true;
+}
