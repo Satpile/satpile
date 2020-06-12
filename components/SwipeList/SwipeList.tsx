@@ -14,14 +14,17 @@ declare type SwipeListProps = {
     actions: SwipeAction[],
     refreshing: boolean,
     onRefresh: () => void,
-    showPreview?: boolean
+    showPreview?: boolean,
+    disableSwipe?: boolean
 }
 
 export function SwipeList(props: SwipeListProps) {
 
-    const {data, render, keyExtractor, showClose, actions, refreshing, onRefresh, showPreview} = {
+    const {data, render, keyExtractor, showClose, actions, refreshing, onRefresh, showPreview, disableSwipe} = {
         actions: [],
-        showPreview: false, ...props
+        showPreview: false,
+        disableSwipe: false,
+        ...props,
     };
     const theme = useTheme();
 
@@ -42,6 +45,7 @@ export function SwipeList(props: SwipeListProps) {
         data={data}
         keyExtractor={keyExtractor}
         disableRightSwipe={true}
+        disableLeftSwipe={disableSwipe}
         rightOpenValue={-80 * ((showClose ? 1 : 0) + actions.length)}
         swipeToOpenPercent={30}
         previewRowKey={showPreview && data.length > 0 ? keyExtractor(data[0]) : ""}

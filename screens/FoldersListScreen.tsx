@@ -11,6 +11,7 @@ import {connect} from 'react-redux';
 import BalanceFetcher from "../utils/BalanceFetcher";
 import EmptyScreenContent from "../components/EmptyScreenContent";
 import {useI18n, useSettings} from "../utils/Settings";
+import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 
 export default connect(state => ({
     folders: state.folders,
@@ -18,24 +19,26 @@ export default connect(state => ({
 }))(function FoldersListScreen({navigation, folders, dispatch, lastReloadTime}) {
     const [totalBalance, setTotalBalance] = useState(0);
     const [showAddModal, setShowAddModal] = useState(false);
+    const [showEditSort, setShowEditSort] = useState(false);
+    const [showToolbar, setShowToolbar] = useState(false);
+
     const [settings] = useSettings();
     const theme = useTheme();
-
     const i18n = useI18n();
 
     navigation.setOptions({
-        headerTitle:
-            props => <DynamicTitle title={i18n.t('home')} satAmount={totalBalance} />,
-        headerLeft: props =>
-            <Appbar.Action color="white" icon="settings" onPress={() => {
-                navigation.navigate('Settings')
-                //dispatch({type:'CLEAR'});
-            }}/>
+        headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={totalBalance} />,
+        headerLeft: _ => <Appbar.Action color="white" icon="settings" onPress={() => { navigation.navigate('Settings') }}/>
         ,
-        headerRight: props =>
-            <Appbar.Action color="white" icon="plus" onPress={() => {
+        headerRight: _ => <View style={{display: "flex", flexDirection: "row"}}>
+            {folders.length > 1 && <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"} onPress={() => {
+                setShowToolbar(!showToolbar);
+                setShowEditSort(false);
+            }}/>}
+            {showToolbar  ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => {
                 setShowAddModal(true);
-            }}/>
+            }}/>}
+            </View>
     });
 
     const updateTotalBalance = function(){
@@ -47,6 +50,9 @@ export default connect(state => ({
 
     useEffect(() => {
         updateTotalBalance();
+        if(folders.length === 0){
+            setShowToolbar(false);
+        }
     }, [folders]);
 
     useEffect(() => {
@@ -82,13 +88,28 @@ export default connect(state => ({
 
     return (
         <View style={{flex: 1, backgroundColor: theme.colors.background}}>
-            {showAddModal && <PromptModal title={i18n.t('new_folder')} description={i18n.t('enter_folder_name')}
-                                          inputPlaceholder={i18n.t('folder_name')} visible={showAddModal}
-                                          submitLabel={i18n.t('add_folder')}
-                                          onClose={closeModal}
-                                          onCancel={() => {
-                                          }}
-                                          onValidate={submitModal}/>}
+            {showAddModal &&
+                (<PromptModal
+                    title={i18n.t('new_folder')}
+                    description={i18n.t('enter_folder_name')}
+                    inputPlaceholder={i18n.t('folder_name')}
+                    visible={showAddModal}
+                    submitLabel={i18n.t('add_folder')}
+                    onClose={closeModal}
+                    onCancel={() => {}}
+                    onValidate={submitModal}
+                />)
+            }
+            <ReorderToolbar
+                display={showToolbar}
+                onToggleArrows={() => setShowEditSort(!showEditSort)}
+                onReorder={(type) => dispatch(Actions.sortFolders(type))}
+                onHide={() => {
+                    setShowEditSort(false);
+                    setShowToolbar(false);
+                }}
+            />
+
             {folders.length > 0 ? <FoldersList
                 afterRefresh={() => {/*this.updateTotalBalance()*/
                 }}
@@ -98,6 +119,11 @@ export default connect(state => ({
                 onRemove={folder => {
                     LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                     dispatch(Actions.removeFolder(folder))
+                }}
+                showEditSort={showEditSort}
+                onSort={(folderA, folderB) => {
+                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                    dispatch(Actions.swapFolders({folderA, folderB}));
                 }}
                 folders={folders}
             /> : <EmptyScreenContent text={i18n.t('no_folder')}/>}

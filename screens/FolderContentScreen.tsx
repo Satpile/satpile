@@ -11,6 +11,7 @@ import EmptyScreenContent from "../components/EmptyScreenContent";
 import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
 import store from "../store/store";
+import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 
 export default connect(state => ({
     folders: state.folders,
@@ -21,19 +22,26 @@ export default connect(state => ({
     const theme = useTheme();
     const folder = folders.find(folder => folder.uid === route.params.folder.uid);
     const dispatch = useDispatch();
+    const [showEditSort, setShowEditSort] = useState(false);
+    const [showToolbar, setShowToolbar] = useState(false);
 
     if (!folder) {
         navigation.goBack();
         return null;
     }
     navigation.setOptions({
-        headerTitle: props => <DynamicTitle title={folder.name} icon={"md-folder"} satAmount={folder.totalBalance}
-                                            onPress={() => {
-                                                setShowRenameModal(true)
-                                            }}/>,
+        headerTitle: props => <DynamicTitle title={folder.name} icon={"md-folder"} satAmount={folder.totalBalance} onPress={() => { setShowRenameModal(true) }}/>,
         headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
-        headerRight: props => <Appbar.Action color="white" icon="plus"
-                                             onPress={() => navigation.navigate('Add', {folder})}/>,
+        headerRight: props => (
+            <View style={{display: "flex", flexDirection: "row"}}>
+                {folder.addresses.length > 1 && <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"}
+                               onPress={() => {
+                                   setShowToolbar(!showToolbar);
+                                   setShowEditSort(false);
+                               }}/>}
+                {showToolbar ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>}
+            </View>),
+
         headerTitleContainerStyle: {
             width: '100%',
             paddingHorizontal: 80
@@ -44,19 +52,37 @@ export default connect(state => ({
         store.dispatch(Actions.renameFolder(folder, newName));
     }
 
-    const list = <AddressesList addresses={folder.addresses} folders={folders} folder={folder}
-                                balances={addressesBalance}
-                                onRefresh={async () => {
-                                    await BalanceFetcher.filterAndFetchBalances();
-                                }}
-                                afterRefresh={() => {
-                                }}
-                                onDelete={address => {
-                                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-                                    dispatch(Actions.removeAddressFromFolder(address, folder))
-                                    dispatch(Actions.updateFoldersTotal(addressesBalance))
-                                }}
-    />
+    const list = (<>
+        <ReorderToolbar
+            display={showToolbar}
+            onToggleArrows={() => setShowEditSort(!showEditSort)}
+            onReorder={(type) => dispatch(Actions.sortFolderAddresses(type, folder))}
+            onHide={() => {
+                setShowEditSort(false);
+                setShowToolbar(false);
+            }}
+        />
+        <AddressesList
+            addresses={folder.addresses}
+            folders={folders}
+            folder={folder}
+            balances={addressesBalance}
+            onRefresh={async () => {
+                await BalanceFetcher.filterAndFetchBalances();
+            }}
+            afterRefresh={() => {
+            }}
+            onDelete={address => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                dispatch(Actions.removeAddressFromFolder(address, folder))
+                dispatch(Actions.updateFoldersTotal(addressesBalance))
+            }}
+            onSort={(addressA, addressB) => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+                dispatch(Actions.swapFolderAddresses({addressA, addressB, folder}));
+            }}
+            showEditSort={showEditSort}
+        /></>);
 
     return (
         <View style={{flex: 1, backgroundColor: theme.colors.background}}>

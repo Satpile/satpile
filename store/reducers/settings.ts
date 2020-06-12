@@ -1,7 +1,10 @@
-import {defaultSettings} from "../../utils/Settings";
+import {defaultSettings, Settings} from "../../utils/Settings";
 
 
-const settings = (state = {}, action) => {
+const settings = (state: Partial<Settings> = {}, action): Settings => {
+
+    const normalizedSettings = {...defaultSettings(), ...state};
+
     switch (action.type) {
         case 'LOAD_DATA':
             //When we load the data from memory we want to merge the saved settings with the default settings
@@ -9,14 +12,18 @@ const settings = (state = {}, action) => {
 
         case 'UPDATE_SETTINGS':
             //When we update some settings, we want to merge the existing settings with the new settings and the default
-            return {...defaultSettings(), ...state, ...action.settings};
+            return {...normalizedSettings, ...action.settings};
 
         case 'CLEAR':
             //When we reset the settings we just return a copy of the default settings
             return {...defaultSettings()};
-    }
+        case 'SORT_FOLDERS':
+            return {...normalizedSettings, foldersOrder: action.foldersOrder}
+        case 'SWAP_FOLDERS':
+            return {...normalizedSettings, foldersOrder: "custom"}
 
-    return state;
+        default: return normalizedSettings;
+    }
 };
 
 export default settings;

@@ -5,8 +5,9 @@ import AddressesListItem from "./AddressesListItem";
 import {useNavigation} from '@react-navigation/native';
 import {i18n} from '../translations/i18n';
 import {SwipeList} from "./SwipeList/SwipeList";
+import {ReorderButtons} from "./SwipeList/ReorderButtons";
 
-export default function AddressesList({addresses, onRefresh, afterRefresh, onDelete, balances, folders, folder}) {
+export default function AddressesList({addresses, onRefresh, afterRefresh, onDelete, balances, folders, folder, showEditSort, onSort}) {
 
     const [refreshing, setRefreshing] = useState(false);
 
@@ -45,13 +46,27 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
             <List.Subheader>{i18n.t('addresses')} : </List.Subheader>
             <SwipeList
                 data={addresses}
-                render={row => <AddressesListItem address={{...row.item, ...balances[row.item.address]}}
-                                                  onClick={(address) => navigation.navigate('AddressDetails', {
-                                                      folders,
-                                                      addresses,
-                                                      address,
-                                                      folder
-                                                  })}/>}
+                render={row => {
+                    return <>
+                        <AddressesListItem
+                            address={{...row.item, ...balances[row.item.address]}}
+                            onClick={(address) => navigation.navigate('AddressDetails', {
+                                folders,
+                                addresses,
+                                address,
+                                folder
+                            })}
+                        />
+                        <ReorderButtons
+                            show={showEditSort}
+                            showUp={row.index > 0}
+                            showDown={row.index < folders.length - 1}
+                            onClickDown={() => onSort(addresses[row.index], addresses[row.index + 1])}
+                            onClickUp={() => onSort(addresses[row.index], addresses[row.index - 1])}
+                            height={85}
+                        />
+                    </>;
+                }}
                 keyExtractor={address => address.address}
                 actions={[
                     {
@@ -61,7 +76,7 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
                         color: 'white',
                         backgroundColor: 'red'
                     }
-                ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false}/>
+                ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false} disableSwipe={showEditSort}/>
         </>
     )
 }

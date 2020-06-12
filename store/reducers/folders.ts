@@ -1,4 +1,6 @@
-const folders = (state = [], action) => {
+import {Folder, FolderAddress} from "../../utils/Types";
+
+const folders = (state: Folder[] = [], action) => {
 
     switch (action.type) {
         case 'CLEAR':
@@ -61,6 +63,61 @@ const folders = (state = [], action) => {
                 }
                 return folder;
             });
+        case 'SWAP_FOLDERS':
+            const {folderA, folderB} = action;
+
+            return state.map(value => {
+                if(value.uid === folderA.uid) return folderB;
+                if(value.uid === folderB.uid) return folderA;
+                return value;
+            })
+
+        case 'SORT_FOLDERS':
+            if(action.foldersOrder === "alphabetically"){
+                return [...state].sort((a:Folder, b: Folder) => {
+                    if(a.name < b.name) return -1;
+                    if(a.name > b.name) return 1;
+                    return 0;
+                })
+            }
+            return state;
+
+        case 'SWAP_FOLDER_ADDRESSES':
+            const {addressA, addressB, folder: inFolder} = action;
+            return state.map(folder => { //Foreach folder
+                if(folder.uid === inFolder.uid){ //Find target folder
+                    return {
+                        ...inFolder,
+                        orderAddresses: "custom",
+                        addresses: inFolder.addresses.map(address => { //For each addresses in folder
+                            if(address.address === addressA.address) return addressB; //Swap if address found
+                            if(address.address === addressB.address) return addressA;
+                            return address;
+                        })
+                    };
+                }
+
+                return folder;
+            })
+
+        case 'SORT_FOLDER_ADDRESSES':
+            if(action.folderOrder === "alphabetically"){
+                return state.map(folder => { //Foreach folder
+                    if (folder.uid === action.folder.uid) { //Find target folder
+                        return {
+                            ...folder,
+                            orderAddresses: "alphabetically",
+                            addresses: [...folder.addresses].sort((a:FolderAddress, b: FolderAddress) => { //Sort content
+                                if(a.name < b.name) return -1;
+                                if(a.name > b.name) return 1;
+                                return 0;
+                            })
+                        }
+                    }
+                    return folder;
+                });
+            }
+            return state;
     }
 
     return state;
