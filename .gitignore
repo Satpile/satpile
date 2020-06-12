@@ -12,3 +12,4 @@ web-report/
 .idea/
 dist/
 deploy.sh
+before_tag.js
