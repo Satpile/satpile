@@ -60,10 +60,10 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
                         <ReorderButtons
                             show={showEditSort}
                             showUp={row.index > 0}
-                            showDown={row.index < folders.length - 1}
+                            showDown={row.index < addresses.length - 1}
                             onClickDown={() => onSort(addresses[row.index], addresses[row.index + 1])}
                             onClickUp={() => onSort(addresses[row.index], addresses[row.index - 1])}
-                            height={85}
+                            height={78}
                         />
                     </>;
                 }}
