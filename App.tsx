@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from 'react';
 import store, {loadStore} from "./store/store";
-import {AppState, Platform, StatusBar, StyleSheet, UIManager, View} from 'react-native';
+import {AppState, StatusBar, StyleSheet, View} from 'react-native';
 import {Provider} from 'react-redux';
-import {AppLoading, SplashScreen} from "expo";
+import {AppLoading} from "expo";
 import AnimatedSplashScreen from "./components/AnimatedSplashScreen";
 import {ToastHolder} from "./components/Toast";
 import {ThemeHolder} from "./utils/Theme";
@@ -14,6 +14,7 @@ import {REFRESH_TASK} from "./utils/Settings";
 import {Navigator} from "./navigation/Navigator";
 import {Asset} from "expo-asset";
 import {bootstrap} from "./utils/Bootstrap";
+import LockScreen from "./screens/LockScreen";
 
 bootstrap();
 
@@ -60,7 +61,9 @@ export default function App(){
                     {loadingState === 'after_loaded' &&
                     <>
                         <StatusBar animated={true} backgroundColor={"#f47c1c"} barStyle={"light-content"}/>
-                        <Navigator/>
+                        <LockScreen>
+                            <Navigator/>
+                        </LockScreen>
                     </>
                     }
                     <ToastHolder/>

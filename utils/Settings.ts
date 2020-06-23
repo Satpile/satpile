@@ -15,6 +15,7 @@ export interface Settings {
     refresh: number;
     darkMode: boolean;
     foldersOrder: ListOrderType;
+    security: "none" | "biometric"
 }
 
 
@@ -23,7 +24,8 @@ export function defaultSettings(): Settings {
         locale: Localization.locale,
         refresh: -1,
         darkMode: Appearance.getColorScheme() === "dark",
-        foldersOrder: "custom"
+        foldersOrder: "custom",
+        security: "none"
     }
 }
 
