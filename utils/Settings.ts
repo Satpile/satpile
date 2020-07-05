@@ -10,12 +10,15 @@ import {ListOrderType} from "./Types";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
+export type SecuritySetting = "none" | "biometric" | "passphrase";
+
 export interface Settings {
     locale: string;
     refresh: number;
     darkMode: boolean;
     foldersOrder: ListOrderType;
-    security: "none" | "biometric"
+    security: SecuritySetting;
+    passphrase: string | null;
 }
 
 
@@ -25,7 +28,8 @@ export function defaultSettings(): Settings {
         refresh: -1,
         darkMode: Appearance.getColorScheme() === "dark",
         foldersOrder: "custom",
-        security: "none"
+        security: "none",
+        passphrase: null
     }
 }
 

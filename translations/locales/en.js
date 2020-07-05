@@ -69,6 +69,12 @@ module.exports = {
 
             "We appreciate your feedback and comments."
         ],
+        lock: "App lock",
+        enable_lock: "Enable app lock",
+        lock_type: {
+            biometric: "FaceID / TouchID",
+            passphrase: "Custom Passphrase"
+        }
     },
     share_qrcode:'Export QRCode',
     notification: {

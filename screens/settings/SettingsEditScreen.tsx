@@ -11,6 +11,7 @@ import {TWITTER_URL} from "../../utils/Constants";
 import {Legal} from "./Legal";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import * as Permissions from 'expo-permissions';
+import {LockSettingsScreen} from "./LockSettingsScreen";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
@@ -127,7 +128,8 @@ export default function SettingsEditScreen({navigation, route}) {
                 }
             ];
             break;
-
+        case 'lock':
+            return <LockSettingsScreen />;
     }
 
     return <View style={{flex: 1, backgroundColor: theme.colors.background}}>

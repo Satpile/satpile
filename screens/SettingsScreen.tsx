@@ -58,9 +58,8 @@ export default function SettingsScreen({navigation}) {
                 },
                 {
                     title: i18n.t("settings.lock"),
-                    renderAccessory: () => <Switch value={settings.security === "biometric"} onValueChange={(value) => {
-                        updateSettings({security: value ? "biometric" : "none"});
-                    }}/>,
+                    showDisclosureIndicator: true,
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'lock'}),
                 }
             ],
         },

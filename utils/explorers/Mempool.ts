@@ -12,9 +12,9 @@ export default class Mempool implements Explorer {
             let request = await fetch('https://mempool.space/api/address/' + address);
             let parsed = await request.json();
             let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
-
             return {balance: result, status: AddressStatusType.OK};
         } catch (e) {
+            console.info(e);
             return {balance: addressContent.balance, status: AddressStatusType.ERROR};
         }
     }

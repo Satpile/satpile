@@ -2,10 +2,10 @@ import React, {useEffect, useState} from "react";
 import {Alert, AppState, AppStateStatus, LayoutAnimation, Platform, StyleSheet, View} from "react-native";
 import {BlurView} from "expo-blur";
 import {Button, Text} from "react-native-paper";
-import * as LocalAuthentication from "expo-local-authentication";
 import {i18n} from "../translations/i18n";
 import {useSettings} from "../utils/Settings";
 import {useTheme} from "../utils/Theme";
+import LocalAuth, {AuthResult} from "../utils/LocalAuth";
 
 const LockScreenContext = React.createContext({
     locked: false,
@@ -17,7 +17,7 @@ export const LockContextConsumer = LockScreenContext.Consumer;
 
 export default function LockScreen({children}) {
 
-    const [settings] = useSettings();
+    const [settings, updateSettings] = useSettings();
     const [locked, setLocked] = useState(settings.security !== "none");
     const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
     const [unlocking, setUnlocking] = useState(false);
@@ -54,13 +54,17 @@ export default function LockScreen({children}) {
     }, [unlocking])
 
     const challengeUnlock = () => {
-        LocalAuthentication.authenticateAsync().then(result => {
-            if(result.success){
-                unlock()
+        LocalAuth.promptLocalAuth().then(result => {
+            switch (result) {
+                case AuthResult.SUCCESS:
+                case AuthResult.UNAVAILABLE:
+                    unlock();
+                    break;
+                case AuthResult.FAIL:
+                    setUnlocking(false);
+                    break;
             }
-        }).catch(err => {
-            Alert.alert(i18n.t("error"));
-        });
+        })
     }
 
     const _handleAppStateChange = (state) => {
@@ -76,7 +80,6 @@ export default function LockScreen({children}) {
     }
 
     const unlock = () => {
-        console.log("unlock");
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setLocked(false);
     }

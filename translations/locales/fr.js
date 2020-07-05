@@ -59,7 +59,13 @@ module.exports = {
         version: 'Version',
         copyright: 'Copyright',
         clear_data: 'Effacer les données',
-        clear_data_sure: 'Êtes-vous sûr de vouloir supprimer toutes les données ?'
+        clear_data_sure: 'Êtes-vous sûr de vouloir supprimer toutes les données ?',
+        lock: "Verrouillage de l'app",
+        enable_lock: "Activer le verrouillage de l'app",
+        lock_type: {
+            biometric: "FaceID / TouchID",
+            passphrase: "Passphrase"
+        }
     },
     share_qrcode:'Exporter le QRCode',
     notification: {
