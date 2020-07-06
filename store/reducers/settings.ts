@@ -1,7 +1,8 @@
 import {defaultSettings, Settings} from "../../utils/Settings";
+import {Action} from "../../utils/Types";
 
 
-const settings = (state: Partial<Settings> = {}, action): Settings => {
+const settings = (state: Partial<Settings> = {}, action: Action): Settings => {
 
     const normalizedSettings = {...defaultSettings(), ...state};
 
