@@ -1,6 +1,7 @@
 import {Folder, FolderAddress} from "../../utils/Types";
+import {Action} from "../actions/actions";
 
-const folders = (state: Folder[] = [], action) => {
+const folders = (state: Folder[] = [], action: Action) => {
 
     switch (action.type) {
         case 'CLEAR':
@@ -9,7 +10,6 @@ const folders = (state: Folder[] = [], action) => {
             return action.state.folders;
 
         case 'ADD_FOLDER':
-            //action.folder.addresses = [{name: 'Test 1', address: "3J98t1WpEZ73CNmQviecrnyiWrnqRhWNLy", balance:12345678}]; //TODO: remove
             return [...state, action.folder];
 
         case 'RENAME_FOLDER':
@@ -72,15 +72,22 @@ const folders = (state: Folder[] = [], action) => {
                 return value;
             })
 
-        case 'SORT_FOLDERS':
-            if(action.foldersOrder === "alphabetically"){
-                return [...state].sort((a:Folder, b: Folder) => {
+        case 'SORT_FOLDERS': {
+            switch (action.foldersOrder) {
+                case "alphabetically" : return [...state].sort((a:Folder, b: Folder) => {
                     if(a.name < b.name) return -1;
                     if(a.name > b.name) return 1;
                     return 0;
-                })
+                });
+                case "alphabetically-desc": return [...state].sort((a:Folder, b: Folder) => {
+                    if(a.name < b.name) return 1;
+                    if(a.name > b.name) return -1;
+                    return 0;
+                });
+                default: return state;
             }
-            return state;
+
+        }
 
         case 'SWAP_FOLDER_ADDRESSES':
             const {addressA, addressB, folder: inFolder} = action;
@@ -100,24 +107,43 @@ const folders = (state: Folder[] = [], action) => {
                 return folder;
             })
 
-        case 'SORT_FOLDER_ADDRESSES':
-            if(action.folderOrder === "alphabetically"){
-                return state.map(folder => { //Foreach folder
-                    if (folder.uid === action.folder.uid) { //Find target folder
-                        return {
-                            ...folder,
-                            orderAddresses: "alphabetically",
-                            addresses: [...folder.addresses].sort((a:FolderAddress, b: FolderAddress) => { //Sort content
-                                if(a.name < b.name) return -1;
-                                if(a.name > b.name) return 1;
-                                return 0;
-                            })
+        case 'SORT_FOLDER_ADDRESSES': {
+            switch (action.folderOrder) {
+                case "alphabetically": {
+                    return state.map(folder => { //Foreach folder
+                        if (folder.uid === action.folder.uid) { //Find target folder
+                            return {
+                                ...folder,
+                                orderAddresses: "alphabetically",
+                                addresses: [...folder.addresses].sort((a:FolderAddress, b: FolderAddress) => { //Sort content
+                                    if(a.name < b.name) return -1;
+                                    if(a.name > b.name) return 1;
+                                    return 0;
+                                })
+                            }
                         }
-                    }
-                    return folder;
-                });
+                        return folder;
+                    });
+                }
+                case "alphabetically-desc": {
+                    return state.map(folder => { //Foreach folder
+                        if (folder.uid === action.folder.uid) { //Find target folder
+                            return {
+                                ...folder,
+                                orderAddresses: "alphabetically-desc",
+                                addresses: [...folder.addresses].sort((a:FolderAddress, b: FolderAddress) => { //Sort content
+                                    if(a.name < b.name) return 1;
+                                    if(a.name > b.name) return -1;
+                                    return 0;
+                                })
+                            }
+                        }
+                        return folder;
+                    });
+                }
+                default: return state;
             }
-            return state;
+        }
     }
 
     return state;

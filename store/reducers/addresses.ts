@@ -1,6 +1,7 @@
 import {AddressStatusType} from "../../components/AddressStatus";
+import {Action} from "../actions/actions";
 
-const addresses = (state = {}, action) => {
+const addresses = (state = {}, action: Action) => {
     switch (action.type) {
         case 'LOAD_DATA':
             //We load the data from the disk, but first we filter out the old addresses that were deleted by checking each folder

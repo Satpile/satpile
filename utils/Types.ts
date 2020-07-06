@@ -15,7 +15,7 @@ export type FolderAddress = {
     address: string;
 }
 
-export type ListOrderType = "custom" | "alphabetically";
+export type ListOrderType = "custom" | "alphabetically" | "alphabetically-desc";
 
 export type Folder = {
     uid: string;

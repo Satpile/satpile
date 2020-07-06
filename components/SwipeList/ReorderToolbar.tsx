@@ -36,13 +36,12 @@ export function ReorderToolbar({display, onHide, onToggleArrows, onReorder, alre
                 onToggleArrows();
             }}/>
             <Appbar.Action  color={theme.colors.onBackground} icon="sort-alphabetical" onPress={() => {
+                LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                 if(alreadySorted){
-                    onHide();
+                    onReorder("alphabetically-desc");
                 }else{
-                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut, onHide);
                     onReorder("alphabetically");
                 }
-                //dispatch(Actions.sortFolders("alphabetically"))
             }}/>
         </View>
     )
