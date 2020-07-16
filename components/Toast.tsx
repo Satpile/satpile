@@ -50,7 +50,7 @@ export function ToastHolder() {
         switch (slideType) {
             case 'top':
                 return {
-                    top: 30,
+                    top: 40,
                     transform: [{
                         translateY: slideAnimation.interpolate({
                             inputRange: [0.0, 0.03, 0.97, 1.0],
@@ -99,6 +99,7 @@ export function ToastHolder() {
         right: 0,
         display: 'flex',
         paddingHorizontal: 15,
+        zIndex: 1001,
         ...animateStyle(),
     }}>
         <Animated.View style={{

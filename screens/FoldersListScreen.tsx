@@ -31,10 +31,18 @@ export default connect(state => ({
         headerLeft: _ => <Appbar.Action color="white" icon="settings" onPress={() => { navigation.navigate('Settings') }}/>
         ,
         headerRight: _ => <View style={{display: "flex", flexDirection: "row"}}>
-            {folders.length > 1 && <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"} onPress={() => {
-                setShowToolbar(!showToolbar);
-                setShowEditSort(false);
-            }}/>}
+            {folders.length > 1 && <Appbar.Action
+                key={"open"} color="white"
+                icon={showToolbar ? "close" : "dots-vertical"}
+                style={showToolbar ? {} : {
+                    marginRight: 0,
+                    paddingLeft: 5,
+                    width: 24
+                }}
+                onPress={() => {
+                    setShowToolbar(!showToolbar);
+                    setShowEditSort(false);
+                }}/>}
             {showToolbar  ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => {
                 setShowAddModal(true);
             }}/>}

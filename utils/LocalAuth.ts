@@ -14,7 +14,7 @@ export default class LocalAuth {
         }
 
         return LocalAuthentication.authenticateAsync({
-            fallbackLabel: ""
+            fallbackLabel: "",
         }).then(value => {
             return value.success ? AuthResult.SUCCESS : AuthResult.FAIL;
         }).catch(e => {

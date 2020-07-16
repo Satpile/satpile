@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {Button, Dialog, Paragraph, Portal, TextInput} from "react-native-paper";
-import {Keyboard, LayoutAnimation, Platform, StatusBar, View} from "react-native";
+import {Keyboard, LayoutAnimation, Platform, StatusBar, TextInputProps, View} from "react-native";
 import {i18n} from "../translations/i18n";
 
 declare type PromptModalProps = {
@@ -13,7 +13,8 @@ declare type PromptModalProps = {
 
     onValidate: (input: string) => void,
     onCancel?: () => void,
-    onClose: () => void
+    onClose: () => void,
+    textInputProps?: TextInputProps
 };
 
 export default function PromptModal(props: PromptModalProps){
@@ -87,6 +88,7 @@ export default function PromptModal(props: PromptModalProps){
                     <Dialog.Content>
                         <Paragraph>{props.description}</Paragraph>
                         <TextInput
+                            {...(props.textInputProps || {})}
                             value={input}
                             defaultValue={props.defaultValue}
                             onChangeText={setInput}
