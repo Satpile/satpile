@@ -1,4 +1,4 @@
-import React, {DependencyList, EffectCallback, useContext, useEffect, useState} from "react";
+import React, {DependencyList, EffectCallback, useCallback, useContext, useEffect, useRef, useState} from "react";
 import {
     ActivityIndicator,
     Alert,
@@ -24,8 +24,18 @@ const LockScreenContext = React.createContext({
     enabled: false
 })
 
+function usePrevious(value) {
+    const ref = useRef();
+    useEffect(() => {
+        ref.current = value;
+    }, [value]);
+    return ref.current;
+}
+
 const useAppState = () => {
     const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
+    const lastAppState = usePrevious(appState);
+
     useEffect(() => {
         AppState.addEventListener("change", _handleAppStateChange);
         return () => {
@@ -34,18 +44,19 @@ const useAppState = () => {
     }, []);
 
     const _handleAppStateChange = (state) => {
-        setAppState(state);
+        setAppState(state)
     }
 
-    return appState;
+    return [lastAppState, appState];
 }
 
-const useAppStateEffect = (effect: (appState: string) => (void | (() => void | undefined)), dependencyList?: DependencyList) => {
-    const appState = useAppState();
+const useAppStateEffect = (effect: (lastAppState: string, appState: string) => (void | (() => void | undefined)), dependencyList?: DependencyList) => {
+    const [lastAppState, appState] = useAppState();
+    const effectCallback = useCallback(effect, dependencyList);
+
     useEffect(() => {
-        console.log(appState);
-        return effect(appState);
-    }, [...dependencyList, appState, effect]);
+        return effectCallback(lastAppState, appState);
+    }, [...dependencyList, appState, effectCallback]);
 }
 
 export const LockContextConsumer = LockScreenContext.Consumer;
@@ -56,7 +67,8 @@ export default function LockScreen({children}) {
     const [locked, setLocked] = useState(!!settings.security.passphrase);
     const [unlocking, setUnlocking] = useState(false);
 
-    useAppStateEffect((appState) => {
+    useAppStateEffect((last, appState) => {
+        console.info({last, appState})
         if(unlocking){
             if(!locked){
                 setUnlocking(true);
@@ -132,7 +144,6 @@ const FrontLockScreen = ({onAskUnlock}) => {
     const onSubmit = async (input) => {
         setChecking(true);
         try{
-            console.info(input);
             if(!await onAskUnlock(input)){
                 setInput("");
             }

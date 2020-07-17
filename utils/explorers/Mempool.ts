@@ -14,7 +14,6 @@ export default class Mempool implements Explorer {
             let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
             return {balance: result, status: AddressStatusType.OK};
         } catch (e) {
-            console.info(e);
             return {balance: addressContent.balance, status: AddressStatusType.ERROR};
         }
     }

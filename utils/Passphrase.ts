@@ -11,7 +11,6 @@ export const hashPassword = async (plainText: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         bcrypt.hash(plainText, 8, function(err, hash) {
             if(err) reject(err);
-            console.info(plainText, hash);
             resolve(hash);
         });
     });
@@ -20,7 +19,6 @@ export const hashPassword = async (plainText: string): Promise<string> => {
 export const checkPassword = async (plainText: string, hash: string): Promise<boolean> => {
     return new Promise((resolve, reject) => {
         bcrypt.compare(plainText, hash, function(err, res) {
-            console.info(plainText, hash, res);
             if(err) reject(err);
             resolve(res);
         });
