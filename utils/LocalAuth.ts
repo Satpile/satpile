@@ -10,20 +10,17 @@ export enum AuthResult {
 
 export default class LocalAuth {
     static async promptLocalAuth(): Promise<AuthResult>{
-        console.log("promptLocalAuth")
         if(!await LocalAuthentication.hasHardwareAsync() || !await LocalAuthentication.isEnrolledAsync()){
             return AuthResult.UNAVAILABLE;
         }
-        console.log("LocalAuthentication.authenticateAsync")
+
         return LocalAuthentication.authenticateAsync({
             fallbackLabel: "",
             ...(Constants.appOwnership === "standalone" ? {disableDeviceFallback: true} : {})
             //Disable device fallback on standalone app; (can't disable on expo because crash (may be related to ios14, TODO: investigate))
         }, ).then(value => {
-            console.log("LocalAuthentication.authenticateAsync = ", value)
             return value.success ? AuthResult.SUCCESS : AuthResult.FAIL;
         }).catch(e => {
-            console.log("LocalAuthentication.authenticateAsync = ", e)
             return AuthResult.FAIL;
         });
     }
