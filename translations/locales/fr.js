@@ -73,6 +73,7 @@ module.exports = {
             wrong_passphrase: "Mauvaise passphrase. Merci de réessayer.",
             unlock: "Déverrouiller"
         },
+        explorer: 'Explorer API'
     },
     share_qrcode:'Exporter le QRCode',
     notification: {
