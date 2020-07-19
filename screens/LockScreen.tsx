@@ -120,7 +120,7 @@ const FrontLockScreen = ({onAskUnlock}) => {
 
             <Paragraph style={{
                 textAlign: "center"
-            }}>Enter passphrase :</Paragraph>
+            }}>{i18n.t("settings.security.enter_passphrase")}</Paragraph>
             <TextInput
                 secureTextEntry={true}
                 value={input}

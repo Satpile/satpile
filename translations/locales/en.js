@@ -80,7 +80,8 @@ module.exports = {
             create_passphrase: "Create the passphrase you will use to access Satpile",
             confirm_passphrase: "Re-type passphrase",
             wrong_passphrase: "Wrong passphrase. Please try again.",
-            unlock: "Unlock"
+            unlock: "Unlock",
+            enter_passphrase: "Enter passphrase:"
         },
         explorer: 'Explorer API'
     },
