@@ -1,5 +1,5 @@
 import {defaultSettings, Settings} from "../../utils/Settings";
-import {Action} from "../../utils/Types";
+import {Action} from "../actions/actions";
 
 
 const settings = (state: Partial<Settings> = {}, action: Action): Settings => {

@@ -2,11 +2,12 @@ import {
     DarkTheme,
     DefaultTheme,
     Provider as PaperProvider,
-    Theme as RNPaperTheme,
     useTheme as useRnPaperTheme
 } from "react-native-paper";
 import React, {createContext} from "react";
 import {useSettings} from "./Settings"
+
+type RNPaperTheme = ReactNativePaper.Theme;
 
 interface Theme extends RNPaperTheme {
     chevron,
