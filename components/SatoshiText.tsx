@@ -5,5 +5,5 @@ import {Text} from "react-native-paper";
 
 export default function SatoshiText({amount, style = {}, ...props}) {
     let currency = amount > 1 ? 'sats' : 'sat';
-    return <Text style={style} {...props}>{convertSatoshiToString(amount)} {currency}</Text>;
+    return <Text style={style} {...props}>{amount === null ? "---,---,---" : convertSatoshiToString(amount)} {currency}</Text>;
 }

@@ -11,17 +11,18 @@ import {TWITTER_URL} from "../../utils/Constants";
 import {Legal} from "./Legal";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import * as Permissions from 'expo-permissions';
+import {LockSettingsScreen} from "./LockSettingsScreen";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
 export default function SettingsEditScreen({navigation, route}) {
 
-    const {setting} = route.params;
+    const {setting, title} = route.params;
     const [settings, updateSettings] = useSettings();
     const theme = useTheme();
 
     navigation.setOptions({
-        headerTitle: () => <MainTitle title={i18n.t('settings.title')}/>,
+        headerTitle: () => <MainTitle title={title || i18n.t('settings.title')}/>,
         headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
     });
 
@@ -127,7 +128,8 @@ export default function SettingsEditScreen({navigation, route}) {
                 }
             ];
             break;
-
+        case 'lock':
+            return <LockSettingsScreen />;
     }
 
     return <View style={{flex: 1, backgroundColor: theme.colors.background}}>

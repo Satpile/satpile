@@ -7,14 +7,24 @@ import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
 import {Linking} from "expo";
 import {ListOrderType} from "./Types";
+import React, {useContext} from "react";
 
 export const REFRESH_TASK = "REFRESH_TASK";
+
+export type SecuritySetting = {
+    enableBiometrics: false;
+    passphrase: null
+} | {
+    enableBiometrics: boolean;
+    passphrase: string
+};
 
 export interface Settings {
     locale: string;
     refresh: number;
     darkMode: boolean;
     foldersOrder: ListOrderType;
+    security: SecuritySetting;
 }
 
 
@@ -23,7 +33,11 @@ export function defaultSettings(): Settings {
         locale: Localization.locale,
         refresh: -1,
         darkMode: Appearance.getColorScheme() === "dark",
-        foldersOrder: "custom"
+        foldersOrder: "custom",
+        security: {
+            passphrase: null,
+            enableBiometrics: false
+        }
     }
 }
 
@@ -95,4 +109,17 @@ export function useI18n() {
  */
 export function durationToText(duration) {
     return duration === -1 ? i18n.t("settings.refresh_manual") : (Math.round(duration / 60) + ' ' + i18n.t("minutes"))
+}
+
+export const LockScreenContext = React.createContext({
+    locked: false,
+    lock: () => {},
+    enabled: false,
+    biometricUnlocking: false,
+    setBiometricUnlocking: (biometricUnlocking: boolean) => {}
+})
+export const LockContextConsumer = LockScreenContext.Consumer;
+
+export const useLockState = () => {
+    return useContext(LockScreenContext);
 }

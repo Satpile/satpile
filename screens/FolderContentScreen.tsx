@@ -36,11 +36,19 @@ export default connect(state => ({
         headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
         headerRight: props => (
             <View style={{display: "flex", flexDirection: "row"}}>
-                {folder.addresses.length > 1 && <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"}
-                               onPress={() => {
-                                   setShowToolbar(!showToolbar);
-                                   setShowEditSort(false);
-                               }}/>}
+                {folder.addresses.length > 1 && <Appbar.Action
+                    key={"open"}
+                    color="white"
+                    icon={showToolbar ? "close" : "dots-vertical"}
+                    style={showToolbar ? {} : {
+                        marginRight: 0,
+                        paddingLeft: 5,
+                        width: 24
+                    }}
+                   onPress={() => {
+                       setShowToolbar(!showToolbar);
+                       setShowEditSort(false);
+                   }}/>}
                 {showToolbar ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>}
             </View>),
 

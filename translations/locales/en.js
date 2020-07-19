@@ -69,6 +69,19 @@ module.exports = {
 
             "We appreciate your feedback and comments."
         ],
+        security: {
+            title: "Security",
+            warning: "When you enable a passphrase, it will be required every time Satpile opens. Be careful as there is no way to recover it.",
+            enable_faceid: "Enable FaceID",
+            enable_touchid: "Enable TouchID",
+            passphrase: "Passphrase",
+            use_passphrase: "Use passphrase",
+            error_match: "Passhrases do not match",
+            create_passphrase: "Create the passphrase you will use to access Satpile",
+            confirm_passphrase: "Re-type passphrase",
+            wrong_passphrase: "Wrong passphrase. Please try again.",
+            unlock: "Unlock"
+        },
     },
     share_qrcode:'Export QRCode',
     notification: {

@@ -10,7 +10,7 @@ import * as Actions from "../store/actions";
 import {connect} from 'react-redux';
 import BalanceFetcher from "../utils/BalanceFetcher";
 import EmptyScreenContent from "../components/EmptyScreenContent";
-import {useI18n, useSettings} from "../utils/Settings";
+import {useI18n, useLockState, useSettings} from "../utils/Settings";
 import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 
 export default connect(state => ({
@@ -25,16 +25,25 @@ export default connect(state => ({
     const [settings] = useSettings();
     const theme = useTheme();
     const i18n = useI18n();
+    const lockState = useLockState();
 
     navigation.setOptions({
-        headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={totalBalance} />,
+        headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={lockState.locked ? null : totalBalance} />,
         headerLeft: _ => <Appbar.Action color="white" icon="settings" onPress={() => { navigation.navigate('Settings') }}/>
         ,
         headerRight: _ => <View style={{display: "flex", flexDirection: "row"}}>
-            {folders.length > 1 && <Appbar.Action key={"open"} color="white" icon={showToolbar ? "close" : "dots-vertical"} onPress={() => {
-                setShowToolbar(!showToolbar);
-                setShowEditSort(false);
-            }}/>}
+            {folders.length > 1 && <Appbar.Action
+                key={"open"} color="white"
+                icon={showToolbar ? "close" : "dots-vertical"}
+                style={showToolbar ? {} : {
+                    marginRight: 0,
+                    paddingLeft: 5,
+                    width: 24
+                }}
+                onPress={() => {
+                    setShowToolbar(!showToolbar);
+                    setShowEditSort(false);
+                }}/>}
             {showToolbar  ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => {
                 setShowAddModal(true);
             }}/>}
@@ -88,6 +97,10 @@ export default connect(state => ({
     const isSortedAlphabetically = useMemo(() => {
         return isSorted(folders);
     }, [folders])
+
+    if(lockState.locked){
+        return <View style={{flex: 1, backgroundColor: theme.colors.background}}></View>
+    }
 
     return (
         <View style={{flex: 1, backgroundColor: theme.colors.background}}>
