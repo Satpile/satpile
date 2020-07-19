@@ -5,7 +5,7 @@ import {useTheme} from "../utils/Theme";
 import {SettingsData} from '@taccolaa/react-native-settings-screen'; //https://github.com/jsoendermann/react-native-settings-screen
 import {i18n} from "../translations/i18n";
 import {MainTitle} from "../components/DynamicTitle";
-import {durationToText, useSettings} from "../utils/Settings";
+import {durationToText, explorerToName, useSettings} from "../utils/Settings";
 import {Ionicons} from '@expo/vector-icons';
 import {Linking} from "expo";
 import * as StoreReview from 'expo-store-review';
@@ -29,12 +29,20 @@ export default function SettingsScreen({navigation}) {
     const settingsData: SettingsData = [
         {
             type: 'SECTION',
-            rows: [{
-                title: i18n.t("settings.refresh_every"),
-                showDisclosureIndicator: true,
-                renderAccessory: () => <SettingItemValue type={"refresh"} value={settings.refresh}/>,
-                onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh', title: i18n.t("settings.refresh")}),
-            }]
+            rows: [
+                {
+                    title: i18n.t("settings.refresh_every"),
+                    showDisclosureIndicator: true,
+                    renderAccessory: () => <SettingItemValue type={"refresh"} value={settings.refresh}/>,
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh', title: i18n.t("settings.refresh")}),
+                },
+                {
+                    title: i18n.t("settings.explorer"),
+                    showDisclosureIndicator: true,
+                    renderAccessory: () => <SettingItemValue type={"explorer"} value={settings.explorer}/>,
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'explorer', title: i18n.t("settings.explorer")}),
+                }
+            ]
         },
         {
             type: 'SECTION',
@@ -146,6 +154,9 @@ const SettingItemValue = ({value, type = null}) => {
     switch (type) {
         case 'refresh':
             displayedValue = durationToText(value);
+            break;
+        case 'explorer':
+            displayedValue = explorerToName(value);
             break;
     }
     return <Text style={style}>{displayedValue}</Text>;

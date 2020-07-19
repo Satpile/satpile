@@ -3,7 +3,7 @@ import {i18n, updateLocale} from "../../translations/i18n";
 import {Appbar, Headline, Text, useTheme} from "react-native-paper";
 import * as React from "react";
 import {StyleSheet, View} from "react-native";
-import {askPermission, durationToText, useSettings} from "../../utils/Settings";
+import {askPermission, durationToText, explorerToName, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
 import {Linking} from "expo";
@@ -12,6 +12,7 @@ import {Legal} from "./Legal";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import * as Permissions from 'expo-permissions';
 import {LockSettingsScreen} from "./LockSettingsScreen";
+import {ExplorerApi} from "../../utils/Types";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
@@ -63,7 +64,28 @@ export default function SettingsEditScreen({navigation, route}) {
                     })
                 }];
             break;
-
+        case 'explorer':
+             const explorers: ExplorerApi[] = [ExplorerApi.MEMPOOL_SPACE, ExplorerApi.BLOCKSTREAM_INFO];
+             settingsData = [
+                 {
+                     type: "SECTION",
+                     header: i18n.t("settings.explorer"),
+                     rows: explorers.map(explorer => ({
+                         title: explorerToName(explorer),
+                         showDisclosureIndicator: false,
+                         renderAccessory: () => {
+                             if(settings.explorer === explorer){
+                                 return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
+                             }
+                             return null;
+                         },
+                         onPress: () => {
+                             updateSettings({explorer: explorer});
+                         }
+                     }))
+                 }
+             ]
+            break;
         //Language setting
         case 'locale':
             let languages = Object.keys(i18n.translations).map(locale => {
