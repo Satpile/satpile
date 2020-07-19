@@ -70,9 +70,9 @@ module.exports = {
             error_match: "Les passphrases sont différentes",
             create_passphrase: "Créez la passphrase que vous utiliserez pour accéder à Satpile",
             confirm_passphrase: "Confirmez la passphrase",
-            wrong_passphrase: "Mauvaise passphrase. Merci de réessayer."
+            wrong_passphrase: "Mauvaise passphrase. Merci de réessayer.",
+            unlock: "Deverrouiller"
         },
-        unlock: "Deverrouiller"
     },
     share_qrcode:'Exporter le QRCode',
     notification: {
