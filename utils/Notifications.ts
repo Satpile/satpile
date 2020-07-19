@@ -76,7 +76,7 @@ export class Notifications {
         if(AppState.currentState === "active"){ return; }
 
         const {folder, address, folderIndex} = this.findFolderAndAddressFromAddress(diff.address);
-        console.log({folder, address, folderIndex});
+
         if(folderIndex === -1){
             return;
         }

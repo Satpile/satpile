@@ -1,97 +1,45 @@
-import React, {DependencyList, EffectCallback, useCallback, useContext, useEffect, useRef, useState} from "react";
-import {
-    ActivityIndicator,
-    Alert,
-    AppState,
-    AppStateStatus,
-    LayoutAnimation,
-    Platform,
-    StyleSheet,
-    View
-} from "react-native";
+import React, {useState} from "react";
+import {ActivityIndicator, LayoutAnimation, Platform, StyleSheet, View} from "react-native";
 import {BlurView} from "expo-blur";
-import {Button, Dialog, Paragraph, Text, TextInput} from "react-native-paper";
-import {i18n} from "../translations/i18n";
-import {useSettings} from "../utils/Settings";
+import {Button, Paragraph, TextInput} from "react-native-paper";
+import {LockScreenContext, useSettings} from "../utils/Settings";
 import {useTheme} from "../utils/Theme";
 import LocalAuth, {AuthResult} from "../utils/LocalAuth";
 import {checkPassword} from "../utils/Passphrase";
 import {Toast} from "../components/Toast";
-
-const LockScreenContext = React.createContext({
-    locked: false,
-    lock: () => {},
-    enabled: false
-})
-
-function usePrevious(value) {
-    const ref = useRef();
-    useEffect(() => {
-        ref.current = value;
-    }, [value]);
-    return ref.current;
-}
-
-const useAppState = () => {
-    const [appState, setAppState] = useState<AppStateStatus>(AppState.currentState);
-    const lastAppState = usePrevious(appState);
-
-    useEffect(() => {
-        AppState.addEventListener("change", _handleAppStateChange);
-        return () => {
-            AppState.removeEventListener("change", _handleAppStateChange);
-        };
-    }, []);
-
-    const _handleAppStateChange = (state) => {
-        setAppState(state)
-    }
-
-    return [lastAppState, appState];
-}
-
-const useAppStateEffect = (effect: (lastAppState: string, appState: string) => (void | (() => void | undefined)), dependencyList?: DependencyList) => {
-    const [lastAppState, appState] = useAppState();
-    const effectCallback = useCallback(effect, dependencyList);
-
-    useEffect(() => {
-        return effectCallback(lastAppState, appState);
-    }, [...dependencyList, appState, effectCallback]);
-}
-
-export const LockContextConsumer = LockScreenContext.Consumer;
+import {useAppStateEffect} from "../utils/AppStateHook";
+import {i18n} from "../translations/i18n";
 
 export default function LockScreen({children}) {
-
     const [settings] = useSettings();
     const [locked, setLocked] = useState(!!settings.security.passphrase);
-    const [unlocking, setUnlocking] = useState(false);
+    const [biometricUnlocking, setBiometricUnlocking] = useState(false);
 
-    useAppStateEffect((last, appState) => {
-        console.info({last, appState})
-        if(unlocking){
-            if(!locked){
-                setUnlocking(true);
-            }
+    useAppStateEffect((appState, last) => {
+        if(!settings.security.passphrase){
+            unlock();
             return;
         }
-        if(appState === "active"){
-            if(locked){
-                setUnlocking(true);
-            }
-        }else if(!!settings.security.passphrase){
+
+        if(!last){ //Lock on first open (should be locked anyway)
             lock();
+            return;
         }
-    }, [unlocking]);
 
+        if(last === "active" && appState !== "active" && !biometricUnlocking){
+            //If the app becomes inactive but not because of unlocking (faceid prompt)
+            lock();
+            return;
+        }
 
-    useEffect(() => {
-        if(unlocking && settings.security.enableBiometrics){
+        if(last !== "active" && appState === "active" && !biometricUnlocking && settings.security.enableBiometrics && locked){
+            //if the app becomes active, and we were not already using the biometric unlocking, we show the biometric challenge
             challengeUnlock();
         }
-    }, [unlocking])
+    }, [settings, locked, biometricUnlocking]);
 
     const challengeUnlock = () => {
+        setBiometricUnlocking(true);
         if(settings.security.enableBiometrics){
             LocalAuth.promptLocalAuth().then(result => {
                 switch (result) {
@@ -100,40 +48,52 @@ export default function LockScreen({children}) {
                         unlock();
                         break;
                     case AuthResult.FAIL:
-                        setUnlocking(false);
+                        //no op
                         break;
                 }
+            }).finally(() => {
+                setBiometricUnlocking(false);
             })
         }
     }
 
 
     const lock = () => {
-        LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        if(!locked) {
+            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+        }
         setLocked(true);
     }
 
     const unlock = () => {
-        //LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
         setLocked(false);
+        setBiometricUnlocking(false);
     }
 
-    return <LockScreenContext.Provider value={{ locked, lock, enabled: !!settings.security.passphrase }}>
-        {children}
-        {locked && <FrontLockScreen onAskUnlock={async (passphrase) => {
-            if(await checkPassword(passphrase, settings.security.passphrase)){
-                unlock();
-                return true;
-            }else{
-                Toast.showToast({
-                    duration: 1500,
-                    message: "Wrong passphrase",
-                    type: "top"
-                });
-                return false;
-            }
-        }} />}
-    </LockScreenContext.Provider>;
+    return (
+        <LockScreenContext.Provider value={{
+            locked,
+            lock,
+            enabled: !!settings.security.passphrase,
+            biometricUnlocking,
+            setBiometricUnlocking
+        }}>
+            {children}
+            {locked && <FrontLockScreen onAskUnlock={async (passphrase) => {
+                if(await checkPassword(passphrase, settings.security.passphrase)){
+                    setTimeout(unlock, 0);
+                    return true;
+                }else{
+                    Toast.showToast({
+                        duration: 1500,
+                        message: "Wrong passphrase",
+                        type: "top"
+                    });
+                    return false;
+                }
+            }} />}
+        </LockScreenContext.Provider>
+    );
 
 }
 
@@ -141,12 +101,11 @@ const FrontLockScreen = ({onAskUnlock}) => {
     const theme = useTheme();
     const [input, setInput] = useState("");
     const [checking, setChecking] = useState(false);
+    const [settings] = useSettings();
     const onSubmit = async (input) => {
         setChecking(true);
         try{
-            if(!await onAskUnlock(input)){
-                setInput("");
-            }
+            await onAskUnlock(input)
         }finally {
             setChecking(false);
         }
@@ -166,11 +125,12 @@ const FrontLockScreen = ({onAskUnlock}) => {
                 secureTextEntry={true}
                 value={input}
                 onChangeText={setInput}
-                placeholder={"Passphrase"}
+                placeholder={i18n.t("settings.security.passphrase")}
                 style={{
                     height: 48,
                     backgroundColor: 'rgba(0,0,0,0.1)',
                 }}
+
                 defaultValue={""}
                 autoFocus={true}
                 blurOnSubmit={false}
@@ -178,6 +138,7 @@ const FrontLockScreen = ({onAskUnlock}) => {
                 returnKeyType={"done"}
                 autoCompleteType={'off'}
                 onSubmitEditing={() => onSubmit(input)}
+                keyboardAppearance={settings.darkMode ? "dark" : "light"}
             />
             <View style={{
                 height: 40,
@@ -185,7 +146,7 @@ const FrontLockScreen = ({onAskUnlock}) => {
                 display: "flex",
                 justifyContent: "center"
             }}>
-            {checking ? <ActivityIndicator size="small" /> : <Button onPress={() => onSubmit(input)}>Unlock </Button> }
+            {checking ? <ActivityIndicator size="small" /> : <Button onPress={() => onSubmit(input)}>{i18n.t("settings.security.unlock")} </Button> }
             </View>
         </View>
     </>;

@@ -1,16 +1,15 @@
-import {Headline, Text, useTheme} from "react-native-paper";
-import {askPermission, durationToText, SecuritySetting, useSettings} from "../../utils/Settings";
+import {Text, useTheme} from "react-native-paper";
+import {useLockState, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {i18n} from "../../translations/i18n";
 import {Alert, LayoutAnimation, StyleSheet, Switch, View} from "react-native";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import * as React from "react";
-import {Ionicons} from "@expo/vector-icons";
-import * as Permissions from "expo-permissions";
 import {useEffect, useRef, useState} from "react";
-import * as LocalAuthentication from "expo-local-authentication";
 import PromptModal from "../../components/PromptModal";
 import {hashPassword} from "../../utils/Passphrase";
+import LocalAuth, {AuthResult} from "../../utils/LocalAuth";
+import {AuthenticationType} from "expo-local-authentication";
 
 const scaleTransition = () => {
     LayoutAnimation.configureNext({
@@ -28,20 +27,18 @@ export function LockSettingsScreen(){
 
     const theme = useTheme();
     const [settings, updateSettings] = useSettings();
-    const [capabilities, setCapabilities] = useState<LocalAuthentication.AuthenticationType[]>([])
     const [showModal, setShowModal] = useState(false);
     const [settingUpPassphrase, setSettingUpPassphrase] = useState(false);
-
+    const [settingUpBiometric, setSettingUpBiometric] = useState(false);
+    const lockContext = useLockState();
+    const [biometricType, setBiometricType] = useState<AuthenticationType | null>(null)
     useEffect(() => {
         (async () => {
-            const supported = await LocalAuthentication.supportedAuthenticationTypesAsync();
-            setCapabilities(supported);
+            setBiometricType(await LocalAuth.getAvailableBiometric());
         })();
-    }, [settings.security.enableBiometrics])
-
+    }, [])
 
     const setPassphrase = async (hash) => {
-        scaleTransition();
         closeModal();
         updateSettings({
             security: {
@@ -69,13 +66,15 @@ export function LockSettingsScreen(){
             type: "SECTION",
             rows: [
                 {
-                    title: i18n.t('settings.enable_lock'),
+                    title: i18n.t('settings.security.use_passphrase'),
                     renderAccessory: () => <Switch value={!!settings.security.passphrase || settingUpPassphrase} onValueChange={(value) => {
-                        scaleTransition();
                         if(value){
                             setShowModal(true);
                             setSettingUpPassphrase(true);
+                            setSettingUpBiometric(false);
                         }else{
+                            scaleTransition();
+                            setSettingUpBiometric(false);
                             updateSettings({
                                 security: {
                                     passphrase: null,
@@ -86,15 +85,31 @@ export function LockSettingsScreen(){
                     }}/>,
                 },
                 {
-                    visible: !!settings.security.passphrase,
-                    title: i18n.t('settings.lock_type.biometric'),
-                    renderAccessory: () => <Switch value={!!settings.security.enableBiometrics} onValueChange={(value) => {
-                        updateSettings({
-                            security: {
-                                enableBiometrics: value,
-                                passphrase: settings.security.passphrase
-                            }
-                        });
+                    visible: !!settings.security.passphrase && !!biometricType,
+                    title: biometricType === AuthenticationType.FACIAL_RECOGNITION ?
+                        i18n.t('settings.security.enable_faceid') :
+                        i18n.t('settings.security.enable_touchid'),
+                    renderAccessory: () => <Switch value={settingUpBiometric || !!settings.security.enableBiometrics} onValueChange={(value) => {
+                        if(value) {
+                            lockContext.setBiometricUnlocking(true);
+                            LocalAuth.promptLocalAuth().then((result) => {
+                                updateSettings({
+                                    security: {
+                                        enableBiometrics: result === AuthResult.SUCCESS,
+                                        passphrase: settings.security.passphrase
+                                    }
+                                });
+                            }).finally(() => {
+                                setTimeout(() => lockContext.setBiometricUnlocking(false), 0);
+                            });
+                        }else{
+                            updateSettings({
+                                security: {
+                                    enableBiometrics: false,
+                                    passphrase: settings.security.passphrase
+                                }
+                            });
+                        }
                     }}/>,
                 }
             ]
@@ -131,24 +146,21 @@ const SetPasswordModal = ({onCancel, onClose, visible, onValidate}) => {
         }
     }
 
-    const goBackToFirst = () => {
-        setTmpPassword(undefined);
-        setStep("password");
-        hash.current = null;
-    }
-
     return (
         <>
             <PromptModal
                 key={"password"}
                 title={"Passphrase"}
-                description={"Create the passphrase you will use to access Satpile."}
+                description={i18n.t("settings.security.create_passphrase")}
                 visible={visible && step === "password"}
-                inputPlaceholder={"Passphrase"}
+                inputPlaceholder={i18n.t("settings.security.passphrase")}
                 submitLabel={"OK"}
                 onValidate={setFirst}
                 onClose={() => {}}
-                onCancel={onCancel}
+                onCancel={() => {
+                    onClose();
+                    onCancel();
+                }}
                 textInputProps={{
                     secureTextEntry: true,
                     keyboardAppearance: settings.darkMode ? "dark" : "light"
@@ -157,7 +169,7 @@ const SetPasswordModal = ({onCancel, onClose, visible, onValidate}) => {
             <PromptModal
                 key={"confirm"}
                 title={"Passphrase"}
-                description={"Re-type passphrase"}
+                description={i18n.t("settings.security.confirm_passphrase")}
                 visible={visible && step === "confirm"}
                 inputPlaceholder={"Passphrase"}
                 submitLabel={"OK"}
@@ -165,12 +177,12 @@ const SetPasswordModal = ({onCancel, onClose, visible, onValidate}) => {
                     if(input === tmpPassword){
                         onValidate(hash.current);
                     }else{
-                        Alert.alert("Passphrases do not match");
+                        Alert.alert(i18n.t("settings.security.error_match"));
                         onCancel();
                     }
                 }}
                 onClose={onClose}
-                onCancel={goBackToFirst}
+                onCancel={onCancel}
                 textInputProps={{
                     secureTextEntry: true,
                     keyboardAppearance: settings.darkMode ? "dark" : "light"

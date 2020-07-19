@@ -17,12 +17,12 @@ import {LockSettingsScreen} from "./LockSettingsScreen";
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
 export default function SettingsEditScreen({navigation, route}) {
 
-    const {setting} = route.params;
+    const {setting, title} = route.params;
     const [settings, updateSettings] = useSettings();
     const theme = useTheme();
 
     navigation.setOptions({
-        headerTitle: () => <MainTitle title={i18n.t('settings.title')}/>,
+        headerTitle: () => <MainTitle title={title || i18n.t('settings.title')}/>,
         headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
     });
 

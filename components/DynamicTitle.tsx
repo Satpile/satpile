@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity, View} from "react-native";
 import {Ionicons} from '@expo/vector-icons';
 import SatoshiText from "./SatoshiText";
 
-declare type DynamicTitleProps = { title: string, icon?: string, satAmount: number, onPress?: () => void }
+declare type DynamicTitleProps = { title: string, icon?: string, satAmount: number | null, onPress?: () => void }
 
 /**
  *

@@ -60,12 +60,19 @@ module.exports = {
         copyright: 'Copyright',
         clear_data: 'Effacer les données',
         clear_data_sure: 'Êtes-vous sûr de vouloir supprimer toutes les données ?',
-        lock: "Verrouillage de l'app",
-        enable_lock: "Activer le verrouillage de l'app",
-        lock_type: {
-            biometric: "FaceID / TouchID",
-            passphrase: "Passphrase"
-        }
+        security: {
+            title: "Sécurité",
+            warning: "Lorsque la passphrase est activée, vous devez la saisir à chaque ouverture de Satpile. Attention, vous ne pouvez pas la récuperer en cas d'oubli.",
+            enable_faceid: "Activer FaceID",
+            enable_touchid: "Activer TouchID",
+            passphrase: "Passphrase",
+            use_passphrase: "Utiliser une passphrase",
+            error_match: "Les passphrases sont différentes",
+            create_passphrase: "Créez la passphrase que vous utiliserez pour accéder à Satpile",
+            confirm_passphrase: "Confirmez la passphrase",
+            wrong_passphrase: "Mauvaise passphrase. Merci de réessayer."
+        },
+        unlock: "Deverrouiller"
     },
     share_qrcode:'Exporter le QRCode',
     notification: {

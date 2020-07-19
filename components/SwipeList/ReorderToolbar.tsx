@@ -3,7 +3,6 @@ import React, {useLayoutEffect, useRef} from "react";
 import {useTheme} from "../../utils/Theme";
 import {Appbar} from "react-native-paper";
 import {ListOrderType} from "../../utils/Types";
-import {LockContextConsumer} from "../../screens/LockScreen";
 
 interface ReorderToolbarProps {
     display: boolean;
@@ -44,9 +43,6 @@ export function ReorderToolbar({display, onHide, onToggleArrows, onReorder, alre
                     onReorder("alphabetically");
                 }
             }}/>
-            <LockContextConsumer>{({enabled, lock, locked}) => {
-                return enabled ? <Appbar.Action color={theme.colors.onBackground} icon="lock" onPress={lock}/> : null;
-            }}</LockContextConsumer>
         </View>
     )
 }

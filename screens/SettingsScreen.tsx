@@ -33,7 +33,7 @@ export default function SettingsScreen({navigation}) {
                 title: i18n.t("settings.refresh_every"),
                 showDisclosureIndicator: true,
                 renderAccessory: () => <SettingItemValue type={"refresh"} value={settings.refresh}/>,
-                onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh'}),
+                onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh', title: i18n.t("settings.refresh")}),
             }]
         },
         {
@@ -43,7 +43,7 @@ export default function SettingsScreen({navigation}) {
                     title: i18n.t("settings.locale"),
                     showDisclosureIndicator: true,
                     renderAccessory: () => <SettingItemValue value={i18n.t('current_language')}/>,
-                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'locale'})
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'locale', title: i18n.t("settings.locale")})
                 },
                 {
                     title: i18n.t("settings.dark_mode"),
@@ -57,9 +57,9 @@ export default function SettingsScreen({navigation}) {
                     }}/>,
                 },
                 {
-                    title: i18n.t("settings.lock"),
+                    title: i18n.t("settings.security.title"),
                     showDisclosureIndicator: true,
-                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'lock'}),
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'lock', title: i18n.t("settings.security.title")}),
                 }
             ],
         },
@@ -97,12 +97,12 @@ export default function SettingsScreen({navigation}) {
                 {
                     title: i18n.t("settings.about"),
                     showDisclosureIndicator: true,
-                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'about'})
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'about', title: i18n.t("settings.about")})
                 },
                 {
                     title: i18n.t("settings.legal"),
                     showDisclosureIndicator: true,
-                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'legal'})
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'legal', title: i18n.t("settings.legal")})
                 },
                 {title: i18n.t("settings.version"), renderAccessory: () => <Text>{Constants.manifest.version}</Text>},
                 {title: i18n.t("settings.copyright"), renderAccessory: () => <Text>{COMPANY}</Text>},

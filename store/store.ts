@@ -14,7 +14,6 @@ export async function loadStore() {
     if (!storeLoaded) {
         storeLoaded = true;
         store.dispatch(await Actions.loadData())
-        console.log(store.getState());
     }
 }
 

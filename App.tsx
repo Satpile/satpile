@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import store, {loadStore} from "./store/store";
-import {AppState, StatusBar, StyleSheet, View} from 'react-native';
+import {StatusBar, StyleSheet, View} from 'react-native';
 import {Provider} from 'react-redux';
 import {AppLoading} from "expo";
 import AnimatedSplashScreen from "./components/AnimatedSplashScreen";
@@ -15,31 +15,22 @@ import {Navigator} from "./navigation/Navigator";
 import {Asset} from "expo-asset";
 import {bootstrap} from "./utils/Bootstrap";
 import LockScreen from "./screens/LockScreen";
+import {useAppStateEffect} from "./utils/AppStateHook";
 
 bootstrap();
 
 export default function App(){
     const [loadingState, setLoadingState] = useState<"loading" | "loaded" | "after_loaded">("loading");
-    const [appState, setAppState] = useState(AppState.currentState);
 
     if (!TaskManager.isTaskDefined(REFRESH_TASK)) {
         TaskManager.defineTask(REFRESH_TASK, BalanceFetcher.backgroundFetch);
     }
 
-    useEffect(() => {
-        AppState.addEventListener("change", _handleAppStateChange);
-
-        return () => {
-            AppState.removeEventListener("change", _handleAppStateChange);
-        };
-    }, []);
-
-    const _handleAppStateChange = nextAppState => {
-        if (nextAppState === "active") {
+    useAppStateEffect((appState, lastAppState) => {
+        if (appState === "active") {
             BalanceFetcher.filterAndFetchBalances();
         }
-        setAppState(nextAppState);
-    };
+    })
 
     if (loadingState === 'loading') {
         return <AppLoading
