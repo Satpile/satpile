@@ -28,3 +28,8 @@ export type Folder = {
 export interface Explorer {
     fetchAndUpdate(AddressesList): Promise<AddressesBalanceDifference[]>
 }
+
+export enum ExplorerApi {
+    MEMPOOL_SPACE = "MEMPOOL_SPACE",
+    BLOCKSTREAM_INFO = "BLOCKSTREAM_INFO",
+}

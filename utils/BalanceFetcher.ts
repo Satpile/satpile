@@ -4,7 +4,7 @@ import Mempool from "./explorers/Mempool";
 import store from "../store/store";
 import {Toast} from "../components/Toast";
 import {i18n} from '../translations/i18n';
-import {Explorer} from "./Types";
+import {Explorer, ExplorerApi} from "./Types";
 import * as BackgroundFetch from "expo-background-fetch";
 import {Platform, StatusBar} from "react-native";
 import {Notifications} from "./Notifications";
@@ -23,7 +23,7 @@ export default class BalanceFetcher {
         this.showNetworkActivity(false);
         if (networkState.isConnected) {
             this.showNetworkActivity(true);
-            const diff = await this.getExplorer().fetchAndUpdate(store.getState().addresses);
+            const diff = await this.getExplorer(store.getState().settings.explorer).fetchAndUpdate(store.getState().addresses);
             BalanceFetcher.afterBalanceFetch();
             this.showNetworkActivity(false);
             return diff;
@@ -34,8 +34,12 @@ export default class BalanceFetcher {
         return null;
     }
 
-    private static getExplorer(): Explorer {
-        return new Mempool();
+    private static getExplorer(explorer: ExplorerApi): Explorer {
+        switch (explorer) {
+            case ExplorerApi.BLOCKSTREAM_INFO: return new Mempool("https://blockstream.info");
+            default:
+            case ExplorerApi.MEMPOOL_SPACE: return new Mempool("https://mempool.space");
+        }
     }
 
     private static afterBalanceFetch() {

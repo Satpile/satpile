@@ -6,7 +6,7 @@ import * as Permissions from "expo-permissions";
 import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
 import {Linking} from "expo";
-import {ListOrderType} from "./Types";
+import {ExplorerApi, ListOrderType} from "./Types";
 import React, {useContext} from "react";
 
 export const REFRESH_TASK = "REFRESH_TASK";
@@ -25,6 +25,7 @@ export interface Settings {
     darkMode: boolean;
     foldersOrder: ListOrderType;
     security: SecuritySetting;
+    explorer: ExplorerApi;
 }
 
 
@@ -37,7 +38,8 @@ export function defaultSettings(): Settings {
         security: {
             passphrase: null,
             enableBiometrics: false
-        }
+        },
+        explorer: ExplorerApi.MEMPOOL_SPACE
     }
 }
 
@@ -122,4 +124,12 @@ export const LockContextConsumer = LockScreenContext.Consumer;
 
 export const useLockState = () => {
     return useContext(LockScreenContext);
+}
+
+export function explorerToName(explorer: ExplorerApi) {
+    switch (explorer) {
+        case ExplorerApi.BLOCKSTREAM_INFO: return "blockstream.info";
+        default:
+        case ExplorerApi.MEMPOOL_SPACE: return "mempool.space";
+    }
 }
