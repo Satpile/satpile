@@ -72,7 +72,7 @@ module.exports = {
             confirm_passphrase: "Confirmez la passphrase",
             wrong_passphrase: "Mauvaise passphrase. Merci de réessayer.",
             unlock: "Déverrouiller",
-            enter_passphrase: "Enter passphrase:"
+            enter_passphrase: "Saisissez la passphrase :"
         },
         explorer: 'Explorer API'
     },
