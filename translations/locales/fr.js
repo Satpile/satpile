@@ -71,7 +71,7 @@ module.exports = {
             create_passphrase: "Créez la passphrase que vous utiliserez pour accéder à Satpile",
             confirm_passphrase: "Confirmez la passphrase",
             wrong_passphrase: "Mauvaise passphrase. Merci de réessayer.",
-            unlock: "Deverrouiller"
+            unlock: "Déverrouiller"
         },
     },
     share_qrcode:'Exporter le QRCode',
