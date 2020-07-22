@@ -76,7 +76,7 @@ module.exports = {
             enable_touchid: "Enable TouchID",
             passphrase: "Passphrase",
             use_passphrase: "Use passphrase",
-            error_match: "Passhrases do not match",
+            error_match: "Passphrases do not match",
             create_passphrase: "Create the passphrase you will use to access Satpile",
             confirm_passphrase: "Re-type passphrase",
             wrong_passphrase: "Wrong passphrase. Please try again.",
