@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "1.3.3",
+    "version": "1.3.4",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -31,7 +31,8 @@
         "UIBackgroundModes": [
           "fetch"
         ],
-        "NSCameraUsageDescription": "This app uses the camera to scan QR codes."
+        "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
+        "NSFaceIDUsageDescription": "Allow Satpile to use FaceID to unlock the app"
       },
       "appStoreUrl": "https://apps.apple.com/us/app/satpile/id1510284403"
     },
