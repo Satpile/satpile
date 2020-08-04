@@ -16,7 +16,7 @@ export default class LocalAuth {
 
         return LocalAuthentication.authenticateAsync({
             fallbackLabel: "",
-            ...(Constants.appOwnership === "standalone" ? {disableDeviceFallback: true} : {})
+            disableDeviceFallback: true,
             //Disable device fallback on standalone app; (can't disable on expo because crash (may be related to ios14, TODO: investigate))
         }, ).then(value => {
             return value.success ? AuthResult.SUCCESS : AuthResult.FAIL;
@@ -25,15 +25,19 @@ export default class LocalAuth {
         });
     }
 
+    static CACHED_AVAILABLE_BIOMETRIC: AuthenticationType | null = null;
+
     static async getAvailableBiometric() {
         const available = await LocalAuthentication.supportedAuthenticationTypesAsync();
         if(available.includes(AuthenticationType.FACIAL_RECOGNITION)){
-            return AuthenticationType.FACIAL_RECOGNITION;
+            this.CACHED_AVAILABLE_BIOMETRIC = AuthenticationType.FACIAL_RECOGNITION;
         }
 
         if(available.includes(AuthenticationType.FINGERPRINT)){
-            return AuthenticationType.FACIAL_RECOGNITION;
+            this.CACHED_AVAILABLE_BIOMETRIC = AuthenticationType.FINGERPRINT;
         }
+
+        return this.CACHED_AVAILABLE_BIOMETRIC;
 
         return null;
     }

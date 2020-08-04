@@ -1,7 +1,7 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ActivityIndicator, LayoutAnimation, Platform, StyleSheet, View} from "react-native";
 import {BlurView} from "expo-blur";
-import {Button, Paragraph, TextInput} from "react-native-paper";
+import {Button, IconButton, Paragraph, TextInput} from "react-native-paper";
 import {LockScreenContext, useSettings} from "../utils/Settings";
 import {useTheme} from "../utils/Theme";
 import LocalAuth, {AuthResult} from "../utils/LocalAuth";
@@ -9,6 +9,7 @@ import {checkPassword} from "../utils/Passphrase";
 import {Toast} from "../components/Toast";
 import {useAppStateEffect} from "../utils/AppStateHook";
 import {i18n} from "../translations/i18n";
+import {BiometricButton} from "../components/BiometricButton";
 
 export default function LockScreen({children}) {
     const [settings] = useSettings();
@@ -23,6 +24,7 @@ export default function LockScreen({children}) {
 
         if(!last){ //Lock on first open (should be locked anyway)
             lock();
+            challengeUnlock(); //Prompt unlock if locked
             return;
         }
 
@@ -39,14 +41,14 @@ export default function LockScreen({children}) {
     }, [settings, locked, biometricUnlocking]);
 
     const challengeUnlock = () => {
-        setBiometricUnlocking(true);
         if(settings.security.enableBiometrics){
+            setBiometricUnlocking(true);
             LocalAuth.promptLocalAuth().then(result => {
                 switch (result) {
                     case AuthResult.SUCCESS:
-                    case AuthResult.UNAVAILABLE:
                         unlock();
                         break;
+                    case AuthResult.UNAVAILABLE:
                     case AuthResult.FAIL:
                         //no op
                         break;
@@ -79,7 +81,7 @@ export default function LockScreen({children}) {
             setBiometricUnlocking
         }}>
             {children}
-            {locked && <FrontLockScreen onAskUnlock={async (passphrase) => {
+            {locked && <FrontLockScreen onAskBiometric={challengeUnlock} onAskUnlock={async (passphrase) => {
                 if(await checkPassword(passphrase, settings.security.passphrase)){
                     setTimeout(unlock, 0);
                     return true;
@@ -97,11 +99,21 @@ export default function LockScreen({children}) {
 
 }
 
-const FrontLockScreen = ({onAskUnlock}) => {
+const FrontLockScreen = ({onAskUnlock, onAskBiometric}) => {
     const theme = useTheme();
     const [input, setInput] = useState("");
     const [checking, setChecking] = useState(false);
     const [settings] = useSettings();
+    const [biometricType, setBiometricType] = useState(LocalAuth.CACHED_AVAILABLE_BIOMETRIC);
+
+    useEffect(() => {
+        (async () => {
+            if(settings.security.enableBiometrics){
+                setBiometricType(await LocalAuth.getAvailableBiometric());
+            }
+        })()
+    }, [settings]);
+
     const onSubmit = async (input) => {
         setChecking(true);
         try{
@@ -121,25 +133,44 @@ const FrontLockScreen = ({onAskUnlock}) => {
             <Paragraph style={{
                 textAlign: "center"
             }}>{i18n.t("settings.security.enter_passphrase")}</Paragraph>
-            <TextInput
-                secureTextEntry={true}
-                value={input}
-                onChangeText={setInput}
-                placeholder={i18n.t("settings.security.passphrase")}
-                style={{
-                    height: 48,
-                    backgroundColor: 'rgba(0,0,0,0.1)',
-                }}
-
-                defaultValue={""}
-                autoFocus={true}
-                blurOnSubmit={false}
-                enablesReturnKeyAutomatically={true}
-                returnKeyType={"done"}
-                autoCompleteType={'off'}
-                onSubmitEditing={() => onSubmit(input)}
-                keyboardAppearance={settings.darkMode ? "dark" : "light"}
-            />
+            <View style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                backgroundColor: 'rgba(0,0,0,0.1)',
+                borderBottomWidth: 1,
+                borderBottomColor: theme.colors.primary
+            }}>
+                <TextInput
+                    theme={{
+                        ...theme,
+                        colors: {
+                            ...theme.colors,
+                            primary: "transparent" //Get rid of the underline
+                        }
+                    }}
+                    selectionColor={theme.colors.primary}
+                    secureTextEntry={true}
+                    value={input}
+                    onChangeText={setInput}
+                    placeholder={i18n.t("settings.security.passphrase")}
+                    style={{
+                        height: 48,
+                        backgroundColor: 'rgba(0,0,0,0)',
+                        flex: 1,
+                    }}
+                    underlineColor={"transparent"}
+                    defaultValue={""}
+                    autoFocus={true}
+                    blurOnSubmit={false}
+                    enablesReturnKeyAutomatically={true}
+                    returnKeyType={"done"}
+                    autoCompleteType={'off'}
+                    onSubmitEditing={() => onSubmit(input)}
+                    keyboardAppearance={settings.darkMode ? "dark" : "light"}
+                />
+                {settings.security.enableBiometrics && <BiometricButton onPress={onAskBiometric} type={biometricType} /> }
+            </View>
             <View style={{
                 height: 40,
                 paddingHorizontal: 40,
