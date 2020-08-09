@@ -31,15 +31,13 @@ export default class LocalAuth {
         const available = await LocalAuthentication.supportedAuthenticationTypesAsync();
         if(available.includes(AuthenticationType.FACIAL_RECOGNITION)){
             this.CACHED_AVAILABLE_BIOMETRIC = AuthenticationType.FACIAL_RECOGNITION;
-        }
-
-        if(available.includes(AuthenticationType.FINGERPRINT)){
+        } else if(available.includes(AuthenticationType.FINGERPRINT)){
             this.CACHED_AVAILABLE_BIOMETRIC = AuthenticationType.FINGERPRINT;
+        }else{
+            return null;
         }
 
         return this.CACHED_AVAILABLE_BIOMETRIC;
-
-        return null;
     }
 
 }

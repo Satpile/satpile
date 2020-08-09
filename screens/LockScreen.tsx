@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {ActivityIndicator, LayoutAnimation, Platform, StyleSheet, View} from "react-native";
 import {BlurView} from "expo-blur";
 import {Button, IconButton, Paragraph, TextInput} from "react-native-paper";
@@ -14,9 +14,13 @@ import {BiometricButton} from "../components/BiometricButton";
 export default function LockScreen({children}) {
     const [settings] = useSettings();
     const [locked, setLocked] = useState(!!settings.security.passphrase);
-    const [biometricUnlocking, setBiometricUnlocking] = useState(false);
+    const biometricUnlocking = useRef(false);
 
     useAppStateEffect((appState, last) => {
+        if(appState === last){
+            return;
+        }
+
         if(!settings.security.passphrase){
             unlock();
             return;
@@ -28,21 +32,21 @@ export default function LockScreen({children}) {
             return;
         }
 
-        if(last === "active" && appState !== "active" && !biometricUnlocking){
+        if(last === "active" && appState !== "active" && !biometricUnlocking.current){
             //If the app becomes inactive but not because of unlocking (faceid prompt)
             lock();
             return;
         }
 
-        if(last !== "active" && appState === "active" && !biometricUnlocking && settings.security.enableBiometrics && locked){
+        if(last !== "active" && appState === "active" && !biometricUnlocking.current && settings.security.enableBiometrics && locked){
             //if the app becomes active, and we were not already using the biometric unlocking, we show the biometric challenge
             challengeUnlock();
         }
-    }, [settings, locked, biometricUnlocking]);
+    }, [settings, locked, biometricUnlocking.current]);
 
     const challengeUnlock = () => {
-        if(settings.security.enableBiometrics){
-            setBiometricUnlocking(true);
+        if(settings.security.enableBiometrics && biometricUnlocking.current === false){
+            biometricUnlocking.current = true;
             LocalAuth.promptLocalAuth().then(result => {
                 switch (result) {
                     case AuthResult.SUCCESS:
@@ -54,7 +58,9 @@ export default function LockScreen({children}) {
                         break;
                 }
             }).finally(() => {
-                setBiometricUnlocking(false);
+                setTimeout(() => {
+                    biometricUnlocking.current = false;
+                }, 1000);
             })
         }
     }
@@ -69,7 +75,9 @@ export default function LockScreen({children}) {
 
     const unlock = () => {
         setLocked(false);
-        setBiometricUnlocking(false);
+        setTimeout(() => {
+            biometricUnlocking.current = false;
+        }, 1000);
     }
 
     return (
@@ -77,8 +85,8 @@ export default function LockScreen({children}) {
             locked,
             lock,
             enabled: !!settings.security.passphrase,
-            biometricUnlocking,
-            setBiometricUnlocking
+            biometricUnlocking: biometricUnlocking.current,
+            setBiometricUnlocking: (unlocking) => {biometricUnlocking.current = unlocking}
         }}>
             {children}
             {locked && <FrontLockScreen onAskBiometric={challengeUnlock} onAskUnlock={async (passphrase) => {
@@ -88,7 +96,7 @@ export default function LockScreen({children}) {
                 }else{
                     Toast.showToast({
                         duration: 1500,
-                        message: "Wrong passphrase",
+                        message: i18n.t("settings.security.wrong_passphrase"),
                         type: "top"
                     });
                     return false;
