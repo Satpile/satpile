@@ -10,6 +10,7 @@
     "@react-navigation/stack": "^5.2.3",
     "@taccolaa/react-native-settings-screen": "^2.2.10",
     "bitcoin-address-validation": "^0.2.9",
+    "bitcoinjs-lib": "^5.1.10",
     "buffer": "^5.4.3",
     "expo": "^38.0.0",
     "expo-background-fetch": "~8.3.0",
@@ -22,6 +23,7 @@
     "expo-sharing": "~8.2.1",
     "expo-store-review": "~2.1.2",
     "expo-task-manager": "~8.3.0",
+    "expo-web-browser": "~8.3.1",
     "i18n-js": "^3.5.1",
     "isaac": "0.0.5",
     "react": "16.11.0",
@@ -43,8 +45,7 @@
     "react-navigation-animated-switch": "^0.3.2",
     "react-redux": "^7.2.0",
     "redux": "^4.0.5",
-    "runes": "^0.4.3",
-    "expo-web-browser": "~8.3.1"
+    "runes": "^0.4.3"
   },
   "devDependencies": {
     "@types/react": "~16.9.41",

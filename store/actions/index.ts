@@ -11,7 +11,7 @@ export const removeFolder = folder => ({
     folder: folder
 });
 
-export const addFolder = folder => ({
+export const addFolder = (folder: Folder) => ({
     type: 'ADD_FOLDER',
     folder: folder
 });

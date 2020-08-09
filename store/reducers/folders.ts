@@ -1,4 +1,4 @@
-import {Folder, FolderAddress} from "../../utils/Types";
+import {Folder, FolderAddress, FolderType} from "../../utils/Types";
 import {Action} from "../actions/actions";
 
 const folders = (state: Folder[] = [], action: Action) => {
@@ -7,7 +7,12 @@ const folders = (state: Folder[] = [], action: Action) => {
         case 'CLEAR':
             return [];
         case 'LOAD_DATA':
-            return action.state.folders;
+            return action.state.folders.map(folder => {
+                return {
+                    type: FolderType.SIMPLE, //Backward compatibility, set default folder type
+                    ...folder,
+                }
+            });
 
         case 'ADD_FOLDER':
             return [...state, action.folder];

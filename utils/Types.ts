@@ -17,12 +17,18 @@ export type FolderAddress = {
 
 export type ListOrderType = "custom" | "alphabetically" | "alphabetically-desc";
 
+export enum FolderType {
+    SIMPLE = "SIMPLE",
+    XPUB_WALLET = "XPUB_WALLET"
+}
+
 export type Folder = {
     uid: string;
     name: string;
     addresses: FolderAddress[];
     orderAddresses: ListOrderType;
     totalBalance: number;
+    type?: FolderType;
 }
 
 export interface Explorer {
