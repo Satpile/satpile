@@ -16,8 +16,10 @@ enum ActionType {
     SORT_FOLDER_ADDRESSES = "SORT_FOLDER_ADDRESSES",
     UPDATE_SETTINGS = "UPDATE_SETTINGS",
     UPDATE_ADDRESSES = "UPDATE_ADDRESSES",
+    RENAME_ADDRESS = "RENAME_ADDRESS",
     UPDATE_SINGLE_ADDRESS = "UPDATE_SINGLE_ADDRESS",
     UPDATE_LAST_RELOAD_TIME = "UPDATE_LAST_RELOAD_TIME",
+    ADD_DERIVED_ADDRESSES = "ADD_DERIVED_ADDRESSES"
 }
 
 interface BaseAction<Type extends ActionType> { type: Type; }
@@ -39,6 +41,12 @@ export interface ActionAddFolder extends BaseAction<ActionType.ADD_FOLDER> {
 
 export interface ActionRenameFolder extends BaseAction<ActionType.RENAME_FOLDER> {
     folder: Folder;
+    newName: string;
+}
+
+export interface ActionRenameAddress extends BaseAction<ActionType.RENAME_ADDRESS> {
+    folder: Folder;
+    address: FolderAddress;
     newName: string;
 }
 
@@ -96,12 +104,18 @@ export interface ActionUpdateSingleAddress extends BaseAction<ActionType.UPDATE_
 
 export interface ActionUpdateLastReloadTime extends BaseAction<ActionType.UPDATE_LAST_RELOAD_TIME> {}
 
+export interface ActionAddDerivedAddresses extends BaseAction<ActionType.ADD_DERIVED_ADDRESSES>{
+    addresses: FolderAddress[];
+    folder: Folder;
+}
+
 export type Action =
     | ActionClear
     | ActionLoadData
     | ActionAddFolder
     | ActionRemoveFolder
     | ActionRenameFolder
+    | ActionRenameAddress
     | ActionUpdateFolderTotal
     | ActionAddAddress
     | ActionRemoveAddress
@@ -113,4 +127,5 @@ export type Action =
     | ActionUpdateAddress
     | ActionUpdateSingleAddress
     | ActionUpdateLastReloadTime
+    | ActionAddDerivedAddresses
     ;

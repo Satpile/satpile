@@ -27,6 +27,26 @@ const folders = (state: Folder[] = [], action: Action) => {
                     return folder;
                 }
             });
+        case 'RENAME_ADDRESS':
+            return state.map(folder => {
+                if (folder.uid === action.folder.uid) {
+                    return {
+                        ...folder,
+                        addresses: folder.addresses.map(address => {
+                            if(address.address === action.address.address){
+                                return {
+                                    ...address,
+                                    name: action.newName
+                                }
+                            }
+
+                            return address;
+                        })
+                    };
+                } else {
+                    return folder;
+                }
+            });
         case 'REMOVE_FOLDER':
             return state.filter(folder => folder.uid != action.folder.uid);
 
@@ -55,6 +75,29 @@ const folders = (state: Folder[] = [], action: Action) => {
                     }
                 }
                 return folder;
+            });
+
+        case 'ADD_DERIVED_ADDRESSES':
+            if(!action.addresses.length){
+                return state;
+            }
+            return state.map(folder => {
+               if(folder.uid === action.folder.uid){
+                   return {
+                       ...folder,
+                       addresses: [
+                           ...folder.addresses,
+                           //Remove duplicate addresses just to be sure.
+                           ...action.addresses.filter(address => !folder.addresses.some(existingAddress => address.address === existingAddress.address))
+                       ],
+                       xpubConfig: {
+                           ...(folder.xpubConfig || {}),
+                           lastPath: action.addresses.slice(-1)[0].derivationPath
+                       }
+                   }
+               }
+
+               return folder;
             });
 
         case 'REMOVE_ADDRESS':

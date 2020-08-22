@@ -4,10 +4,11 @@ import Mempool from "./explorers/Mempool";
 import store from "../store/store";
 import {Toast} from "../components/Toast";
 import {i18n} from '../translations/i18n';
-import {Explorer, ExplorerApi} from "./Types";
+import {Explorer, ExplorerApi, Folder} from "./Types";
 import * as BackgroundFetch from "expo-background-fetch";
 import {Platform, StatusBar} from "react-native";
 import {Notifications} from "./Notifications";
+import {DERIVATION_BATCH_SIZE, generateNextNAddresses, shouldDeriveMoreAddresses} from "./XPubAddresses";
 
 export default class BalanceFetcher {
 
@@ -24,7 +25,7 @@ export default class BalanceFetcher {
         if (networkState.isConnected) {
             this.showNetworkActivity(true);
             const diff = await this.getExplorer(store.getState().settings.explorer).fetchAndUpdate(store.getState().addresses);
-            BalanceFetcher.afterBalanceFetch();
+            BalanceFetcher.afterBalanceFetch(showError);
             this.showNetworkActivity(false);
             return diff;
         } else if (showError) {
@@ -42,9 +43,21 @@ export default class BalanceFetcher {
         }
     }
 
-    private static afterBalanceFetch() {
+    private static afterBalanceFetch(showError: boolean) {
         store.dispatch(Actions.updateFoldersTotal(store.getState().addresses));
         store.dispatch(Actions.updateLastReloadTime());
+        let shouldRefresh = false;
+        store.getState().folders.forEach((folder: Folder) => {
+            if(shouldDeriveMoreAddresses(folder, store.getState().addresses)){
+                shouldRefresh = true;
+                const newAddresses = generateNextNAddresses(folder, DERIVATION_BATCH_SIZE);
+                store.dispatch(Actions.addDerivedAddresses(folder, newAddresses));
+            }
+        })
+
+        if(shouldRefresh){
+            this.filterAndFetchBalances(showError);
+        }
     }
 
     static async backgroundFetch() {

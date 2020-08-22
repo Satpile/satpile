@@ -7,8 +7,9 @@ import {Appbar, Subheading} from "react-native-paper";
 import validate from 'bitcoin-address-validation';
 import {i18n} from "../translations/i18n";
 import {askPermission} from "../utils/Settings";
+import {isAddressValid} from "../utils/Helper";
 
-export function QRCodeScanner({onAddressScanned, onCancel}) {
+export function QRCodeScanner({onAddressScanned, onCancel, scanningType}) {
 
     const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(null);
 
@@ -28,7 +29,7 @@ export function QRCodeScanner({onAddressScanned, onCancel}) {
     const onScan = (result) => {
         if (result.type === BarCodeScanner.Constants.BarCodeType.qr) {
             let address = result.data.replace('bitcoin:', '');
-            if (validate(address)) {
+            if (isAddressValid(address, scanningType)) {
                 onAddressScanned(address);
             }
         }

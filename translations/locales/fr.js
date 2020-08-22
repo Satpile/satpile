@@ -93,5 +93,8 @@ module.exports = {
         camera: "L'accès à la Camera est désactivé. Pour scanner des QRCode, merci d'autoriser la caméra dans Paramètres > Satpile.",
         notification: "Vous devez autoriser les notifications pour que le rafraichissement en arrière plan fonctionne."
     },
-    goto_settings: "Accéder aux paramètres"
+    goto_settings: "Accéder aux paramètres",
+    rename_address: "Renommer l'adresse",
+    enter_address_name: "Saisissez le nom de l'adresse",
+    address_name: "Nom de l'adresse"
 };

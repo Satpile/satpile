@@ -1,5 +1,6 @@
-import {AddressValue, Folder, ListOrderType} from "../../utils/Types";
+import {AddressValue, Folder, FolderAddress, ListOrderType} from "../../utils/Types";
 import AddressesStorage from "../../utils/AddressesStorage";
+import {Action} from "./actions";
 
 export const loadData = async () => {
     let state = await AddressesStorage.loadState();
@@ -19,6 +20,11 @@ export const addFolder = (folder: Folder) => ({
 export const renameFolder = (folder, newName) => ({
     type: 'RENAME_FOLDER',
     folder, newName
+});
+
+export const renameAddress = (folder, address, newName) => ({
+    type: 'RENAME_ADDRESS',
+    folder, address, newName
 });
 
 export const updateFoldersTotal = addresses => ({
@@ -85,5 +91,13 @@ export const sortFolderAddresses = (folderOrder: ListOrderType, folder: Folder) 
     return {
         type: "SORT_FOLDER_ADDRESSES",
         folderOrder, folder
+    }
+}
+
+export const addDerivedAddresses = (folder: Folder, addresses: FolderAddress[]) => {
+    return {
+        type: "ADD_DERIVED_ADDRESSES",
+        folder,
+        addresses
     }
 }

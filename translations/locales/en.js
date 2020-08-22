@@ -102,5 +102,8 @@ module.exports = {
         camera: "Camera access is disabled. To scan a QR code, please allow camera access in Settings > Satpile.",
         notification: "You need to allow notifications for background refresh to work."
     },
-    goto_settings: "Go to settings"
+    goto_settings: "Go to settings",
+    rename_address: "Rename address",
+    enter_address_name: "Enter address name",
+    address_name: "Address name"
 };

@@ -18,6 +18,12 @@ const addresses = (state = {}, action: Action) => {
             return {};
         case 'ADD_ADDRESS':
             return {[action.address.address]: {balance: 0, status: AddressStatusType.NEW}, ...state};
+        case 'ADD_DERIVED_ADDRESSES':
+            const newState = {};
+            action.addresses.forEach(address => {
+                newState[address.address] = {balance: 0, status: AddressStatusType.NEW};
+            })
+            return {...newState, ...state};
         //If the state already contains that address, it won't be overwritten, thus avoiding an unnecessary balance reset to 0
         case 'UPDATE_ADDRESSES':
             return {...action.addresses}

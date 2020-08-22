@@ -121,6 +121,9 @@ export default connect(state => ({
         };
 
         dispatch(Actions.addFolder(folder));
+        setTimeout(() => {
+            navigation.navigate('FolderContent', {folder})
+        }, 300);
     };
 
     const isSortedAlphabetically = useMemo(() => {
@@ -156,6 +159,7 @@ export default connect(state => ({
                 onHide={() => {
                     setShowAddFolderToolbar(false);
                 }}
+                onAddFolder={() => setShowAddModal(true)}
             />
 
             {folders.length > 0 ? <FoldersList
