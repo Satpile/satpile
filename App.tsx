@@ -1,3 +1,4 @@
+import './shim';
 import React, {useState} from 'react';
 import store, {loadStore} from "./store/store";
 import {StatusBar, StyleSheet, View} from 'react-native';

@@ -6,6 +6,7 @@ import {useNavigation} from '@react-navigation/native';
 import {i18n} from '../translations/i18n';
 import {SwipeList} from "./SwipeList/SwipeList";
 import {ReorderButtons} from "./SwipeList/ReorderButtons";
+import {FolderType} from "../utils/Types";
 
 export default function AddressesList({addresses, onRefresh, afterRefresh, onDelete, balances, folders, folder, showEditSort, onSort}) {
 
@@ -76,7 +77,7 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
                         color: 'white',
                         backgroundColor: 'red'
                     }
-                ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false} disableSwipe={showEditSort}/>
+                ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false} disableSwipe={showEditSort || folder.type === FolderType.XPUB_WALLET}/>
         </>
     )
 }

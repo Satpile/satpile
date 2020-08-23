@@ -12,6 +12,36 @@ import BalanceFetcher from "../utils/BalanceFetcher";
 import EmptyScreenContent from "../components/EmptyScreenContent";
 import {useI18n, useLockState, useSettings} from "../utils/Settings";
 import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
+import {Folder, FolderType} from "../utils/Types";
+import {AddFolderToolbar} from "../components/AddFolderToolbar";
+
+const TopRightActions = ({showToolbar, onShowToolbar, showAddToolbar, onShowAddToolbar, folderCount, onClose}) => {
+
+    const ActionToolbar = () =>
+        folderCount > 1 && <Appbar.Action
+            key={"open"} color="white"
+            icon={showToolbar ? "close" : "dots-vertical"}
+            style={showToolbar ? {} : {
+                marginRight: 0,
+                paddingLeft: 5,
+                width: 24
+            }}
+            onPress={showToolbar ? onClose : onShowToolbar}
+        />;
+
+    const ActionAddToolbar = () =>
+            <Appbar.Action
+                key={"add"}
+                color="white"
+                icon={showAddToolbar ? "close" : "plus"}
+                onPress={showAddToolbar ? onClose : onShowAddToolbar}
+            />;
+
+    return <View style={{display: "flex", flexDirection: "row"}}>
+        {!showAddToolbar && <ActionToolbar />}
+        {!showToolbar  && <ActionAddToolbar />}
+    </View>
+}
 
 export default connect(state => ({
     folders: state.folders,
@@ -21,6 +51,7 @@ export default connect(state => ({
     const [showAddModal, setShowAddModal] = useState(false);
     const [showEditSort, setShowEditSort] = useState(false);
     const [showToolbar, setShowToolbar] = useState(false);
+    const [showAddFolderToolbar, setShowAddFolderToolbar] = useState(false);
 
     const [settings] = useSettings();
     const theme = useTheme();
@@ -31,23 +62,19 @@ export default connect(state => ({
         headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={lockState.locked ? null : totalBalance} />,
         headerLeft: _ => <Appbar.Action color="white" icon="settings" onPress={() => { navigation.navigate('Settings') }}/>
         ,
-        headerRight: _ => <View style={{display: "flex", flexDirection: "row"}}>
-            {folders.length > 1 && <Appbar.Action
-                key={"open"} color="white"
-                icon={showToolbar ? "close" : "dots-vertical"}
-                style={showToolbar ? {} : {
-                    marginRight: 0,
-                    paddingLeft: 5,
-                    width: 24
-                }}
-                onPress={() => {
-                    setShowToolbar(!showToolbar);
+        headerRight: _ =>
+            <TopRightActions
+                onClose={() => {
+                    setShowToolbar(false);
                     setShowEditSort(false);
-                }}/>}
-            {showToolbar  ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => {
-                setShowAddModal(true);
-            }}/>}
-            </View>
+                    setShowAddFolderToolbar(false);
+                }}
+                folderCount={folders.length}
+                onShowAddToolbar={() => setShowAddFolderToolbar(true)}
+                onShowToolbar={() => setShowToolbar(true)}
+                showAddToolbar={showAddFolderToolbar}
+                showToolbar={showToolbar}
+            />
     });
 
     const updateTotalBalance = function(){
@@ -84,14 +111,19 @@ export default connect(state => ({
     }
 
     const submitModal = async (folderName) => {
-        let folder = {
+        let folder: Folder = {
             uid: generateUid(),
             name: folderName,
             addresses: [],
-            totalBalance: 0
+            totalBalance: 0,
+            orderAddresses: "custom",
+            type: FolderType.SIMPLE
         };
 
         dispatch(Actions.addFolder(folder));
+        setTimeout(() => {
+            navigation.navigate('FolderContent', {folder})
+        }, 300);
     };
 
     const isSortedAlphabetically = useMemo(() => {
@@ -99,7 +131,7 @@ export default connect(state => ({
     }, [folders])
 
     if(lockState.locked){
-        return <View style={{flex: 1, backgroundColor: theme.colors.background}}></View>
+        return <View style={{flex: 1, backgroundColor: theme.colors.background}} />
     }
 
     return (
@@ -120,11 +152,14 @@ export default connect(state => ({
                 display={showToolbar}
                 onToggleArrows={() => setShowEditSort(!showEditSort)}
                 onReorder={(type) => dispatch(Actions.sortFolders(type))}
-                onHide={() => {
-                    setShowEditSort(false);
-                    setShowToolbar(false);
-                }}
                 alreadySorted={isSortedAlphabetically}
+            />
+            <AddFolderToolbar
+                display={showAddFolderToolbar}
+                onHide={() => {
+                    setShowAddFolderToolbar(false);
+                }}
+                onAddFolder={() => setShowAddModal(true)}
             />
 
             {folders.length > 0 ? <FoldersList

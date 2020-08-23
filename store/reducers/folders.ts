@@ -1,5 +1,6 @@
-import {Folder, FolderAddress} from "../../utils/Types";
+import {Folder, FolderAddress, FolderType} from "../../utils/Types";
 import {Action} from "../actions/actions";
+import {getNextNPaths} from "../../utils/XPubAddresses";
 
 const folders = (state: Folder[] = [], action: Action) => {
 
@@ -7,7 +8,12 @@ const folders = (state: Folder[] = [], action: Action) => {
         case 'CLEAR':
             return [];
         case 'LOAD_DATA':
-            return action.state.folders;
+            return action.state.folders.map(folder => {
+                return {
+                    type: FolderType.SIMPLE, //Backward compatibility, set default folder type
+                    ...folder,
+                }
+            });
 
         case 'ADD_FOLDER':
             return [...state, action.folder];
@@ -18,6 +24,26 @@ const folders = (state: Folder[] = [], action: Action) => {
             return state.map(folder => {
                 if (folder.uid === updatedFolder.uid) {
                     return updatedFolder;
+                } else {
+                    return folder;
+                }
+            });
+        case 'RENAME_ADDRESS':
+            return state.map(folder => {
+                if (folder.uid === action.folder.uid) {
+                    return {
+                        ...folder,
+                        addresses: folder.addresses.map(address => {
+                            if(address.address === action.address.address){
+                                return {
+                                    ...address,
+                                    name: action.newName
+                                }
+                            }
+
+                            return address;
+                        })
+                    };
                 } else {
                     return folder;
                 }
@@ -50,6 +76,29 @@ const folders = (state: Folder[] = [], action: Action) => {
                     }
                 }
                 return folder;
+            });
+
+        case 'ADD_DERIVED_ADDRESSES':
+            if(!action.addresses.length){
+                return state;
+            }
+            return state.map(folder => {
+               if(folder.uid === action.folder.uid){
+                   return {
+                       ...folder,
+                       addresses: [
+                           ...folder.addresses,
+                           //Remove duplicate addresses just to be sure.
+                           ...action.addresses.filter(address => !folder.addresses.some(existingAddress => address.address === existingAddress.address))
+                       ],
+                       xpubConfig: {
+                           ...(folder.xpubConfig || {}),
+                           nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 1)[0]
+                       }
+                   }
+               }
+
+               return folder;
             });
 
         case 'REMOVE_ADDRESS':

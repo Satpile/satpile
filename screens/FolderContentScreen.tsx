@@ -12,7 +12,7 @@ import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
 import store from "../store/store";
 import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
-import {Folder} from "../utils/Types";
+import {Folder, FolderType} from "../utils/Types";
 import {isSorted} from "../utils/Helper";
 
 export default connect(state => ({
@@ -31,12 +31,13 @@ export default connect(state => ({
         navigation.goBack();
         return null;
     }
+
     navigation.setOptions({
-        headerTitle: props => <DynamicTitle title={folder.name} icon={"md-folder"} satAmount={folder.totalBalance} onPress={() => { setShowRenameModal(true) }}/>,
+        headerTitle: props => <DynamicTitle title={folder.name} icon={folder.type === FolderType.XPUB_WALLET ? "md-wallet" : "md-folder"} satAmount={folder.totalBalance} onPress={() => { setShowRenameModal(true) }}/>,
         headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
         headerRight: props => (
             <View style={{display: "flex", flexDirection: "row"}}>
-                {folder.addresses.length > 1 && <Appbar.Action
+                {folder.addresses.length > 1 && folder.type === FolderType.SIMPLE && <Appbar.Action
                     key={"open"}
                     color="white"
                     icon={showToolbar ? "close" : "dots-vertical"}
@@ -49,7 +50,7 @@ export default connect(state => ({
                        setShowToolbar(!showToolbar);
                        setShowEditSort(false);
                    }}/>}
-                {showToolbar ? null : <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>}
+                {showToolbar ? null : (folder.type === FolderType.SIMPLE && <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>)}
             </View>),
 
         headerTitleContainerStyle: {
@@ -71,10 +72,6 @@ export default connect(state => ({
             display={showToolbar}
             onToggleArrows={() => setShowEditSort(!showEditSort)}
             onReorder={(type) => dispatch(Actions.sortFolderAddresses(type, folder))}
-            onHide={() => {
-                setShowEditSort(false);
-                setShowToolbar(false);
-            }}
             alreadySorted={isSortedAlphabetically}
         />
         <AddressesList
@@ -108,9 +105,9 @@ export default connect(state => ({
                                              onValidate={submitRenameModal}
                                              defaultValue={folder.name}
             />}
-            {folder.addresses.length > 0 ? list : <EmptyScreenContent text={i18n.t('no_address')}/>}
+            {folder.addresses.length > 0 ? list : <EmptyScreenContent text={folder.type === FolderType.SIMPLE ? i18n.t('no_address') : ""}/>}
             <ReloadButton/>
-            <FAB style={styles.fab} color={"white"} icon={"plus"} onPress={() => navigation.navigate('Add', {folder})}/>
+            {folder.type === FolderType.SIMPLE && <FAB style={styles.fab} color={"white"} icon={"plus"} onPress={() => navigation.navigate('Add', {folder})}/> }
         </View>)
 })
 

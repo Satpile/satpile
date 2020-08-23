@@ -11,10 +11,11 @@ import ExplorerList from "../components/ExplorersList";
 import ViewShot from "react-native-view-shot";
 import * as Sharing from 'expo-sharing'
 import {QRCodeAddress} from "../components/QRCodeAddress";
+import PromptModal from "../components/PromptModal";
 
 export default function AddressDetailsScreen({navigation, route}) {
 
-
+    const [showRenameModal, setShowRenameModal] = useState(false);
     const [folders, addresses] = useSelector(state => [state.folders, state.addresses]);
     const [bigQRCode, setBigQRCode] = useState(false);
     const store = useStore();
@@ -31,10 +32,13 @@ export default function AddressDetailsScreen({navigation, route}) {
     const balance = addresses[address.address].balance;
 
     navigation.setOptions({
-        headerTitle: () => <DynamicTitle title={address.name} satAmount={balance}/>,
+        headerTitle: () => <DynamicTitle title={address.name} satAmount={balance} onPress={() => setShowRenameModal(true)}/>,
         headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>
     });
 
+    const submitRenameModal = (newName) => {
+        store.dispatch(Actions.renameAddress(folder, address, newName));
+    }
 
     const deleteAddress = () => {
         Alert.alert(i18n.t('delete'), i18n.t('delete_address_sure'), [
@@ -74,6 +78,13 @@ export default function AddressDetailsScreen({navigation, route}) {
 
     return (
         <View style={{display: 'flex', flex: 1, backgroundColor: theme.colors.background}}>
+            {showRenameModal && <PromptModal title={i18n.t('rename_address')} description={i18n.t('enter_address_name')}
+                                             inputPlaceholder={i18n.t('address_name')} visible={showRenameModal}
+                                             submitLabel={i18n.t('done')}
+                                             onClose={() => setShowRenameModal(false)}
+                                             onValidate={submitRenameModal}
+                                             defaultValue={address.name}
+            />}
             <View style={{flex: 1}}>
                 <View style={{flexDirection: 'row', paddingVertical: 20}}>
                     <View style={{flex: 1, paddingLeft: 20}}>

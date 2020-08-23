@@ -1,4 +1,7 @@
 import runes from "runes";
+import {AddingEnum, FolderType} from "./Types";
+import validate from 'bitcoin-address-validation';
+
 
 export function convertSatoshiToString(satoshi, prependSign = false){
 
@@ -46,4 +49,12 @@ export function isSorted<T extends {name: string}>(array: T[]){
         last = element.name;
     }
     return true;
+}
+
+export function isAddressValid(address: string, type: AddingEnum) {
+    if(type === AddingEnum.XPUB_WALLET){
+        return address.startsWith("xpub");
+    }
+
+    return validate(address) !== false;
 }

@@ -1,9 +1,19 @@
 import React from "react";
-import {TouchableHighlight} from "react-native";
-import {List, useTheme} from 'react-native-paper';
+import {TouchableHighlight, View} from "react-native";
+import {List, Text, useTheme} from 'react-native-paper';
 import SatoshiText from "./SatoshiText";
+import {Folder, FolderType} from "../utils/Types";
 
-declare type FoldersListItemProps = { folder, onClick: (folder) => void, onLongPress: (folder) => void }
+declare type FoldersListItemProps = { folder: Folder, onClick: (folder) => void, onLongPress: (folder) => void }
+
+export const FolderIcon = ({folderType}: {folderType: FolderType}) => {
+    switch (folderType) {
+        case FolderType.SIMPLE:
+            return <List.Icon color="#f47c1c" icon="folder"/>;
+        case FolderType.XPUB_WALLET:
+                return <List.Icon color="#f47c1c" icon="wallet"/>;
+    }
+}
 
 export default function FoldersListItem(props: FoldersListItemProps){
     const theme = useTheme();
@@ -22,7 +32,7 @@ export default function FoldersListItem(props: FoldersListItemProps){
             <List.Item
                 title={props.folder.name}
                 description={() => <SatoshiText amount={props.folder.totalBalance} style={{color:'#717171'} } />}
-                left={() => <List.Icon color="#f47c1c" icon="folder"/>}
+                left={(listProps) => <FolderIcon folderType={props.folder.type} {...listProps} />}
                 right={() =>
                     <List.Icon color="#929292" icon="chevron-right"/>
                 }

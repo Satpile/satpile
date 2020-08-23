@@ -2,14 +2,17 @@ import React, {useState} from "react";
 import {Alert, Modal, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
 import {Appbar, Button, HelperText, Text, TextInput, useTheme} from "react-native-paper";
-import validate from 'bitcoin-address-validation';
 import QRCodeButton from "../components/QRCodeButton";
 import {MainTitle} from "../components/DynamicTitle";
 import {connect} from 'react-redux';
-import {addAddressToFolder} from "../store/actions";
+import {addAddressToFolder, addDerivedAddresses, addFolder} from "../store/actions";
 import {QRCodeScanner} from "../components/QRCodeScanner";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import {Toast} from "../components/Toast";
+import {AddingEnum, Folder, FolderType} from "../utils/Types";
+import {generateUid, isAddressValid} from "../utils/Helper";
+import {initializeAddressesDerivation} from "../utils/XPubAddresses";
+import {DerivationPathSelector} from "../components/DerivationPathSelector";
 
 export default connect(state => ({
     folders: state.folders,
@@ -21,6 +24,9 @@ export default connect(state => ({
     const [saving, setSaving] = useState(false);
     const [addressInput, setAddressInput] = useState('');
     const [nameInput, setNameInput] = useState('');
+    const [derivationStartingPath, setDerivationStartingPath] = useState("m/0/0");
+
+    const addingType = route.params.folder ? AddingEnum.ADDRESS : AddingEnum.XPUB_WALLET;
 
     navigation.setOptions({
         headerTitle: () => <MainTitle title={i18n.t('add')}/>,
@@ -48,27 +54,49 @@ export default connect(state => ({
     };
 
     const saveAddress = async () => {
-        if (isAddressValid(addressInput)) {
+        if (isAddressValid(addressInput, addingType)) {
             setSaving(true);
 
             let address = addressInput;
             let name = nameInput;
 
-            dispatch(addAddressToFolder({name: name, address: address}, route.params.folder))
-            BalanceFetcher.filterAndFetchBalances(false);
+            if(addingType === AddingEnum.ADDRESS){
+                dispatch(addAddressToFolder({name: name, address: address}, route.params.folder));
+                BalanceFetcher.filterAndFetchBalances(false);
+                Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
+                navigation.goBack();
+            } else{
+                const newFolder: Folder = {
+                    uid: generateUid(),
+                    name: name,
+                    addresses: [],
+                    totalBalance: 0,
+                    orderAddresses: "custom",
+                    type: FolderType.XPUB_WALLET,
+                    address: address,
+                    xpubConfig: {
+                        nextPath: derivationStartingPath
+                    }
+                };
 
-            Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
-            navigation.goBack();
+                dispatch(addFolder(newFolder));
+                const firstAddresses = initializeAddressesDerivation(newFolder);
+                dispatch(addDerivedAddresses(newFolder, firstAddresses));
+
+                BalanceFetcher.filterAndFetchBalances(false);
+                Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
+                navigation.goBack();
+
+                setTimeout(() => {
+                    navigation.navigate('FolderContent', {folder: newFolder})
+                }, 300);
+            }
 
             return true;
         } else {
             Alert.alert(i18n.t('error'), i18n.t('invalid_address'));
             return false;
         }
-    }
-
-    const isAddressValid = (str: string) => {
-        return validate(str) !== false; //uses lib 'bitcoin-address-validation'
     }
 
     return (
@@ -84,11 +112,17 @@ export default connect(state => ({
                 }} value={addressInput} label={i18n.t('address')}/>
                 <HelperText
                     type="error"
-                    visible={!isAddressValid(addressInput) && addressInput.length > 0}
+                    visible={!isAddressValid(addressInput, addingType) && addressInput.length > 0}
                 >
                     {i18n.t('invalid_address')}
                 </HelperText>
             </View>
+
+            {addingType === AddingEnum.XPUB_WALLET && <DerivationPathSelector
+                onChange={value => setDerivationStartingPath(value)}
+                value={derivationStartingPath}
+            />}
+
             <View>
                 <QRCodeButton onPress={() => {
                     !saving && startScan()
@@ -104,7 +138,7 @@ export default connect(state => ({
                    onRequestClose={() => setShowScanner(false)}>
                 <QRCodeScanner onAddressScanned={result => onScan(result)} onCancel={() => {
                     setShowScanner(false)
-                }}/>
+                }} scanningType={addingType}/>
             </Modal>
 
         </View>

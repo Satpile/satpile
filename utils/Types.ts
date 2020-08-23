@@ -13,9 +13,15 @@ export type AddressesBalanceDifference = {
 export type FolderAddress = {
     name: string,
     address: string;
+    derivationPath?: string;
 }
 
 export type ListOrderType = "custom" | "alphabetically" | "alphabetically-desc";
+
+export enum FolderType {
+    SIMPLE = "SIMPLE",
+    XPUB_WALLET = "XPUB_WALLET"
+}
 
 export type Folder = {
     uid: string;
@@ -23,6 +29,11 @@ export type Folder = {
     addresses: FolderAddress[];
     orderAddresses: ListOrderType;
     totalBalance: number;
+    type?: FolderType;
+    address?: string; //If type is xpub_wallet, the folder has an address
+    xpubConfig?: {
+        nextPath: string
+    }
 }
 
 export interface Explorer {
@@ -32,4 +43,9 @@ export interface Explorer {
 export enum ExplorerApi {
     MEMPOOL_SPACE = "MEMPOOL_SPACE",
     BLOCKSTREAM_INFO = "BLOCKSTREAM_INFO",
+}
+
+export enum AddingEnum {
+    XPUB_WALLET = "XPUB_WALLET",
+    ADDRESS = "ADDRESS"
 }

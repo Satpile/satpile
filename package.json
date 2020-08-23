@@ -1,7 +1,8 @@
 {
   "main": "node_modules/expo/AppEntry.js",
   "scripts": {
-    "start": "expo start --lan"
+    "start": "expo start --lan",
+    "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,process,stream,util,inherits,fs,path,assert --hack;"
   },
   "dependencies": {
     "@react-native-community/masked-view": "0.1.10",
@@ -9,8 +10,12 @@
     "@react-navigation/native": "^5.1.1",
     "@react-navigation/stack": "^5.2.3",
     "@taccolaa/react-native-settings-screen": "^2.2.10",
+    "assert": "^1.1.1",
+    "babel-plugin-react-native-nodeify-hack": "^1.0.1",
     "bitcoin-address-validation": "^0.2.9",
-    "buffer": "^5.4.3",
+    "bitcoinjs-lib": "^5.1.10",
+    "buffer": "^5.6.0",
+    "events": "^3.2.0",
     "expo": "^38.0.0",
     "expo-background-fetch": "~8.3.0",
     "expo-barcode-scanner": "~8.2.1",
@@ -22,8 +27,11 @@
     "expo-sharing": "~8.2.1",
     "expo-store-review": "~2.1.2",
     "expo-task-manager": "~8.3.0",
+    "expo-web-browser": "~8.3.1",
     "i18n-js": "^3.5.1",
     "isaac": "0.0.5",
+    "path-browserify": "0.0.0",
+    "process": "^0.11.10",
     "react": "16.11.0",
     "react-dom": "16.11.0",
     "react-native": "https://github.com/expo/react-native/archive/sdk-38.0.2.tar.gz",
@@ -31,6 +39,7 @@
     "react-native-bcrypt": "^2.4.0",
     "react-native-dialog": "^5.6.0",
     "react-native-gesture-handler": "~1.6.0",
+    "react-native-level-fs": "^3.0.0",
     "react-native-paper": "^4.0.1",
     "react-native-qrcode-svg": "^6.0.6",
     "react-native-reanimated": "~1.9.0",
@@ -42,9 +51,13 @@
     "react-native-web": "~0.11.7",
     "react-navigation-animated-switch": "^0.3.2",
     "react-redux": "^7.2.0",
+    "readable-stream": "^1.0.33",
     "redux": "^4.0.5",
+    "rn-nodeify": "^10.2.0",
     "runes": "^0.4.3",
-    "expo-web-browser": "~8.3.1"
+    "stream": "0.0.2",
+    "stream-browserify": "^1.0.0",
+    "util": "^0.10.4"
   },
   "devDependencies": {
     "@types/react": "~16.9.41",
@@ -52,5 +65,25 @@
     "babel-preset-expo": "^8.2.3",
     "typescript": "~3.9.5"
   },
-  "private": true
+  "private": true,
+  "react-native": {
+    "path": "path-browserify",
+    "fs": "react-native-level-fs",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
+  },
+  "browser": {
+    "path": "path-browserify",
+    "fs": "react-native-level-fs",
+    "_stream_transform": "readable-stream/transform",
+    "_stream_readable": "readable-stream/readable",
+    "_stream_writable": "readable-stream/writable",
+    "_stream_duplex": "readable-stream/duplex",
+    "_stream_passthrough": "readable-stream/passthrough",
+    "stream": "stream-browserify"
+  }
 }
