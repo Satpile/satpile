@@ -1,5 +1,6 @@
 import {Folder, FolderAddress, FolderType} from "../../utils/Types";
 import {Action} from "../actions/actions";
+import {getNextNPaths} from "../../utils/XPubAddresses";
 
 const folders = (state: Folder[] = [], action: Action) => {
 
@@ -92,7 +93,7 @@ const folders = (state: Folder[] = [], action: Action) => {
                        ],
                        xpubConfig: {
                            ...(folder.xpubConfig || {}),
-                           lastPath: action.addresses.slice(-1)[0].derivationPath
+                           nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 1)[0]
                        }
                    }
                }

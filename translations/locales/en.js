@@ -105,5 +105,10 @@ module.exports = {
     goto_settings: "Go to settings",
     rename_address: "Rename address",
     enter_address_name: "Enter address name",
-    address_name: "Address name"
+    address_name: "Address name",
+    edit_derivation_path: "Edit derivation path",
+    enter_starting_derivation_path: "Enter starting derivation path",
+    starting_derivation_path: "Starting derivation path",
+    selected_starting_derivation_path: "Selected starting derivation path:",
+    generated_derivation_paths: "Generated next derivation paths:",
 };

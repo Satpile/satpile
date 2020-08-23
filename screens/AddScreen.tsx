@@ -12,6 +12,7 @@ import {Toast} from "../components/Toast";
 import {AddingEnum, Folder, FolderType} from "../utils/Types";
 import {generateUid, isAddressValid} from "../utils/Helper";
 import {initializeAddressesDerivation} from "../utils/XPubAddresses";
+import {DerivationPathSelector} from "../components/DerivationPathSelector";
 
 export default connect(state => ({
     folders: state.folders,
@@ -23,6 +24,7 @@ export default connect(state => ({
     const [saving, setSaving] = useState(false);
     const [addressInput, setAddressInput] = useState('');
     const [nameInput, setNameInput] = useState('');
+    const [derivationStartingPath, setDerivationStartingPath] = useState("m/0/0");
 
     const addingType = route.params.folder ? AddingEnum.ADDRESS : AddingEnum.XPUB_WALLET;
 
@@ -72,6 +74,9 @@ export default connect(state => ({
                     orderAddresses: "custom",
                     type: FolderType.XPUB_WALLET,
                     address: address,
+                    xpubConfig: {
+                        nextPath: derivationStartingPath
+                    }
                 };
 
                 dispatch(addFolder(newFolder));
@@ -86,8 +91,6 @@ export default connect(state => ({
                     navigation.navigate('FolderContent', {folder: newFolder})
                 }, 300);
             }
-
-            if(addingType === AddingEnum.XPUB_WALLET){}
 
             return true;
         } else {
@@ -114,6 +117,12 @@ export default connect(state => ({
                     {i18n.t('invalid_address')}
                 </HelperText>
             </View>
+
+            {addingType === AddingEnum.XPUB_WALLET && <DerivationPathSelector
+                onChange={value => setDerivationStartingPath(value)}
+                value={derivationStartingPath}
+            />}
+
             <View>
                 <QRCodeButton onPress={() => {
                     !saving && startScan()

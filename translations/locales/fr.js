@@ -96,5 +96,10 @@ module.exports = {
     goto_settings: "Accéder aux paramètres",
     rename_address: "Renommer l'adresse",
     enter_address_name: "Saisissez le nom de l'adresse",
-    address_name: "Nom de l'adresse"
+    address_name: "Nom de l'adresse",
+    edit_derivation_path: "Modifier le chemin de dérivation",
+    enter_starting_derivation_path: "Saisissez le chemin de dérivation de départ",
+    starting_derivation_path: "Chemin de dérivation de départ",
+    selected_starting_derivation_path: "Chemin de dérivation de départ selectionné :",
+    generated_derivation_paths: "Chemins de dérivation suivants générés :",
 };

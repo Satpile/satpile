@@ -1,12 +1,11 @@
 import * as BTC from "bitcoinjs-lib";
 import {AddressesList, Folder, FolderAddress, FolderType} from "./Types";
 
-export const STARTING_DERIVATION_PATH = "m/1/-1";
+export const STARTING_DERIVATION_PATH = "m/0/0";
 export const DERIVATION_BATCH_SIZE = 10;
 
 export function generateAddresses(paths: string[], xpub: string): FolderAddress[] {
     return paths.map(path => {
-        const bech = BTC.bip32.fromBase58(xpub);
         const derived = BTC.bip32.fromBase58(xpub).derivePath(path);
         return {
             name: path,
@@ -16,12 +15,12 @@ export function generateAddresses(paths: string[], xpub: string): FolderAddress[
     });
 }
 
-export function getNextNPaths(lastPath: string, count: number): string[] {
-    const parts = lastPath.split("/");
+export function getNextNPaths(startingPath: string, count: number): string[] {
+    const parts = startingPath.split("/");
     const lastPartNumber = parseInt(parts.pop());
     const paths: string[] = [];
     for(let i = 0; i<count; i++){
-        paths.push([...parts, lastPartNumber+i+1].join("/"))
+        paths.push([...parts, lastPartNumber+i].join("/"))
     }
     return paths;
 }
@@ -31,7 +30,7 @@ export function initializeAddressesDerivation(folder: Folder) {
 
     const countToAdd = Math.max(DERIVATION_BATCH_SIZE-folder.addresses.length, 0);
 
-    const pathsToAdd = getNextNPaths(folder.xpubConfig?.lastPath || STARTING_DERIVATION_PATH, countToAdd);
+    const pathsToAdd = getNextNPaths(folder.xpubConfig?.nextPath || STARTING_DERIVATION_PATH, countToAdd);
 
     return generateAddresses(pathsToAdd, folder.address);
 }
@@ -39,7 +38,7 @@ export function initializeAddressesDerivation(folder: Folder) {
 export function generateNextNAddresses(folder: Folder, count: number) {
     if(folder.type === FolderType.SIMPLE) return;
 
-    const pathsToAdd = getNextNPaths(folder.xpubConfig?.lastPath || STARTING_DERIVATION_PATH, count);
+    const pathsToAdd = getNextNPaths(folder.xpubConfig?.nextPath || STARTING_DERIVATION_PATH, count);
 
     return generateAddresses(pathsToAdd, folder.address);
 }
@@ -51,7 +50,7 @@ export function generateNextNAddresses(folder: Folder, count: number) {
 export function shouldDeriveMoreAddresses(folder: Folder, addresses: AddressesList) {
     if(folder.type === FolderType.SIMPLE) return false;
 
-    const lastDerived = folder.addresses.find(folderAddress => folderAddress.derivationPath === folder.xpubConfig.lastPath);
+    const lastDerived = folder.addresses.slice(-1)[0]
     if(!lastDerived){ return true; }
 
     return addresses[lastDerived.address].balance > 0;

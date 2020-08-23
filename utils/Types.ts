@@ -32,7 +32,7 @@ export type Folder = {
     type?: FolderType;
     address?: string; //If type is xpub_wallet, the folder has an address
     xpubConfig?: {
-        lastPath: string
+        nextPath: string
     }
 }
 

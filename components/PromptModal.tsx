@@ -14,7 +14,8 @@ declare type PromptModalProps = {
     onValidate: (input: string) => void,
     onCancel?: () => void,
     onClose: () => void,
-    textInputProps?: TextInputProps
+    textInputProps?: TextInputProps,
+    validationRule?: (input: string) => boolean
 };
 
 export default function PromptModal(props: PromptModalProps){
@@ -28,8 +29,10 @@ export default function PromptModal(props: PromptModalProps){
     }
 
     const _validate = () => {
-        props.onValidate(input);
-        _close()
+        if(!props.validationRule || props.validationRule(input)){
+            props.onValidate(input)
+            _close()
+        }
     }
 
     const _close = () => {
@@ -97,11 +100,12 @@ export default function PromptModal(props: PromptModalProps){
                             autoFocus={true} blurOnSubmit={true} enablesReturnKeyAutomatically={true}
                             returnKeyType={"done"}
                             autoCompleteType={'off'}
-                            onSubmitEditing={_validate}/>
+                            onSubmitEditing={_validate}
+                        />
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={_cancel}>{i18n.t('cancel')}</Button>
-                        <Button onPress={_validate}>{props.submitLabel}</Button>
+                        <Button onPress={_validate} disabled={props.validationRule && !props.validationRule(input)}>{props.submitLabel}</Button>
                     </Dialog.Actions>
                 </Dialog>
             </View>
