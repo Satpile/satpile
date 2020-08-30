@@ -5,13 +5,13 @@ import {Appbar, Button, HelperText, Text, TextInput, useTheme} from "react-nativ
 import QRCodeButton from "../components/QRCodeButton";
 import {MainTitle} from "../components/DynamicTitle";
 import {connect} from 'react-redux';
-import {addAddressToFolder, addDerivedAddresses, addFolder} from "../store/actions";
+import {addAddressToFolder, addDerivedAddresses, addFolder, removeFolder} from "../store/actions";
 import {QRCodeScanner} from "../components/QRCodeScanner";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import {Toast} from "../components/Toast";
 import {AddingEnum, Folder, FolderType} from "../utils/Types";
 import {generateUid, isAddressValid} from "../utils/Helper";
-import {initializeAddressesDerivation} from "../utils/XPubAddresses";
+import {initializeAddressesDerivation, STARTING_DERIVATION_PATH} from "../utils/XPubAddresses";
 import {DerivationPathSelector} from "../components/DerivationPathSelector";
 
 export default connect(state => ({
@@ -24,7 +24,7 @@ export default connect(state => ({
     const [saving, setSaving] = useState(false);
     const [addressInput, setAddressInput] = useState('');
     const [nameInput, setNameInput] = useState('');
-    const [derivationStartingPath, setDerivationStartingPath] = useState("m/0/0");
+    const [derivationStartingPath, setDerivationStartingPath] = useState(STARTING_DERIVATION_PATH);
 
     const addingType = route.params.folder ? AddingEnum.ADDRESS : AddingEnum.XPUB_WALLET;
 
@@ -80,16 +80,21 @@ export default connect(state => ({
                 };
 
                 dispatch(addFolder(newFolder));
-                const firstAddresses = initializeAddressesDerivation(newFolder);
-                dispatch(addDerivedAddresses(newFolder, firstAddresses));
+                try{
+                    const firstAddresses = initializeAddressesDerivation(newFolder);
+                    dispatch(addDerivedAddresses(newFolder, firstAddresses));
 
-                BalanceFetcher.filterAndFetchBalances(false);
-                Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
-                navigation.goBack();
+                    BalanceFetcher.filterAndFetchBalances(false);
+                    Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
+                    navigation.goBack();
 
-                setTimeout(() => {
-                    navigation.navigate('FolderContent', {folder: newFolder})
-                }, 300);
+                    setTimeout(() => {
+                        navigation.navigate('FolderContent', {folder: newFolder})
+                    }, 300);
+                }catch(e) {
+                    dispatch(removeFolder(newFolder));
+                    Toast.showToast({type: 'top', message: i18n.t('error_added'), duration: 2000})
+                }
             }
 
             return true;

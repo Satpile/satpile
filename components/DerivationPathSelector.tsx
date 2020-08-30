@@ -16,7 +16,7 @@ function generatePathsExample(startingPath: string) {
 }
 
 function isPathValid(path: string): boolean {
-    return /^m(\/[0-9]+)+$/.test(path);
+    return /^[0-9](\/[0-9])*$/.test(path);
 }
 
 export function DerivationPathSelector({value, onChange}: Props) {

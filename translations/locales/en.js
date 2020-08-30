@@ -11,6 +11,7 @@ module.exports = {
     done: 'Save',
     invalid_address: 'Invalid address',
     success_added: 'Successfully added address',
+    error_added: 'Error while adding address',
     address_copied: 'Address copied to clipboard',
     delete: 'Delete',
     delete_address_sure: 'Remove this address from the list?',

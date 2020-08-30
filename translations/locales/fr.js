@@ -11,6 +11,7 @@ module.exports = {
     done: 'Valider',
     invalid_address: 'Addresse non valide',
     success_added: 'Adresse ajoutée avec succés',
+    error_added: "Erreur lors de l'ajout de l'adresse",
     address_copied: 'Adresse copiée dans le presse-papier',
     delete: 'Supprimer',
     delete_address_sure: 'Retirer cette adresse de la liste ?',

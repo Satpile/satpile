@@ -1,17 +1,35 @@
 import * as BTC from "bitcoinjs-lib";
 import {AddressesList, Folder, FolderAddress, FolderType} from "./Types";
+import * as b58 from "bs58check";
 
-export const STARTING_DERIVATION_PATH = "m/0/0";
+export const STARTING_DERIVATION_PATH = "0/0";
 export const DERIVATION_BATCH_SIZE = 10;
 
 export function generateAddresses(paths: string[], xpub: string): FolderAddress[] {
+    const network = BTC.networks.bitcoin;
+    const convertedPubKey = ['y', 'z'].includes(xpub[0]) ? convertPubToXPub(xpub) : xpub;
     return paths.map(path => {
-        const derived = BTC.bip32.fromBase58(xpub).derivePath(path);
-        return {
+        const result = {
             name: path,
-            address: BTC.payments.p2pkh({pubkey: derived.publicKey}).address,
-            derivationPath: path
+            derivationPath: path,
+            address: ""
         };
+        const derived = BTC.bip32.fromBase58(convertedPubKey, network).derivePath(path);
+        switch (xpub[0]) {
+            case 'x':
+                result.address = BTC.payments.p2pkh({pubkey: derived.publicKey, network}).address;
+                break;
+            case 'y':
+                result.address = BTC.payments.p2sh({
+                    redeem: BTC.payments.p2wpkh({pubkey: derived.publicKey, network}),
+                    network
+                }).address;
+                break;
+            case 'z':
+                result.address = BTC.payments.p2wpkh({pubkey: derived.publicKey, network}).address;
+                break;
+        }
+        return result;
     });
 }
 
@@ -54,4 +72,32 @@ export function shouldDeriveMoreAddresses(folder: Folder, addresses: AddressesLi
     if(!lastDerived){ return true; }
 
     return addresses[lastDerived.address].balance > 0;
+}
+
+
+const prefixes = new Map(
+    [
+        ['xpub', '0488b21e'],
+        ['ypub', '049d7cb2'],
+        ['Ypub', '0295b43f'],
+        ['zpub', '04b24746'],
+        ['Zpub', '02aa7ed3'],
+        ['tpub', '043587cf'],
+        ['upub', '044a5262'],
+        ['Upub', '024289ef'],
+        ['vpub', '045f1cf6'],
+        ['Vpub', '02575483'],
+    ]
+);
+
+export function convertPubToXPub(pubKey: string): string{
+    try {
+        var data = b58.decode(pubKey);
+        data = data.slice(4);
+        data = Buffer.concat([Buffer.from(prefixes.get("xpub"),'hex'), data]);
+        return b58.encode(data);
+    } catch (err) {
+        console.error(err)
+        throw err;
+    }
 }

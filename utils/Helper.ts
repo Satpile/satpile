@@ -53,7 +53,7 @@ export function isSorted<T extends {name: string}>(array: T[]){
 
 export function isAddressValid(address: string, type: AddingEnum) {
     if(type === AddingEnum.XPUB_WALLET){
-        return address.startsWith("xpub");
+        return /^[xyz]pub[A-Za-z0-9]+/.test(address);
     }
 
     return validate(address) !== false;
