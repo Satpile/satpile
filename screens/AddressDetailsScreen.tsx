@@ -12,6 +12,7 @@ import ViewShot from "react-native-view-shot";
 import * as Sharing from 'expo-sharing'
 import {QRCodeAddress} from "../components/QRCodeAddress";
 import PromptModal from "../components/PromptModal";
+import {Folder, FolderType} from "../utils/Types";
 
 export default function AddressDetailsScreen({navigation, route}) {
 
@@ -20,7 +21,7 @@ export default function AddressDetailsScreen({navigation, route}) {
     const [bigQRCode, setBigQRCode] = useState(false);
     const store = useStore();
     const theme = useTheme();
-    const folder = folders.find(folder => route.params.folder.uid === folder.uid);
+    const folder: Folder = folders.find(folder => route.params.folder.uid === folder.uid);
     const address = folder.addresses.find(address => address.address === route.params.address.address);
 
     if (!address) {
@@ -100,7 +101,7 @@ export default function AddressDetailsScreen({navigation, route}) {
                             <ActionButton text={i18n.t('copy')} onPress={() => copyAddress()}/>
                             <ActionButton text={i18n.t('export')} onPress={() => exportAddress()} icon={"export"}
                                           color={'black'}/>
-                            <ActionButton text={i18n.t('delete')} onPress={() => deleteAddress()} color={"red"}/>
+                            {folder.type === FolderType.SIMPLE ? <ActionButton text={i18n.t('delete')} onPress={() => deleteAddress()} color={"red"}/> : null}
                         </View>
 
                     </View>
