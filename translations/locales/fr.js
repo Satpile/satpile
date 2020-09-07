@@ -36,7 +36,7 @@ module.exports = {
     },
     no_network: "Erreur, réseau injoignable",
     no_address: "Ce dossier est vide.\n Cliquez sur + pour ajouter une addresse",
-    no_folder: "Vous n'avez pas encore créé de dossier. Cliquez sur + pour en ajouter un",
+    no_folder: "Vous n'avez pas encore créé de dossier. Cliquez sur + pour en ajouter un. Vous pouvez aussi ajouter des wallets XPUB",
     rename_folder: "Renommer le dossier",
     successfully_deleted: "Dossier supprimé avec succés.",
     tap_reload: "Appuyez pour mettre à jour",
@@ -103,4 +103,5 @@ module.exports = {
     starting_derivation_path: "Chemin de dérivation de départ",
     selected_starting_derivation_path: "Chemin de dérivation de départ selectionné :",
     generated_derivation_paths: "Chemins de dérivation suivants générés :",
+    generate_new_addresses: "Générer de nouvelles adresses"
 };

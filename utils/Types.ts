@@ -1,6 +1,10 @@
 import {AddressStatusType} from "../components/AddressStatus";
 
-export type AddressValue = { status: AddressStatusType, balance: number };
+export type AddressValue = {
+    status: AddressStatusType,
+    balance: number,
+    transactionCount?: number
+};
 export type AddressesList = {
     [address: string]: AddressValue
 }

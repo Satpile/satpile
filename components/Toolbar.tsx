@@ -1,14 +1,15 @@
 import {useTheme} from "../utils/Theme";
 import React, {useLayoutEffect, useRef} from "react";
-import {LayoutAnimation, View} from "react-native";
+import {LayoutAnimation, View, ViewStyle} from "react-native";
 import {ListOrderType} from "../utils/Types";
 
 interface ToolbarProps {
     display: boolean;
     children: React.ReactNode;
+    style?: ViewStyle
 }
 
-export function Toolbar({children, display}: ToolbarProps) {
+export function Toolbar({children, display, style}: ToolbarProps) {
 
     const theme = useTheme();
     const hasMounted = useRef(false);
@@ -27,7 +28,8 @@ export function Toolbar({children, display}: ToolbarProps) {
             alignSelf: "flex-end",
             justifyContent: "flex-end",
             alignItems: "center",
-            flexDirection: "row"
+            flexDirection: "row",
+            ...style
         }}>
             {children}
         </View>

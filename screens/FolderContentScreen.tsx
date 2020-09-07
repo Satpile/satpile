@@ -14,6 +14,8 @@ import store from "../store/store";
 import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 import {Folder, FolderType} from "../utils/Types";
 import {isSorted} from "../utils/Helper";
+import {LoadMoreToolbar} from "../components/LoadMoreToolbar";
+import {DERIVATION_BATCH_SIZE, generateNextNAddresses} from "../utils/XPubAddresses";
 
 export default connect(state => ({
     folders: state.folders,
@@ -25,7 +27,22 @@ export default connect(state => ({
     const folder : Folder = folders.find(folder => folder.uid === route.params.folder.uid);
     const dispatch = useDispatch();
     const [showEditSort, setShowEditSort] = useState(false);
-    const [showToolbar, setShowToolbar] = useState(false);
+    const [showReorderToolbar, setShowReorderToolbar] = useState(false);
+    const [showLoadMoreToolbar, setShowLoadMoreToolbar] = useState(false);
+    const [loadingMore, setLoadingMore] = useState(false);
+
+    const addressesSortedByRecentPath = useMemo(() => {
+        if(folder && folder.type === FolderType.XPUB_WALLET){
+            return [...folder.addresses].sort((a, b) => {
+                const pathA = a.derivationPath.split("/").slice(-1)[0];
+                const pathB = b.derivationPath.split("/").slice(-1)[0];
+                const indexA = parseInt(pathA);
+                const indexB = parseInt(pathB);
+                return indexB - indexA;
+            });
+        }
+        return [];
+    }, [folder]);
 
     if (!folder) {
         navigation.goBack();
@@ -40,17 +57,25 @@ export default connect(state => ({
                 {folder.addresses.length > 1 && folder.type === FolderType.SIMPLE && <Appbar.Action
                     key={"open"}
                     color="white"
-                    icon={showToolbar ? "close" : "dots-vertical"}
-                    style={showToolbar ? {} : {
+                    icon={showReorderToolbar ? "close" : "dots-vertical"}
+                    style={showReorderToolbar ? {} : {
                         marginRight: 0,
                         paddingLeft: 5,
                         width: 24
                     }}
                    onPress={() => {
-                       setShowToolbar(!showToolbar);
+                       setShowReorderToolbar(!showReorderToolbar);
                        setShowEditSort(false);
                    }}/>}
-                {showToolbar ? null : (folder.type === FolderType.SIMPLE && <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>)}
+                {showReorderToolbar ? null : (folder.type === FolderType.SIMPLE && <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>)}
+                {folder.type === FolderType.XPUB_WALLET ?
+                    <Appbar.Action
+                        key={"add"}
+                        color="white"
+                        icon={showLoadMoreToolbar ? "close" : "plus"}
+                        onPress={() => setShowLoadMoreToolbar(!showLoadMoreToolbar)}/>
+                    : null
+                }
             </View>),
 
         headerTitleContainerStyle: {
@@ -69,13 +94,28 @@ export default connect(state => ({
 
     const list = (<>
         <ReorderToolbar
-            display={showToolbar}
+            display={showReorderToolbar}
             onToggleArrows={() => setShowEditSort(!showEditSort)}
             onReorder={(type) => dispatch(Actions.sortFolderAddresses(type, folder))}
             alreadySorted={isSortedAlphabetically}
         />
+        {folder.type === FolderType.XPUB_WALLET && <LoadMoreToolbar display={showLoadMoreToolbar} loading={loadingMore} onLoadMore={() => {
+            setLoadingMore(true);
+            setTimeout(() => {
+                try{
+                    const newAddresses = generateNextNAddresses(folder, DERIVATION_BATCH_SIZE);
+                    dispatch(Actions.addDerivedAddresses(folder, newAddresses));
+                    BalanceFetcher.filterAndFetchBalances();
+                    setShowLoadMoreToolbar(false);
+                }catch(e){
+
+                }finally {
+                    setLoadingMore(false);
+                }
+            });
+        }} /> }
         <AddressesList
-            addresses={folder.addresses}
+            addresses={folder.type === FolderType.XPUB_WALLET ? addressesSortedByRecentPath : folder.addresses}
             folders={folders}
             folder={folder}
             balances={addressesBalance}
