@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {Alert, Modal, TouchableOpacity, View} from "react-native";
+import {ActivityIndicator, Alert, Modal, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
 import {Appbar, Button, HelperText, Text, TextInput, useTheme} from "react-native-paper";
 import QRCodeButton from "../components/QRCodeButton";
@@ -25,6 +25,7 @@ export default connect(state => ({
     const [addressInput, setAddressInput] = useState('');
     const [nameInput, setNameInput] = useState('');
     const [derivationStartingPath, setDerivationStartingPath] = useState(STARTING_DERIVATION_PATH);
+    const [loading, setLoading] = useState(false);
 
     const addingType = route.params.folder ? AddingEnum.ADDRESS : AddingEnum.XPUB_WALLET;
 
@@ -80,21 +81,26 @@ export default connect(state => ({
                 };
 
                 dispatch(addFolder(newFolder));
-                try{
-                    const firstAddresses = initializeAddressesDerivation(newFolder);
-                    dispatch(addDerivedAddresses(newFolder, firstAddresses));
+                setLoading(true);
+                setTimeout(() => { //Wrap in settimeout to update the UI first
+                    try{
+                        const firstAddresses = initializeAddressesDerivation(newFolder);
+                        dispatch(addDerivedAddresses(newFolder, firstAddresses));
 
-                    BalanceFetcher.filterAndFetchBalances(false);
-                    Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
-                    navigation.goBack();
+                        BalanceFetcher.filterAndFetchBalances(false);
+                        Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})
+                        navigation.goBack();
 
-                    setTimeout(() => {
-                        navigation.navigate('FolderContent', {folder: newFolder})
-                    }, 300);
-                }catch(e) {
-                    dispatch(removeFolder(newFolder));
-                    Toast.showToast({type: 'top', message: i18n.t('error_added'), duration: 2000})
-                }
+                        setTimeout(() => {
+                            navigation.navigate('FolderContent', {folder: newFolder})
+                        }, 300);
+                    }catch(e) {
+                        dispatch(removeFolder(newFolder));
+                        Toast.showToast({type: 'top', message: i18n.t('error_added'), duration: 2000})
+                    }finally {
+                        setLoading(false);
+                    }
+                }, 0);
             }
 
             return true;
@@ -135,7 +141,9 @@ export default connect(state => ({
             </View>
 
             <Button style={{marginTop: 40}} onPress={() => saveAddress()}>{i18n.t('done')}</Button>
-
+            {loading && <View>
+                <ActivityIndicator size="small" />
+            </View>}
             <Modal visible={showScanner}
                    animated={true}
                    animationType={"slide"}

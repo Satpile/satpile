@@ -14,9 +14,19 @@ export default class Mempool implements Explorer {
             let request = await fetch(`${this.url}/api/address/` + address);
             let parsed = await request.json();
             let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
-            return {balance: result, status: AddressStatusType.OK};
+            const txCount = parsed.chain_stats.tx_count;
+
+            return {
+                balance: result,
+                status: AddressStatusType.OK,
+                transactionCount: txCount
+            };
         } catch (e) {
-            return {balance: addressContent.balance, status: AddressStatusType.ERROR};
+            return {
+                balance: addressContent.balance,
+                status: AddressStatusType.ERROR,
+                transactionCount: addressContent.transactionCount
+            };
         }
     }
 
@@ -39,7 +49,7 @@ export default class Mempool implements Explorer {
                 }
                 delete requestsDebouncer[address]; //clean debouncer
 
-                if (addressContent.balance !== result.balance) { //We store all the differences
+                if (addressContent.balance !== result.balance || addressContent.transactionCount !== result.transactionCount) { //We store all the differences
                     diff.push({
                         address: address,
                         before: addressContent,
@@ -47,9 +57,9 @@ export default class Mempool implements Explorer {
                     })
                 }
 
-                if (addressContent.balance !== result.balance || addressContent.status !== result.status) {
+                if (addressContent.balance !== result.balance || addressContent.status !== result.status || addressContent.transactionCount !== result.transactionCount) {
                     //We only update the state if the result has changed
-                    dispatch(Actions.updateSingleAddressBalance(address, result));
+                    setTimeout(() => dispatch(Actions.updateSingleAddressBalance(address, result)), 0);
                 }
 
                 return result;

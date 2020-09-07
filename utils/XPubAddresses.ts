@@ -8,13 +8,14 @@ export const DERIVATION_BATCH_SIZE = 10;
 export function generateAddresses(paths: string[], xpub: string): FolderAddress[] {
     const network = BTC.networks.bitcoin;
     const convertedPubKey = ['y', 'z'].includes(xpub[0]) ? convertPubToXPub(xpub) : xpub;
+    const address = BTC.bip32.fromBase58(convertedPubKey, network);
     return paths.map(path => {
         const result = {
             name: path,
             derivationPath: path,
             address: ""
         };
-        const derived = BTC.bip32.fromBase58(convertedPubKey, network).derivePath(path);
+        const derived = address.derivePath(path);
         switch (xpub[0]) {
             case 'x':
                 result.address = BTC.payments.p2pkh({pubkey: derived.publicKey, network}).address;
@@ -55,7 +56,6 @@ export function initializeAddressesDerivation(folder: Folder) {
 
 export function generateNextNAddresses(folder: Folder, count: number) {
     if(folder.type === FolderType.SIMPLE) return;
-
     const pathsToAdd = getNextNPaths(folder.xpubConfig?.nextPath || STARTING_DERIVATION_PATH, count);
 
     return generateAddresses(pathsToAdd, folder.address);
@@ -68,10 +68,12 @@ export function generateNextNAddresses(folder: Folder, count: number) {
 export function shouldDeriveMoreAddresses(folder: Folder, addresses: AddressesList) {
     if(folder.type === FolderType.SIMPLE) return false;
 
-    const lastDerived = folder.addresses.slice(-1)[0]
-    if(!lastDerived){ return true; }
+    const lastNDerived = folder.addresses.slice(-10)
+    if(lastNDerived.length < 10) return true;
 
-    return addresses[lastDerived.address].balance > 0;
+    return lastNDerived.some((folderAddress) => {
+        return addresses[folderAddress.address].transactionCount > 0;
+    });
 }
 
 

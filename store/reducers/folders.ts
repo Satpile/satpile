@@ -93,7 +93,7 @@ const folders = (state: Folder[] = [], action: Action) => {
                        ],
                        xpubConfig: {
                            ...(folder.xpubConfig || {}),
-                           nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 1)[0]
+                           nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 2)[1]
                        }
                    }
                }

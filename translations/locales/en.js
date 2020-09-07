@@ -36,7 +36,7 @@ module.exports = {
     },
     no_network: "Error: Can't reach network",
     no_address: "This folder is empty.\nTap + button to start watching an address",
-    no_folder: "Click + button to create a new folder.\nThen, tap this folder to start watching new addresses.",
+    no_folder: "Click + button to create a new folder.\nThen, tap this folder to start watching new addresses.\nYou can also add a wallet's XPUB",
     rename_folder: "Rename folder",
     successfully_deleted: "Successfully deleted folder",
     tap_reload: "Tap to refresh balances",
@@ -112,4 +112,5 @@ module.exports = {
     starting_derivation_path: "Starting derivation path",
     selected_starting_derivation_path: "Selected starting derivation path:",
     generated_derivation_paths: "Generated next derivation paths:",
+    generate_new_addresses: "Generate new addresses"
 };
