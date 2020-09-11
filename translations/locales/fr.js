@@ -103,5 +103,8 @@ module.exports = {
     starting_derivation_path: "Chemin de dérivation de départ",
     selected_starting_derivation_path: "Chemin de dérivation de départ selectionné :",
     generated_derivation_paths: "Chemins de dérivation suivants générés :",
-    generate_new_addresses: "Générer de nouvelles adresses"
+    generate_new_addresses: "Générer de nouvelles adresses",
+    info_xpub: "Vous pouvez ajouter une adresse XPUB (xpub/ypub/zpub) et automatiquement suive ses adresses dérivées.",
+    advanced_users_only: "Utilisateurs avancés uniquement",
+    should_not_change: "Tout devrait fonctionner sans avoir à éditer ceci"
 };

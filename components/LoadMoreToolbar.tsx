@@ -2,7 +2,6 @@ import React from "react";
 import {Button} from "react-native-paper";
 import {useTheme} from "../utils/Theme";
 import {Toolbar} from "./Toolbar";
-import {useNavigation} from '@react-navigation/native';
 import {ActivityIndicator} from "react-native";
 import {i18n} from "../translations/i18n";
 

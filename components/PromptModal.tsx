@@ -10,7 +10,7 @@ declare type PromptModalProps = {
     inputPlaceholder: string
     submitLabel: string,
     defaultValue?: string
-
+    footerComponent?: React.ReactNode
     onValidate: (input: string) => void,
     onCancel?: () => void,
     onClose: () => void,
@@ -102,6 +102,9 @@ export default function PromptModal(props: PromptModalProps){
                             autoCompleteType={'off'}
                             onSubmitEditing={_validate}
                         />
+                    </Dialog.Content>
+                    <Dialog.Content>
+                        {props.footerComponent}
                     </Dialog.Content>
                     <Dialog.Actions>
                         <Button onPress={_cancel}>{i18n.t('cancel')}</Button>

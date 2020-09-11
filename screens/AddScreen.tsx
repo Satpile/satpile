@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import {ActivityIndicator, Alert, Modal, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
-import {Appbar, Button, HelperText, Text, TextInput, useTheme} from "react-native-paper";
+import {Appbar, Button, HelperText, Text, TextInput, useTheme, Headline} from "react-native-paper";
 import QRCodeButton from "../components/QRCodeButton";
 import {MainTitle} from "../components/DynamicTitle";
 import {connect} from 'react-redux';
@@ -129,11 +129,6 @@ export default connect(state => ({
                 </HelperText>
             </View>
 
-            {addingType === AddingEnum.XPUB_WALLET && <DerivationPathSelector
-                onChange={value => setDerivationStartingPath(value)}
-                value={derivationStartingPath}
-            />}
-
             <View>
                 <QRCodeButton onPress={() => {
                     !saving && startScan()
@@ -144,6 +139,17 @@ export default connect(state => ({
             {loading && <View>
                 <ActivityIndicator size="small" />
             </View>}
+            {addingType === AddingEnum.XPUB_WALLET && (
+                <View style={{
+                    paddingHorizontal: 25,
+                    marginTop: 25
+                }}>
+                    <View style={{marginBottom: 10}}>
+                        <Headline>{i18n.t("advanced_users_only")}</Headline>
+                        <Text>{i18n.t('should_not_change')}</Text>
+                    </View>
+                    <DerivationPathSelector onChange={value => setDerivationStartingPath(value)} value={derivationStartingPath} />
+                </View>)}
             <Modal visible={showScanner}
                    animated={true}
                    animationType={"slide"}

@@ -112,5 +112,8 @@ module.exports = {
     starting_derivation_path: "Starting derivation path",
     selected_starting_derivation_path: "Selected starting derivation path:",
     generated_derivation_paths: "Generated next derivation paths:",
-    generate_new_addresses: "Generate new addresses"
+    generate_new_addresses: "Generate new addresses",
+    info_xpub: "You can add an XPUB wallet (xpub/ypub/zpub) address and automatically track its derived addresses.",
+    advanced_users_only: "Advanced users only",
+    should_not_change: "Everything should be working without editing this"
 };

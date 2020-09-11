@@ -178,7 +178,7 @@ export default connect(state => ({
                     dispatch(Actions.swapFolders({folderA, folderB}));
                 }}
                 folders={folders}
-            /> : <EmptyScreenContent text={i18n.t('no_folder')}/>}
+            /> : <EmptyScreenContent text={i18n.t('no_folder')} info={i18n.t("info_xpub")}/>}
 
             <ReloadButton/>
         </View>)

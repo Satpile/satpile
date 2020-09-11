@@ -30,14 +30,22 @@ export function AddFolderToolbar({display, onHide, onAddFolder}: AddFolderToolba
             <TouchableHighlight style={{
                 marginRight:5,
                 padding: 5,
+                borderRadius: 17
             }} onPress={() => {
                 onHide();
                 navigation.navigate("Add", {folder: null});
-            }}><>
-                <MaterialCommunityIcons name={"wallet"} color={theme.colors.onBackground} size={24} />
-                <Text style={{
-                    fontSize: 8
-                }}>XPUB</Text>
+            }}
+            underlayColor={theme.dark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)"}
+            >
+                <>
+                    <MaterialCommunityIcons name={"wallet"} color={theme.colors.onBackground} size={24} />
+                    <Text style={{
+                        fontSize: 8,
+                        position: "absolute",
+                        bottom: -3,
+                        left: 5,
+                        width: "100%",
+                    }}>XPUB</Text>
                 </>
             </TouchableHighlight>
         </Toolbar>

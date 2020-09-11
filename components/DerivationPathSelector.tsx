@@ -5,6 +5,7 @@ import {useTheme} from "../utils/Theme";
 import PromptModal from "./PromptModal";
 import {i18n} from "../translations/i18n";
 import {getNextNPaths} from "../utils/XPubAddresses";
+import {FontAwesome} from "@expo/vector-icons";
 
 type Props = {
     value: string;
@@ -41,7 +42,9 @@ export function DerivationPathSelector({value, onChange}: Props) {
                 onChange(input);
             }}
             validationRule={isPathValid}
-            defaultValue={value} /> }
+            defaultValue={value}
+            footerComponent={<Text><FontAwesome name={"warning"} />{" "}{i18n.t("should_not_change")}</Text>}
+        /> }
             <View style={{ flexDirection: "column", alignItems: "center" }}>
                 <Text>{i18n.t("selected_starting_derivation_path")}</Text>
                 <View style={{ flexDirection: "row", alignItems: "center" }}>

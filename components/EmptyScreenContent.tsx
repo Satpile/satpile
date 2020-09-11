@@ -1,9 +1,20 @@
 import {View} from "react-native";
-import {Title} from "react-native-paper";
+import {Text} from "react-native-paper";
 import React from "react";
+import {INFORMATION_EMOJI, Tooltip} from "./Tooltip";
 
-export default ({text}) => (
-    <View style={{
+export default ({text, info = undefined}) => {
+    const content = <Text style={{
+        color: "#606060",
+        textAlign: 'center',
+        fontSize: 20,
+        lineHeight: 30,
+        marginVertical: 2,
+        letterSpacing: 0.15,
+    }}>
+        {text}{info && (<>{" "}{INFORMATION_EMOJI}</>)}
+    </Text>;
+    return <View style={{
         alignContent: 'center',
         flexDirection: 'column',
         flex: 1,
@@ -11,6 +22,11 @@ export default ({text}) => (
         paddingHorizontal: '15%',
         paddingTop: 200
     }}>
-        <Title style={{color: "#606060", textAlign: 'center'}}>{text}</Title>
+        {info ?
+            <Tooltip text={info} >
+                {content}
+            </Tooltip> :
+            content
+        }
     </View>
-);
+}
