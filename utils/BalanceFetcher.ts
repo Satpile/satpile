@@ -48,10 +48,18 @@ export default class BalanceFetcher {
         store.dispatch(Actions.updateLastReloadTime());
         let shouldRefresh = false;
         store.getState().folders.forEach((folder: Folder) => {
-            if(shouldDeriveMoreAddresses(folder, store.getState().addresses)){
-                shouldRefresh = true;
-                const newAddresses = generateNextNAddresses(folder, DERIVATION_BATCH_SIZE);
-                store.dispatch(Actions.addDerivedAddresses(folder, newAddresses));
+            if(folder.xpubConfig){
+                console.log("FOLDERS LOG" , folder);
+                if(folder.xpubConfig.branches){
+                    console.log("XPUB BRANCHES", folder.xpubConfig.branches.map(branch => branch.nextPath))
+                    folder.xpubConfig.branches.map(branch => {
+                        if(shouldDeriveMoreAddresses(folder, branch, store.getState().addresses)){
+                            shouldRefresh = true;
+                            const newAddresses = generateNextNAddresses(folder, branch, DERIVATION_BATCH_SIZE);
+                            store.dispatch(Actions.addDerivedAddresses(folder, branch, newAddresses));
+                        }
+                    })
+                }
             }
         })
 

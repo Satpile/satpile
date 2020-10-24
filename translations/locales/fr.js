@@ -75,7 +75,8 @@ module.exports = {
             unlock: "Déverrouiller",
             enter_passphrase: "Saisissez la passphrase :"
         },
-        explorer: 'Explorer API'
+        explorer: 'Explorer API',
+        website: 'Visiter le site web'
     },
     share_qrcode:'Exporter le QRCode',
     notification: {

@@ -33,13 +33,7 @@ export default connect(state => ({
 
     const addressesSortedByRecentPath = useMemo(() => {
         if(folder && folder.type === FolderType.XPUB_WALLET){
-            return [...folder.addresses].sort((a, b) => {
-                const pathA = a.derivationPath.split("/").slice(-1)[0];
-                const pathB = b.derivationPath.split("/").slice(-1)[0];
-                const indexA = parseInt(pathA);
-                const indexB = parseInt(pathB);
-                return indexB - indexA;
-            });
+            return [...folder.addresses].reverse();
         }
         return [];
     }, [folder]);
@@ -103,8 +97,10 @@ export default connect(state => ({
             setLoadingMore(true);
             setTimeout(() => {
                 try{
-                    const newAddresses = generateNextNAddresses(folder, DERIVATION_BATCH_SIZE);
-                    dispatch(Actions.addDerivedAddresses(folder, newAddresses));
+                    folder.xpubConfig.branches.forEach(branch => {
+                        const newAddresses = generateNextNAddresses(folder, branch, DERIVATION_BATCH_SIZE);
+                        dispatch(Actions.addDerivedAddresses(folder, branch, newAddresses));
+                    });
                     BalanceFetcher.filterAndFetchBalances();
                     setShowLoadMoreToolbar(false);
                 }catch(e){

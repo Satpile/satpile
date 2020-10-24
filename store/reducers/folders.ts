@@ -2,17 +2,31 @@ import {Folder, FolderAddress, FolderType} from "../../utils/Types";
 import {Action} from "../actions/actions";
 import {getNextNPaths} from "../../utils/XPubAddresses";
 
-const folders = (state: Folder[] = [], action: Action) => {
+const folders = (state: Folder[] = [], action: Action): Folder[] => {
 
     switch (action.type) {
         case 'CLEAR':
             return [];
         case 'LOAD_DATA':
             return action.state.folders.map(folder => {
-                return {
-                    type: FolderType.SIMPLE, //Backward compatibility, set default folder type
-                    ...folder,
+                if(folder.version === "v2" || folder.type === FolderType.SIMPLE){  //Migration to new datastructure
+                    return {
+                        type: FolderType.SIMPLE, //Backward compatibility, set default folder type
+                        ...folder,
+                        version: "v2",
+                        xpubConfig: folder.xpubConfig ? ("branches" in folder ? {branches: folder["branches"]} : folder.xpubConfig) : undefined
+                    }
                 }
+
+                if(!folder.version || folder.version !== "v2"){
+                    return {
+                        type: FolderType.SIMPLE,
+                        ...folder,
+                        version: "v2",
+                        branches: folder.type === FolderType.XPUB_WALLET ? [{addresses: folder.addresses, nextPath: folder.xpubConfig?.nextPath}] : undefined
+                    }
+                }
+
             });
 
         case 'ADD_FOLDER':
@@ -93,7 +107,20 @@ const folders = (state: Folder[] = [], action: Action) => {
                        ],
                        xpubConfig: {
                            ...(folder.xpubConfig || {}),
-                           nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 2)[1]
+
+                           //deprecated:
+                           //nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 2)[1]
+
+                           branches: folder.xpubConfig.branches.map(branch => {
+                               if(branch.nextPath === action.branch.nextPath){
+                                   return {
+                                       nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 2)[1],
+                                       addresses: [...branch.addresses, ...action.addresses]
+                                   }
+                               }
+
+                               return branch;
+                           })
                        }
                    }
                }
