@@ -1,4 +1,4 @@
-import {AddressValue, Folder, FolderAddress, ListOrderType} from "../../utils/Types";
+import {AddressValue, Folder, FolderAddress, FolderXPubBranch, ListOrderType} from "../../utils/Types";
 import AddressesStorage from "../../utils/AddressesStorage";
 import {Action} from "./actions";
 
@@ -94,10 +94,11 @@ export const sortFolderAddresses = (folderOrder: ListOrderType, folder: Folder) 
     }
 }
 
-export const addDerivedAddresses = (folder: Folder, addresses: FolderAddress[]) => {
+export const addDerivedAddresses = (folder: Folder, branch: FolderXPubBranch, addresses: FolderAddress[]) => {
     return {
         type: "ADD_DERIVED_ADDRESSES",
         folder,
-        addresses
+        addresses,
+        branch
     }
 }

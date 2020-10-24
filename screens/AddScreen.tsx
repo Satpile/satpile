@@ -69,6 +69,7 @@ export default connect(state => ({
             } else{
                 const newFolder: Folder = {
                     uid: generateUid(),
+                    version: "v2",
                     name: name,
                     addresses: [],
                     totalBalance: 0,
@@ -76,7 +77,9 @@ export default connect(state => ({
                     type: FolderType.XPUB_WALLET,
                     address: address,
                     xpubConfig: {
-                        nextPath: derivationStartingPath
+                        branches: derivationStartingPath.split(",").map(path =>
+                            ({nextPath: path, addresses: []})
+                        )
                     }
                 };
 
@@ -84,8 +87,10 @@ export default connect(state => ({
                 setLoading(true);
                 setTimeout(() => { //Wrap in settimeout to update the UI first
                     try{
-                        const firstAddresses = initializeAddressesDerivation(newFolder);
-                        dispatch(addDerivedAddresses(newFolder, firstAddresses));
+                        newFolder.xpubConfig.branches.forEach(branch => {
+                            const firstAddresses = initializeAddressesDerivation(newFolder, branch);
+                            dispatch(addDerivedAddresses(newFolder, branch, firstAddresses));
+                        })
 
                         BalanceFetcher.filterAndFetchBalances(false);
                         Toast.showToast({type: 'top', message: i18n.t('success_added'), duration: 1500})

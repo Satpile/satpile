@@ -13,11 +13,11 @@ type Props = {
 }
 
 function generatePathsExample(startingPath: string) {
-    return getNextNPaths(startingPath, 5);
+    return startingPath.split(",").map(path => getNextNPaths(path, 5));
 }
 
 function isPathValid(path: string): boolean {
-    return /^[0-9](\/[0-9])*$/.test(path);
+    return /^[0-9](\/[0-9])*(,[0-9](\/[0-9]))*$/.test(path);
 }
 
 export function DerivationPathSelector({value, onChange}: Props) {

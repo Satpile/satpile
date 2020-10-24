@@ -1,5 +1,5 @@
 import {Settings} from "../../utils/Settings";
-import {AddressesList, AddressValue, Folder, FolderAddress, ListOrderType} from "../../utils/Types";
+import {AddressesList, AddressValue, Folder, FolderAddress, FolderXPubBranch, ListOrderType} from "../../utils/Types";
 
 enum ActionType {
     CLEAR = "CLEAR",
@@ -107,6 +107,7 @@ export interface ActionUpdateLastReloadTime extends BaseAction<ActionType.UPDATE
 export interface ActionAddDerivedAddresses extends BaseAction<ActionType.ADD_DERIVED_ADDRESSES>{
     addresses: FolderAddress[];
     folder: Folder;
+    branch: FolderXPubBranch;
 }
 
 export type Action =

@@ -11,7 +11,7 @@ import {Linking} from "expo";
 import * as StoreReview from 'expo-store-review';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from "expo-constants";
-import {COMPANY, FEEDBACK_URL, TWITTER_URL} from "../utils/Constants";
+import {BLOG_URL, COMPANY, FEEDBACK_URL, TWITTER_URL} from "../utils/Constants";
 import {CustomSettingsScreen} from "../components/CustomSettingsScreen";
 
 export default function SettingsScreen({navigation}) {
@@ -95,6 +95,11 @@ export default function SettingsScreen({navigation}) {
                     title: i18n.t("settings.twitter"),
                     renderBeforeAccessory: () => <ItemIcon icon={"logo-twitter"} color={"#53acee"}/>,
                     onPress: () => Linking.openURL(TWITTER_URL)
+                },
+                {
+                    title: i18n.t("settings.website"),
+                    renderBeforeAccessory: () => <ItemIcon icon={"md-globe"} color={theme.colors.primary}/>,
+                    onPress: () => WebBrowser.openBrowserAsync(BLOG_URL)
                 },
             ]
         },

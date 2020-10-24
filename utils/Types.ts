@@ -27,16 +27,26 @@ export enum FolderType {
     XPUB_WALLET = "XPUB_WALLET"
 }
 
+export type FolderXPubBranch = {
+    nextPath: string,
+    addresses: FolderAddress[] // Holds addresses corresponding to given branch (ex 0/0 or 1/0)
+}
+
 export type Folder = {
     uid: string;
+    version?: "v2"; //used in migrations (LOAD_DATA action)
     name: string;
-    addresses: FolderAddress[];
+    addresses: FolderAddress[]; //backward compatibility
     orderAddresses: ListOrderType;
     totalBalance: number;
     type?: FolderType;
     address?: string; //If type is xpub_wallet, the folder has an address
     xpubConfig?: {
-        nextPath: string
+        /**
+         * @deprecated
+         */
+        nextPath?: string,
+        branches?: FolderXPubBranch[],
     }
 }
 

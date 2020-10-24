@@ -84,7 +84,8 @@ module.exports = {
             unlock: "Unlock",
             enter_passphrase: "Enter passphrase:"
         },
-        explorer: 'Explorer API'
+        explorer: 'Explorer API',
+        website: 'Visit our website'
     },
     share_qrcode:'Export QRCode',
     notification: {

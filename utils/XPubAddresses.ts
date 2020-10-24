@@ -1,8 +1,8 @@
 import * as BTC from "bitcoinjs-lib";
-import {AddressesList, Folder, FolderAddress, FolderType} from "./Types";
+import {AddressesList, Folder, FolderAddress, FolderType, FolderXPubBranch} from "./Types";
 import * as b58 from "bs58check";
 
-export const STARTING_DERIVATION_PATH = "0/0";
+export const STARTING_DERIVATION_PATH = "0/0,1/0";
 export const DERIVATION_BATCH_SIZE = 10;
 
 export function generateAddresses(paths: string[], xpub: string): FolderAddress[] {
@@ -44,19 +44,19 @@ export function getNextNPaths(startingPath: string, count: number): string[] {
     return paths;
 }
 
-export function initializeAddressesDerivation(folder: Folder) {
+export function initializeAddressesDerivation(folder: Folder, branch: FolderXPubBranch) {
     if(folder.type === FolderType.SIMPLE) return;
 
     const countToAdd = Math.max(DERIVATION_BATCH_SIZE-folder.addresses.length, 0);
 
-    const pathsToAdd = getNextNPaths(folder.xpubConfig?.nextPath || STARTING_DERIVATION_PATH, countToAdd);
+    const pathsToAdd = getNextNPaths(branch.nextPath, countToAdd);
 
     return generateAddresses(pathsToAdd, folder.address);
 }
 
-export function generateNextNAddresses(folder: Folder, count: number) {
+export function generateNextNAddresses(folder: Folder, folderXPubBranch: FolderXPubBranch, count: number) {
     if(folder.type === FolderType.SIMPLE) return;
-    const pathsToAdd = getNextNPaths(folder.xpubConfig?.nextPath || STARTING_DERIVATION_PATH, count);
+    const pathsToAdd = getNextNPaths(folderXPubBranch.nextPath, count);
 
     return generateAddresses(pathsToAdd, folder.address);
 }
@@ -65,10 +65,10 @@ export function generateNextNAddresses(folder: Folder, count: number) {
  * We get the last derived address in the folder and check if it has some balance.
  * If so, we scan the next 10 addresses.
  */
-export function shouldDeriveMoreAddresses(folder: Folder, addresses: AddressesList) {
+export function shouldDeriveMoreAddresses(folder: Folder, folderXPubBranch: FolderXPubBranch, addresses: AddressesList) {
     if(folder.type === FolderType.SIMPLE) return false;
 
-    const lastNDerived = folder.addresses.slice(-10)
+    const lastNDerived = folderXPubBranch.addresses.slice(-10)
     if(lastNDerived.length < 10) return true;
 
     return lastNDerived.some((folderAddress) => {
