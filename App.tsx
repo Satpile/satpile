@@ -70,7 +70,7 @@ async function preLoadAssets() {
     const assets = [
         require('./assets/splash.png')
     ];
-    const toLoad = [
+    const toLoad: Promise<any>[] = [
         ...assets.map(asset => Asset.fromModule(asset).downloadAsync()),
         loadStore(),
         Ionicons.loadFont()
