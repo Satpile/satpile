@@ -1,53 +1,22 @@
-import {ActionType, Channel} from "expo/build/Notifications/Notifications.types";
-import {Notifications as NotificationsManager} from 'expo';
+import * as NotificationsManager from 'expo-notifications';
 import {AddressesBalanceDifference, Folder, FolderAddress} from "./Types";
 import {AppState, Platform} from "react-native";
 import {i18n} from "../translations/i18n";
 import {convertSatoshiToString, truncate} from "./Helper";
 import store from "../store/store";
 
-
-export const BALANCE_UPDATE = "BALANCE_UPDATE";
-
-declare type NotificationsCategory = {
-    name: string,
-    actions: ActionType[],
-    placeholder: string
-}
-
-declare type NotificationsChannel = {
-    id: string,
-    channel: Channel
-}
-
 export class Notifications {
-
-    static notificationCategories: NotificationsCategory[] = [
-     {
-            name: BALANCE_UPDATE,
-            actions: [],
-            placeholder: "Balances updates"
-      }
-    ];
-
-    static channels: NotificationsChannel[] = [
-        {
-            id: BALANCE_UPDATE,
-            channel: {
-                name: "Balance update",
-                sound: true,
-                vibrate: true,
-                description: "Notifies when a wallet's value changes",
-                badge: true,
-            }
-        }
-    ]
-
     static async initNotifications() {
-        await Promise.all([
-          ...this.notificationCategories.map(category => NotificationsManager.createCategoryAsync(category.name, category.actions, category.placeholder)),
-          ...(Platform.OS === "android" ? this.channels.map(channel => NotificationsManager.createChannelAndroidAsync(channel.id, channel.channel)) : [])
-        ]);
+
+        NotificationsManager.setNotificationHandler({
+            handleNotification: async () => {
+                return {
+                    shouldShowAlert: true,
+                    shouldPlaySound: true,
+                    shouldSetBadge: true,
+                };
+            },
+        });
     }
 
 
@@ -111,17 +80,12 @@ export class Notifications {
           `${i18n.t(`notification.total`, {total:newTotalString})}`,
         ];
 
-        await NotificationsManager.presentLocalNotificationAsync({
-            title: title,
-            body: lines.join("\n"),
-            android:{
-                channelId: BALANCE_UPDATE,
-                color: "rgb(255,88,0)"
+        return NotificationsManager.scheduleNotificationAsync({
+            content: {
+                title, body: lines.join("\n")
             },
-            categoryId: BALANCE_UPDATE
+            trigger: null
         });
-
-
     }
 
     static async sendUpdateNotification(diffs: AddressesBalanceDifference[]){

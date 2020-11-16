@@ -1,6 +1,7 @@
 import * as LocalAuthentication from "expo-local-authentication";
 import {AuthenticationType} from "expo-local-authentication";
 import Constants from 'expo-constants';
+import {i18n} from "../translations/i18n";
 
 export enum AuthResult {
     SUCCESS= "SUCCESS",
@@ -16,6 +17,7 @@ export default class LocalAuth {
 
         return LocalAuthentication.authenticateAsync({
             fallbackLabel: "",
+            cancelLabel: i18n.t('cancel'),
             disableDeviceFallback: true,
             //Disable device fallback on standalone app; (can't disable on expo because crash (may be related to ios14, TODO: investigate))
         }, ).then(value => {

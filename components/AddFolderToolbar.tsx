@@ -19,7 +19,7 @@ export function AddFolderToolbar({display, onHide, onAddFolder}: AddFolderToolba
     return (
         <Toolbar display={display} style={{
             alignItems: "flex-start",
-            paddingTop:display && 12,
+            paddingTop:display ? 12 : 0,
         }}>
             <Appbar.Action style={{
                 marginTop: 0
