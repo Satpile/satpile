@@ -6,12 +6,12 @@ import {SettingsData} from '@taccolaa/react-native-settings-screen'; //https://g
 import {i18n} from "../translations/i18n";
 import {MainTitle} from "../components/DynamicTitle";
 import {durationToText, explorerToName, useSettings} from "../utils/Settings";
-import {Ionicons} from '@expo/vector-icons';
+import {Ionicons, FontAwesome} from '@expo/vector-icons';
 import {Linking} from "expo";
 import * as StoreReview from 'expo-store-review';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from "expo-constants";
-import {BLOG_URL, COMPANY, FEEDBACK_URL, TWITTER_URL} from "../utils/Constants";
+import {BLOG_URL, COMPANY, FEEDBACK_URL, TWITTER_URL, BUY_URL, SHOP_URL} from "../utils/Constants";
 import {CustomSettingsScreen} from "../components/CustomSettingsScreen";
 
 export default function SettingsScreen({navigation}) {
@@ -75,6 +75,16 @@ export default function SettingsScreen({navigation}) {
             type: 'SECTION',
             rows: [
                 {
+                    title: i18n.t("settings.buy"),
+                    renderBeforeAccessory: () => <ItemIcon iconComponent={FontAwesome} icon={"bitcoin"} color={theme.colors.primary}/>,
+                    onPress: () => Linking.openURL(BUY_URL)
+                },
+                {
+                    title: i18n.t("settings.shop"),
+                    renderBeforeAccessory: () => <ItemIcon icon={"md-cart"} color={'#5d2eb4'}/>,
+                    onPress: () => Linking.openURL(SHOP_URL)
+                },
+                {
                     title: i18n.t("settings.feedback"),
                     renderBeforeAccessory: () => <ItemIcon icon={"md-mail"} color={'#74b42e'}/>,
                     onPress: () => WebBrowser.openBrowserAsync(FEEDBACK_URL.replace('{version}', Constants.manifest.version))
@@ -98,7 +108,7 @@ export default function SettingsScreen({navigation}) {
                 },
                 {
                     title: i18n.t("settings.website"),
-                    renderBeforeAccessory: () => <ItemIcon icon={"md-globe"} color={theme.colors.primary}/>,
+                    renderBeforeAccessory: () => <ItemIcon icon={"md-globe"} color="#3b5998"/>,
                     onPress: () => WebBrowser.openBrowserAsync(BLOG_URL)
                 },
             ]
@@ -131,8 +141,8 @@ export default function SettingsScreen({navigation}) {
 
 
 
-const ItemIcon = ({icon, color}) => {
-
+const ItemIcon = ({icon, color, iconComponent}: {icon: string, color: string, iconComponent ?: any}) => {
+    const IconComponent = iconComponent || Ionicons;
     return <View style={{marginRight: 5}}>
         <View style={{
             backgroundColor: color,
@@ -143,9 +153,9 @@ const ItemIcon = ({icon, color}) => {
             width: 30,
             height: 30
         }}>
-            <Ionicons style={{
+            <IconComponent style={{
                 alignContent: 'center',
-                marginBottom: -1
+                marginBottom: 0,
             }} name={icon} color={'white'} size={20}/>
         </View>
     </View>

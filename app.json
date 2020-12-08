@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "1.5.1",
+    "version": "1.5.2",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -41,7 +41,10 @@
       "en": "./translations/permissions/en.json"
     },
     "android": {
-      "package": "com.satpile.app"
+      "package": "com.satpile.app",
+      "permissions": [
+        "USE_FINGERPRINT", "USE_BIOMETRIC", "CAMERA"
+      ]
     },
     "androidStatusBar": {
       "barStyle": "light-content",

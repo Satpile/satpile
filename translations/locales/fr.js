@@ -76,7 +76,9 @@ module.exports = {
             enter_passphrase: "Saisissez la passphrase :"
         },
         explorer: 'Explorer API',
-        website: 'Actualités'
+        website: 'Actualités',
+        buy: 'Acheter',
+        shop: 'Magasin'
     },
     share_qrcode:'Exporter le QRCode',
     notification: {
