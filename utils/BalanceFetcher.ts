@@ -49,9 +49,7 @@ export default class BalanceFetcher {
         let shouldRefresh = false;
         store.getState().folders.forEach((folder: Folder) => {
             if(folder.xpubConfig){
-                console.log("FOLDERS LOG" , folder);
                 if(folder.xpubConfig.branches){
-                    console.log("XPUB BRANCHES", folder.xpubConfig.branches.map(branch => branch.nextPath))
                     folder.xpubConfig.branches.map(branch => {
                         if(shouldDeriveMoreAddresses(folder, branch, store.getState().addresses)){
                             shouldRefresh = true;

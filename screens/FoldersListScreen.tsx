@@ -60,7 +60,7 @@ export default connect(state => ({
 
     navigation.setOptions({
         headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={lockState.locked ? null : totalBalance} />,
-        headerLeft: _ => <Appbar.Action color="white" icon="settings" onPress={() => { navigation.navigate('Settings') }}/>
+        headerLeft: _ => <Appbar.Action color="white" icon="cog" onPress={() => { navigation.navigate('Settings') }}/>
         ,
         headerRight: _ =>
             <TopRightActions
