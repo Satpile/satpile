@@ -1,4 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Platform} from "react-native";
 
 export default class AddressesStorage {
 
@@ -16,9 +17,18 @@ export default class AddressesStorage {
         }
     }
 
+    static async retrieveOldStorage(){
+        if(Platform.OS !== "ios"){
+            return null;
+        }
+
+        return null;
+
+    }
+
     static async loadState() {
         try {
-            const rawData = await AsyncStorage.getItem('state');
+            const rawData = (await AsyncStorage.getItem('state')) || (await this.retrieveOldStorage()); // Prevents dataloss from updating app
             if (rawData === null) return this.defaultState;
 
             return JSON.parse(rawData);
