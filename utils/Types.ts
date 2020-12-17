@@ -1,4 +1,5 @@
 import {AddressStatusType} from "../components/AddressStatus";
+import Mempool from "./explorers/Mempool";
 
 export type AddressValue = {
     status: AddressStatusType,
@@ -54,9 +55,25 @@ export interface Explorer {
     fetchAndUpdate(AddressesList): Promise<AddressesBalanceDifference[]>
 }
 
+export interface CustomExplorerOptions {
+    type: "electrum",
+    options: ElectrumOptions
+}
+
+export interface ElectrumOptions {
+    host: string,
+    port: number,
+    protocol: "tls"|"tcp"
+}
+
+export interface MempoolOptions {
+    url: string,
+}
+
 export enum ExplorerApi {
     MEMPOOL_SPACE = "MEMPOOL_SPACE",
     BLOCKSTREAM_INFO = "BLOCKSTREAM_INFO",
+    CUSTOM = "CUSTOM"
 }
 
 export enum AddingEnum {

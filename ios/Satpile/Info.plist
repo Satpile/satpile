@@ -56,6 +56,8 @@
     </array>
     <key>NSCameraUsageDescription</key>
     <string>This app uses the camera to scan QR codes.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>This app uses the camera to scan QR codes.</string>
     <key>NSFaceIDUsageDescription</key>
     <string>Allow Satpile to use FaceID to unlock the app</string>
     <key>ITSAppUsesNonExemptEncryption</key>

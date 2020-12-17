@@ -5,14 +5,24 @@ import store from "../../store/store";
 import {generateUid} from "../Helper";
 import {requestsDebouncer} from "../RequestDebouncer";
 
+const wait = async (ms: number) => new Promise((resolve => setTimeout(resolve, ms)));
+
 export default class Mempool implements Explorer {
 
      constructor(public url: string) {}
 
     async fetch(address: string, addressContent: AddressValue): Promise<AddressValue> {
         try {
+            await wait(Math.floor(Math.random()*1000)); // Reduce number of concurrent requests
             let request = await fetch(`${this.url}/api/address/` + address);
-            let parsed = await request.json();
+            const content = await request.text();
+            let parsed;
+            try{
+                parsed = await JSON.parse(content);
+            }catch(e){
+                console.log(content);
+                throw e;
+            }
             let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
             const txCount = parsed.chain_stats.tx_count;
 
@@ -22,6 +32,7 @@ export default class Mempool implements Explorer {
                 transactionCount: txCount
             };
         } catch (e) {
+            console.log(e);
             return {
                 balance: addressContent.balance,
                 status: AddressStatusType.ERROR,

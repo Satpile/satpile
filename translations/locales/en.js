@@ -35,6 +35,7 @@ module.exports = {
         month_names: [null, "January", "February", "March", "May", "June", "July", "August", "September", "October", "November", "December"]
     },
     no_network: "Error: Can't reach network",
+    connection_error: "Can't connect to server \n{{server}}",
     no_address: "This folder is empty.\nTap + button to start watching an address",
     no_folder: "Click + button to create a new folder.\nThen, tap this folder to start watching new addresses.\nYou can also add a wallet's XPUB",
     rename_folder: "Rename folder",
@@ -85,6 +86,9 @@ module.exports = {
             enter_passphrase: "Enter passphrase:"
         },
         explorer: 'Explorer API',
+        explorer_http: "HTTP API Explorer",
+        explorer_custom: "Custom Node",
+        explorer_electrum: "Electrum Server",
         website: 'News',
         buy: 'Buy',
         shop: 'Shop'

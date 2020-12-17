@@ -261,6 +261,8 @@ PODS:
     - React-Core
   - react-native-safe-area-context (3.1.9):
     - React-Core
+  - react-native-tcp (6.3.0):
+    - React
   - react-native-view-shot (3.1.2):
     - React
   - React-RCTActionSheet (0.63.4):
@@ -406,6 +408,7 @@ DEPENDENCIES:
   - react-native-appearance (from `../node_modules/react-native-appearance`)
   - "react-native-netinfo (from `../node_modules/@react-native-community/netinfo`)"
   - react-native-safe-area-context (from `../node_modules/react-native-safe-area-context`)
+  - "react-native-tcp (from `../node_modules/@photon-sdk/react-native-tcp`)"
   - react-native-view-shot (from `../node_modules/react-native-view-shot`)
   - React-RCTActionSheet (from `../node_modules/react-native/Libraries/ActionSheetIOS`)
   - React-RCTAnimation (from `../node_modules/react-native/Libraries/NativeAnimation`)
@@ -529,6 +532,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-community/netinfo"
   react-native-safe-area-context:
     :path: "../node_modules/react-native-safe-area-context"
+  react-native-tcp:
+    :path: "../node_modules/@photon-sdk/react-native-tcp"
   react-native-view-shot:
     :path: "../node_modules/react-native-view-shot"
   React-RCTActionSheet:
@@ -638,6 +643,7 @@ SPEC CHECKSUMS:
   react-native-appearance: fc2014516054585d531e07aa0b40ab0de1d2be85
   react-native-netinfo: e36c1bb6df27ab84aa933679b3f5bbf9d180b18f
   react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
+  react-native-tcp: 5e814866a2904c3cffb704d70f8e6b1fe55ffe38
   react-native-view-shot: 08c46c9e8e92f6681e8f2ffa55ac3d06e7e99070
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b

@@ -35,6 +35,7 @@ module.exports = {
         month_names: [null, "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
     },
     no_network: "Erreur, réseau injoignable",
+    connection_error: "Erreur de connexion au serveur \n{{server}}",
     no_address: "Ce dossier est vide.\n Cliquez sur + pour ajouter une addresse",
     no_folder: "Vous n'avez pas encore créé de dossier. Cliquez sur + pour en ajouter un. Vous pouvez aussi ajouter des wallets XPUB",
     rename_folder: "Renommer le dossier",

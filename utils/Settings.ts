@@ -6,7 +6,7 @@ import * as Permissions from "expo-permissions";
 import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
 import {Linking} from "expo";
-import {ExplorerApi, ListOrderType} from "./Types";
+import {ExplorerApi, CustomExplorerOptions, ListOrderType} from "./Types";
 import React, {useContext} from "react";
 
 export const REFRESH_TASK = "REFRESH_TASK";
@@ -26,8 +26,19 @@ export interface Settings {
     foldersOrder: ListOrderType;
     security: SecuritySetting;
     explorer: ExplorerApi;
+    explorerOption?: CustomExplorerOptions;
 }
 
+export function defaultCustomElectrum(): CustomExplorerOptions {
+    return{
+        type: "electrum",
+        options: {
+            port: 50002,
+            protocol: "tls",
+            host: "electrum.blockstream.info",
+        }
+    }
+}
 
 export function defaultSettings(): Settings {
     return {
@@ -129,6 +140,7 @@ export const useLockState = () => {
 export function explorerToName(explorer: ExplorerApi) {
     switch (explorer) {
         case ExplorerApi.BLOCKSTREAM_INFO: return "blockstream.info";
+        case ExplorerApi.CUSTOM: return i18n.t("settings.explorer_custom");
         default:
         case ExplorerApi.MEMPOOL_SPACE: return "mempool.space";
     }
