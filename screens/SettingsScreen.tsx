@@ -37,10 +37,10 @@ export default function SettingsScreen({navigation}) {
                     onPress: () => navigation.navigate('SettingsEdit', {setting: 'refresh', title: i18n.t("settings.refresh")}),
                 },
                 {
-                    title: i18n.t("settings.explorer"),
+                    title: i18n.t("settings.explorer.title"),
                     showDisclosureIndicator: true,
                     renderAccessory: () => <SettingItemValue type={"explorer"} value={settings.explorer}/>,
-                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'explorer', title: i18n.t("settings.explorer")}),
+                    onPress: () => navigation.navigate('SettingsEdit', {setting: 'explorer', title: i18n.t("settings.explorer.title")}),
                 }
             ]
         },

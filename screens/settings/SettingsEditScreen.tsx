@@ -3,7 +3,7 @@ import {i18n, updateLocale} from "../../translations/i18n";
 import {Appbar, Headline, Text, useTheme} from "react-native-paper";
 import * as React from "react";
 import {StyleSheet, View} from "react-native";
-import {askPermission, durationToText, explorerToName, useSettings} from "../../utils/Settings";
+import {askPermission, defaultCustomElectrum, durationToText, explorerToName, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
 import {Linking} from "expo";
@@ -13,6 +13,7 @@ import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import * as Permissions from 'expo-permissions';
 import {LockSettingsScreen} from "./LockSettingsScreen";
 import {ExplorerApi} from "../../utils/Types";
+import CustomExplorerSettings from "./CustomExplorerSettings";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
@@ -69,7 +70,7 @@ export default function SettingsEditScreen({navigation, route}) {
              settingsData = [
                  {
                      type: "SECTION",
-                     header: i18n.t("settings.explorer"),
+                     header: i18n.t("settings.explorer.http_api"),
                      rows: explorers.map(explorer => ({
                          title: explorerToName(explorer),
                          showDisclosureIndicator: false,
@@ -82,7 +83,36 @@ export default function SettingsEditScreen({navigation, route}) {
                          onPress: () => {
                              updateSettings({explorer: explorer});
                          }
-                     }))
+                    }))
+                 },
+                 {
+                     type: "SECTION",
+                     header: i18n.t("settings.explorer.custom"),
+                     rows:[
+                         {
+                             title: i18n.t("settings.explorer.custom_electrum"),
+                             showDisclosureIndicator: false,
+                             renderAccessory: () => {
+                                 if(settings.explorer === ExplorerApi.CUSTOM){
+                                     return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
+                                 }
+                                 return null;
+                             },
+                             onPress: () => {
+                                 if(settings.explorer !== ExplorerApi.CUSTOM){
+                                     updateSettings({explorer: ExplorerApi.CUSTOM, explorerOption: defaultCustomElectrum()});
+                                 }
+                             }
+                         }
+                     ]
+                 },
+                 {
+                     visible: settings.explorer === ExplorerApi.CUSTOM,
+                     type: "CUSTOM_VIEW",
+                     key: "settings.explorer_custom.options",
+                     render: () => {
+                         return <CustomExplorerSettings />
+                     }
                  }
              ]
             break;

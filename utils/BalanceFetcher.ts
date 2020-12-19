@@ -9,6 +9,7 @@ import * as BackgroundFetch from "expo-background-fetch";
 import {Platform, StatusBar} from "react-native";
 import {Notifications} from "./Notifications";
 import {DERIVATION_BATCH_SIZE, generateNextNAddresses, shouldDeriveMoreAddresses} from "./XPubAddresses";
+import {Electrum} from "./explorers/Electrum";
 
 export default class BalanceFetcher {
 
@@ -38,9 +39,23 @@ export default class BalanceFetcher {
     private static getExplorer(explorer: ExplorerApi): Explorer {
         switch (explorer) {
             case ExplorerApi.BLOCKSTREAM_INFO: return new Mempool("https://blockstream.info");
+            case ExplorerApi.CUSTOM:
+                return this.getCustomExplorerInstance();
             default:
             case ExplorerApi.MEMPOOL_SPACE: return new Mempool("https://mempool.space");
         }
+    }
+
+    private static getCustomExplorerInstance() {
+        const settings = store.getState().settings;
+        if(settings.explorer === ExplorerApi.CUSTOM && settings.explorerOption){
+            switch(settings.explorerOption.type){
+                case "electrum": return new Electrum(settings.explorerOption.options);
+            }
+        }
+
+        return null;
+
     }
 
     private static afterBalanceFetch(showError: boolean) {

@@ -35,6 +35,7 @@ module.exports = {
         month_names: [null, "Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
     },
     no_network: "Erreur, réseau injoignable",
+    connection_error: "Erreur de connexion au serveur \n{{server}}",
     no_address: "Ce dossier est vide.\n Cliquez sur + pour ajouter une addresse",
     no_folder: "Vous n'avez pas encore créé de dossier. Cliquez sur + pour en ajouter un. Vous pouvez aussi ajouter des wallets XPUB",
     rename_folder: "Renommer le dossier",
@@ -75,7 +76,16 @@ module.exports = {
             unlock: "Déverrouiller",
             enter_passphrase: "Saisissez la passphrase :"
         },
-        explorer: 'Explorer API',
+        explorer: {
+            title: "Explorer",
+            http_api: "HTTP API Explorer",
+            custom: "Explorer personnalisé",
+            custom_electrum: "Serveur Electrum personnalisé",
+            hostname: "Nom d'hôte/IP",
+            enable_ssl: "Activer TLS/SSL",
+            port_number: "Numéro de port",
+            test: "Tester la connexion"
+        },
         website: 'Actualités',
         buy: 'Acheter',
         shop: 'Magasin'
