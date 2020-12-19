@@ -32,7 +32,6 @@ export default class Mempool implements Explorer {
                 transactionCount: txCount
             };
         } catch (e) {
-            console.log(e);
             return {
                 balance: addressContent.balance,
                 status: AddressStatusType.ERROR,

@@ -13,34 +13,6 @@ import * as Actions from "../../store/actions";
 export class Electrum implements Explorer {
     constructor(public options: ElectrumOptions) {}
 
-    /*private async connect() {
-        try{
-            await new Promise(async (resolve, reject) => {
-                const cancel = setTimeout(() => {
-                    this.connection.close();
-                    this.connection.conn.end();
-                    this.connection.conn.destroy();
-
-                }, 5000);
-                const connection = this.connection;
-                this.connection.onError = function (e) {
-                    reject(e);
-                    //connection.close();
-                };
-                await this.connection.connect();
-                //clearTimeout(cancel);
-                resolve();
-            });
-        }catch(e){
-            Toast.showToast({
-                message: e.toString(),
-                duration: 2000,
-                type:  "top"
-            });
-        }
-
-    }*/
-
     public async connect(){
         try{
             const client = new ElectrumCli(this.options.port, this.options.host, this.options.protocol);
