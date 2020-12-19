@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import store, {loadStore} from "./store/store";
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Provider} from 'react-redux';
-import {AppLoading} from "expo";
+import AppLoading from "expo-app-loading";
 import AnimatedSplashScreen from "./components/AnimatedSplashScreen";
 import {ToastHolder} from "./components/Toast";
 import {ThemeHolder} from "./utils/Theme";
@@ -40,6 +40,7 @@ export default function App(){
                 BalanceFetcher.filterAndFetchBalances();
                 setLoadingState("loaded")
             }}
+            onError={(_)=>{}}
         />
     }
 

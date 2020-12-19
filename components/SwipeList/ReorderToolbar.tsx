@@ -20,7 +20,7 @@ export function ReorderToolbar({display, onToggleArrows, onReorder, alreadySorte
             <Appbar.Action color={theme.colors.onBackground} icon="sort" onPress={() => {
                 onToggleArrows();
             }}/>
-            <Appbar.Action  color={theme.colors.onBackground} icon="sort-alphabetical" onPress={() => {
+            <Appbar.Action  color={theme.colors.onBackground} icon="sort-alphabetical-variant" onPress={() => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                 if(alreadySorted){
                     onReorder("alphabetically-desc");

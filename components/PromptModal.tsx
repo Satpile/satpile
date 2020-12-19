@@ -92,7 +92,6 @@ export default function PromptModal(props: PromptModalProps){
                         <Paragraph>{props.description}</Paragraph>
                         <TextInput
                             {...(props.textInputProps || {})}
-                            value={input}
                             defaultValue={props.defaultValue}
                             onChangeText={setInput}
                             placeholder={props.inputPlaceholder}
