@@ -70,44 +70,41 @@ export default function SettingsEditScreen({navigation, route}) {
              settingsData = [
                  {
                      type: "SECTION",
-                     header: i18n.t("settings.explorer"),
-                     rows: [
-                         ...explorers.map(explorer => ({
-                             title: explorerToName(explorer),
+                     header: i18n.t("settings.explorer.http_api"),
+                     rows: explorers.map(explorer => ({
+                         title: explorerToName(explorer),
+                         showDisclosureIndicator: false,
+                         renderAccessory: () => {
+                             if(settings.explorer === explorer){
+                                 return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
+                             }
+                             return null;
+                         },
+                         onPress: () => {
+                             updateSettings({explorer: explorer});
+                         }
+                    }))
+                 },
+                 {
+                     type: "SECTION",
+                     header: i18n.t("settings.explorer.custom"),
+                     rows:[
+                         {
+                             title: i18n.t("settings.explorer.custom_electrum"),
                              showDisclosureIndicator: false,
                              renderAccessory: () => {
-                                 if(settings.explorer === explorer){
+                                 if(settings.explorer === ExplorerApi.CUSTOM){
                                      return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
                                  }
                                  return null;
                              },
                              onPress: () => {
-                                 updateSettings({explorer: explorer});
+                                 if(settings.explorer !== ExplorerApi.CUSTOM){
+                                     updateSettings({explorer: ExplorerApi.CUSTOM, explorerOption: defaultCustomElectrum()});
+                                 }
                              }
-                        })),
-                        {
-                            title: i18n.t("settings.explorer_custom") + (settings.explorer === ExplorerApi.CUSTOM ? "" : " ..."),
-                            showDisclosureIndicator: false,
-                            renderAccessory: () => {
-                                if(settings.explorer === ExplorerApi.CUSTOM){
-                                    return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
-                                }
-                                return null;
-                            },
-                            onPress: () => {
-                                if(settings.explorer !== ExplorerApi.CUSTOM){
-                                    updateSettings({explorer: ExplorerApi.CUSTOM, explorerOption: defaultCustomElectrum()});
-                                }
-                            }
-                        }
-                    ]
-                 },
-                 {
-                     type: "SECTION",
-                     key: "settings.explorer_custom.optionsHeader",
-                     header: i18n.t("settings.explorer_custom"),
-                     visible: settings.explorer === ExplorerApi.CUSTOM,
-                     rows:[]
+                         }
+                     ]
                  },
                  {
                      visible: settings.explorer === ExplorerApi.CUSTOM,

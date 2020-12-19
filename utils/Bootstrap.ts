@@ -11,7 +11,7 @@ export async function bootstrap() {
       UIManager.setLayoutAnimationEnabledExperimental(true);
     }
   }
-  await SplashScreen.preventAutoHideAsync();
+  await SplashScreen.preventAutoHideAsync().catch();
   if(!TaskManager.isTaskDefined(REFRESH_TASK)){
     TaskManager.defineTask(REFRESH_TASK, BalanceFetcher.backgroundFetch);
   }

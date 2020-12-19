@@ -140,7 +140,7 @@ export const useLockState = () => {
 export function explorerToName(explorer: ExplorerApi) {
     switch (explorer) {
         case ExplorerApi.BLOCKSTREAM_INFO: return "blockstream.info";
-        case ExplorerApi.CUSTOM: return i18n.t("settings.explorer_custom");
+        case ExplorerApi.CUSTOM: return i18n.t("settings.explorer.custom");
         default:
         case ExplorerApi.MEMPOOL_SPACE: return "mempool.space";
     }

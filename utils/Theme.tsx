@@ -12,7 +12,10 @@ type RNPaperTheme = ReactNativePaper.Theme;
 interface Theme extends RNPaperTheme {
     chevron,
     border,
-    settingsValue
+    settingsValue,
+    colors: RNPaperTheme['colors'] & {
+        success: string
+    }
 }
 
 const lightTheme: Theme = {
@@ -21,7 +24,8 @@ const lightTheme: Theme = {
     colors: {
         ...DefaultTheme.colors,
         primary: '#f47c1c',
-        background: 'hsl(0, 0%, 97%)'
+        background: 'hsl(0, 0%, 97%)',
+        success: 'hsl(120, 100%, 35%)'
     },
     chevron: '#c0c0c2',
     border: '#c8c8c8',
@@ -35,6 +39,7 @@ const darkTheme: Theme = {
         ...DarkTheme.colors,
         primary: '#f47c1c',
         surface: '#1c1c1e',
+        success: 'hsl(120, 52%, 61%)'
     },
     chevron: '#616065',
     border: '#413f44',

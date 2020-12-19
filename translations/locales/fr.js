@@ -76,7 +76,16 @@ module.exports = {
             unlock: "Déverrouiller",
             enter_passphrase: "Saisissez la passphrase :"
         },
-        explorer: 'Explorer API',
+        explorer: {
+            title: "Explorer",
+            http_api: "HTTP API Explorer",
+            custom: "Explorer personnalisé",
+            custom_electrum: "Serveur Electrum personnalisé",
+            hostname: "Nom d'hôte/IP",
+            enable_ssl: "Activer TLS/SSL",
+            port_number: "Numéro de port",
+            test: "Tester la connexion"
+        },
         website: 'Actualités',
         buy: 'Acheter',
         shop: 'Magasin'

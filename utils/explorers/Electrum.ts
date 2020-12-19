@@ -41,20 +41,31 @@ export class Electrum implements Explorer {
 
     }*/
 
-    async fetchAndUpdate(addresses: AddressesList): Promise<AddressesBalanceDifference[]> {
-        const diff: AddressesBalanceDifference[] = [];
-        const dispatch = store.dispatch;
-
-        const client = new ElectrumCli(this.options.port, this.options.host, this.options.protocol);
-
+    public async connect(){
         try{
-           await client.connect();
-        }catch(e){
+            const client = new ElectrumCli(this.options.port, this.options.host, this.options.protocol);
+            await client.connect();
+            await client.server_ping();
+            return client;
+        }catch(e) {
             Toast.showToast({
                 message: i18n.t("connection_error", {server: `${this.options.protocol}://${this.options.host}:${this.options.port}`}),
                 duration: 2000,
                 type:  "top"
             });
+            throw e;
+        }
+    }
+
+    async fetchAndUpdate(addresses: AddressesList): Promise<AddressesBalanceDifference[]> {
+        const diff: AddressesBalanceDifference[] = [];
+        const dispatch = store.dispatch;
+
+        let client;
+
+        try{
+           client = await this.connect();
+        }catch(e){
             return [];
         }
 
@@ -86,8 +97,13 @@ export class Electrum implements Explorer {
             });
         });
 
-        await Promise.all(queries);
-        client.close();
+        try{
+            await Promise.all(queries);
+        }catch (e){
+            throw e;
+        }finally {
+            client.close();
+        }
         return diff;
     }
 
