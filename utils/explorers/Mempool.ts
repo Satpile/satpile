@@ -15,14 +15,8 @@ export default class Mempool implements Explorer {
         try {
             await wait(Math.floor(Math.random()*1000)); // Reduce number of concurrent requests
             let request = await fetch(`${this.url}/api/address/` + address);
-            const content = await request.text();
-            let parsed;
-            try{
-                parsed = await JSON.parse(content);
-            }catch(e){
-                console.log(content);
-                throw e;
-            }
+            const parsed = await request.json();
+
             let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
             const txCount = parsed.chain_stats.tx_count;
 

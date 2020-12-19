@@ -71,7 +71,7 @@ export default function CustomExplorerSettings(){
             <TextInput
                 disabled={testing}
                 style={{flex: 1}}
-                label={i18n.t('settings.expliorer.port')}
+                label={i18n.t('settings.explorer.port_number')}
                 defaultValue={settings.explorerOption.options.port+""}
                 keyboardType={"number-pad"}
 
