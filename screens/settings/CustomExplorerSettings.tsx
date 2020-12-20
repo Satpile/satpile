@@ -1,4 +1,4 @@
-import {ActivityIndicator, LayoutAnimation, View} from "react-native";
+import {ActivityIndicator, LayoutAnimation, Platform, View} from "react-native";
 import {Text, TextInput, Switch, Button} from "react-native-paper";
 import React, {useEffect, useState} from "react";
 import {useI18n, useSettings} from "../../utils/Settings";
@@ -9,15 +9,17 @@ import {FontAwesome} from '@expo/vector-icons';
 
 
 const transition = () => {
-    LayoutAnimation.configureNext({
-        duration: 100,
-        create: {
-            property: LayoutAnimation.Properties.opacity
-        },
-        delete: {
-            property: LayoutAnimation.Properties.opacity
-        }
-    });
+    if(Platform.OS === "ios"){
+        LayoutAnimation.configureNext({
+            duration: 100,
+            create: {
+                property: LayoutAnimation.Properties.opacity
+            },
+            delete: {
+                property: LayoutAnimation.Properties.opacity
+            }
+        });
+    }
 }
 export default function CustomExplorerSettings(){
     useEffect(() => {

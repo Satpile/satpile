@@ -2,7 +2,7 @@ import {Text, useTheme} from "react-native-paper";
 import {useLockState, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {i18n} from "../../translations/i18n";
-import {Alert, LayoutAnimation, StyleSheet, Switch, View} from "react-native";
+import {Alert, LayoutAnimation, Platform, StyleSheet, Switch, View} from "react-native";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import * as React from "react";
 import {useEffect, useRef, useState} from "react";
@@ -12,15 +12,17 @@ import LocalAuth, {AuthResult} from "../../utils/LocalAuth";
 import {AuthenticationType} from "expo-local-authentication";
 
 const scaleTransition = () => {
-    LayoutAnimation.configureNext({
-        duration: 200,
-        create: {
-            property: LayoutAnimation.Properties.scaleXY
-        },
-        delete: {
-            property: LayoutAnimation.Properties.scaleXY
-        }
-    });
+    if(Platform.OS === "ios"){
+        LayoutAnimation.configureNext({
+            duration: 200,
+            create: {
+                property: LayoutAnimation.Properties.scaleXY
+            },
+            delete: {
+                property: LayoutAnimation.Properties.scaleXY
+            }
+        });
+    }
 }
 
 export function LockSettingsScreen(){
