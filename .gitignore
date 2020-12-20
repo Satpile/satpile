@@ -85,3 +85,4 @@ web-build/
 # @end expo-cli
 
 android/java_pid*.hprof
+android/app/release/
