@@ -3,21 +3,21 @@ import * as bitcoin from 'bitcoinjs-lib';
 import {AddressesBalanceDifference, AddressesList, AddressValue, Explorer, ElectrumOptions} from '../Types';
 import {Toast} from "../../components/Toast";
 import {i18n} from "../../translations/i18n";
-import store from "../../store/store";
-import {generateUid} from "../Helper";
-import {requestsDebouncer} from "../RequestDebouncer";
 import {AddressStatusType} from "../../components/AddressStatus";
-import * as Actions from "../../store/actions";
+import AbstractExplorer from "./AbstractExplorer";
 
-
-export class Electrum implements Explorer {
-    constructor(public options: ElectrumOptions) {}
+export class Electrum extends AbstractExplorer implements Explorer {
+    private client : typeof ElectrumCli;
+    constructor(public options: ElectrumOptions) {
+        super();
+    }
 
     public async connect(){
         try{
             const client = new ElectrumCli(this.options.port, this.options.host, this.options.protocol);
             await client.connect();
             await client.server_ping();
+            this.client = client;
             return client;
         }catch(e) {
             Toast.showToast({
@@ -30,51 +30,20 @@ export class Electrum implements Explorer {
     }
 
     async fetchAndUpdate(addresses: AddressesList): Promise<AddressesBalanceDifference[]> {
-        const diff: AddressesBalanceDifference[] = [];
-        const dispatch = store.dispatch;
-
-        let client;
+        let diff: AddressesBalanceDifference[] = [];
 
         try{
-           client = await this.connect();
+           await this.connect();
         }catch(e){
             return [];
         }
 
-        const queries = Object.entries(addresses).map(([address, addressContent]) => {
-            const requestUniqId = generateUid();
-            requestsDebouncer[address] = requestUniqId;
-            return this.fetch(client, address, addressContent).then(result => {
-                if(requestUniqId !== requestsDebouncer[address]){
-                    // In the meantime, if the requestId coresponding to this address has changed,
-                    // it means this request is obsolete. We ignore it.
-                    return;
-                }
-                delete requestsDebouncer[address]; //clean debouncer
-
-                if (addressContent.balance !== result.balance || addressContent.transactionCount !== result.transactionCount) { //We store all the differences
-                    diff.push({
-                        address: address,
-                        before: addressContent,
-                        after: result
-                    })
-                }
-
-                if (addressContent.balance !== result.balance || addressContent.status !== result.status || addressContent.transactionCount !== result.transactionCount) {
-                    //We only update the state if the result has changed
-                    setTimeout(() => dispatch(Actions.updateSingleAddressBalance(address, result)), 0);
-                }
-
-                return result;
-            });
-        });
-
         try{
-            await Promise.all(queries);
+            diff = await this.runQueries(addresses);
         }catch (e){
             throw e;
         }finally {
-            client.close();
+            this.client.close();
         }
         return diff;
     }
@@ -86,20 +55,20 @@ export class Electrum implements Explorer {
         return reversedHash.toString('hex');
     }
 
-    async getBalance (ecl, addressHash) {
-        return await ecl.request("blockchain.scripthash.get_balance", [addressHash]);
+    async getBalance (addressHash) {
+        return await this.client.request("blockchain.scripthash.get_balance", [addressHash]);
     }
 
-    async getTransactions (ecl, addressHash) {
-        const result = await ecl.request("blockchain.scripthash.get_history", [addressHash]);
+    async getTransactions (addressHash) {
+        const result = await this.client.request("blockchain.scripthash.get_history", [addressHash]);
         return result.filter(tx => tx.height > 0);
     }
 
-    async fetch (ecl: typeof ElectrumCli, address: string, addressContent: AddressValue): Promise<AddressValue>{
+    async fetch (address: string, addressContent: AddressValue): Promise<AddressValue>{
         const hash = this.addressToHashScript(address);
         try{
-            const transactionCount = (await this.getTransactions(ecl, hash)).length;
-            const balance = ( await this.getBalance(ecl, hash)).confirmed;
+            const transactionCount = (await this.getTransactions(hash)).length;
+            const balance = ( await this.getBalance(hash)).confirmed;
 
             return {
                 transactionCount,

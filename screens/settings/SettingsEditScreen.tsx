@@ -2,7 +2,7 @@ import {MainTitle} from "../../components/DynamicTitle";
 import {i18n, updateLocale} from "../../translations/i18n";
 import {Appbar, Headline, Text, useTheme} from "react-native-paper";
 import * as React from "react";
-import {StyleSheet, View} from "react-native";
+import {Image, StyleSheet, View} from "react-native";
 import {askPermission, defaultCustomElectrum, durationToText, explorerToName, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
@@ -14,6 +14,7 @@ import * as Permissions from 'expo-permissions';
 import {LockSettingsScreen} from "./LockSettingsScreen";
 import {ExplorerApi} from "../../utils/Types";
 import CustomExplorerSettings from "./CustomExplorerSettings";
+import explorers from "../../utils/explorers/Explorers";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
@@ -66,22 +67,30 @@ export default function SettingsEditScreen({navigation, route}) {
                 }];
             break;
         case 'explorer':
-             const explorers: ExplorerApi[] = [ExplorerApi.MEMPOOL_SPACE, ExplorerApi.BLOCKSTREAM_INFO];
              settingsData = [
                  {
                      type: "SECTION",
                      header: i18n.t("settings.explorer.http_api"),
-                     rows: explorers.map(explorer => ({
-                         title: explorerToName(explorer),
+                     rows: explorers.filter(explorer => "explorerApi" in explorer).map(explorer => ({
+                         title: explorer.name,
                          showDisclosureIndicator: false,
                          renderAccessory: () => {
-                             if(settings.explorer === explorer){
+                             if(settings.explorer === explorer.explorerApi){
                                  return <Ionicons name={"md-checkmark"} color={'#f47c1c'} size={20}/>
                              }
                              return null;
                          },
                          onPress: () => {
-                             updateSettings({explorer: explorer});
+                             updateSettings({explorer: explorer.explorerApi});
+                         },
+                         renderBeforeAccessory: () => {
+                             return <Image source={explorer.icon || require('../../assets/icon.png')} style={{
+                                 width: 24,
+                                 height: 24,
+                                 borderRadius: 3,
+                                 backgroundColor: 'white',
+                                 marginRight: 4
+                             }}/>
                          }
                     }))
                  },
@@ -102,6 +111,15 @@ export default function SettingsEditScreen({navigation, route}) {
                                  if(settings.explorer !== ExplorerApi.CUSTOM){
                                      updateSettings({explorer: ExplorerApi.CUSTOM, explorerOption: defaultCustomElectrum()});
                                  }
+                             },
+                             renderBeforeAccessory: () => {
+                                 return <Image source={require('../../assets/explorers/electrum.png')} style={{
+                                     width: 24,
+                                     height: 24,
+                                     borderRadius: 3,
+                                     backgroundColor: 'white',
+                                     marginRight: 4
+                                 }}/>
                              }
                          }
                      ]

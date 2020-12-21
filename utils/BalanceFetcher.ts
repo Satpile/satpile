@@ -10,6 +10,9 @@ import {Platform, StatusBar} from "react-native";
 import {Notifications} from "./Notifications";
 import {DERIVATION_BATCH_SIZE, generateNextNAddresses, shouldDeriveMoreAddresses} from "./XPubAddresses";
 import {Electrum} from "./explorers/Electrum";
+import TradeBlock from "./explorers/TradeBlock";
+import SmartBit from "./explorers/SmartBit";
+import BlockCypher from "./explorers/BlockCypher";
 
 export default class BalanceFetcher {
 
@@ -39,6 +42,9 @@ export default class BalanceFetcher {
     private static getExplorer(explorer: ExplorerApi): Explorer {
         switch (explorer) {
             case ExplorerApi.BLOCKSTREAM_INFO: return new Mempool("https://blockstream.info");
+            case ExplorerApi.TRADEBLOCK_COM: return new TradeBlock();
+            case ExplorerApi.SMARTBIT_COM_AU: return new SmartBit();
+            case ExplorerApi.BLOCKCYPHER_COM: return new BlockCypher();
             case ExplorerApi.CUSTOM:
                 return this.getCustomExplorerInstance();
             default:

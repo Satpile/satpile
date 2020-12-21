@@ -4,20 +4,16 @@ import AbstractExplorer from "./AbstractExplorer";
 
 const wait = async (ms: number) => new Promise((resolve => setTimeout(resolve, ms)));
 
-export default class Mempool extends AbstractExplorer implements Explorer {
-
-    constructor(public url: string) {
-        super();
-    }
+export default class BlockCypher extends AbstractExplorer implements Explorer {
 
     async fetch(address: string, addressContent: AddressValue): Promise<AddressValue> {
         try {
             await wait(Math.floor(Math.random()*1000)); // Reduce number of concurrent requests
-            let request = await fetch(`${this.url}/api/address/` + address);
+            let request = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/` + address);
             const parsed = await request.json();
 
-            let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
-            const txCount = parsed.chain_stats.tx_count;
+            let result = parsed.balance;
+            const txCount = parsed.n_tx;
 
             return {
                 balance: result,

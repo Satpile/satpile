@@ -1,3 +1,5 @@
+import {ExplorerApi} from "../Types";
+
 let icons = {
     "mempool.space": require('../../assets/explorers/mempool.space.png'),
     "blockchair.com": require('../../assets/explorers/blockchair.com.png'),
@@ -10,14 +12,14 @@ let icons = {
 };
 
 let explorers = [
-    {name: "mempool.space", pattern: "https://mempool.space/address/{address}"},
+    {name: "mempool.space", pattern: "https://mempool.space/address/{address}", explorerApi: ExplorerApi.MEMPOOL_SPACE},
     {name: "blockchair.com", pattern: "https://blockchair.com/bitcoin/address/{address}"},
-    {name: "blockstream.info", pattern: "https://blockstream.info/address/{address}"},
-    {name: "tradeblock.com", pattern: "https://tradeblock.com/bitcoin/address/{address}"},
-    {name: "blockcypher.com", pattern: "https://live.blockcypher.com/btc/address/{address}"},
+    {name: "blockstream.info", pattern: "https://blockstream.info/address/{address}", explorerApi: ExplorerApi.BLOCKSTREAM_INFO},
+    {name: "tradeblock.com", pattern: "https://tradeblock.com/bitcoin/address/{address}", explorerApi: ExplorerApi.TRADEBLOCK_COM},
+    {name: "blockcypher.com", pattern: "https://live.blockcypher.com/btc/address/{address}", explorerApi: ExplorerApi.BLOCKCYPHER_COM},
     {name: "coinmarketcap.com", pattern: "https://blockchain.coinmarketcap.com/address/bitcoin/{address}"},
     {name: "blockchain.com", pattern: "https://www.blockchain.com/btc/address/{address}"},
-    {name: "smartbit.com.au", pattern: "https://www.smartbit.com.au/address/{address}"},
+    {name: "smartbit.com.au", pattern: "https://www.smartbit.com.au/address/{address}", explorerApi: ExplorerApi.SMARTBIT_COM_AU},
 //    {name: "otx.me", pattern: "https://oxt.me/address/{address}"},
     //{name:"blockexplorer.com", pattern: ""},
     //{name:"btc.com", pattern: ""},

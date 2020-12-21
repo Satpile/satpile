@@ -73,6 +73,9 @@ export interface MempoolOptions {
 export enum ExplorerApi {
     MEMPOOL_SPACE = "MEMPOOL_SPACE",
     BLOCKSTREAM_INFO = "BLOCKSTREAM_INFO",
+    TRADEBLOCK_COM = "TRADEBLOCK_COM",
+    BLOCKCYPHER_COM = "BLOCKCYPHER_COM",
+    SMARTBIT_COM_AU = "SMARTBIT_COM_AU",
     CUSTOM = "CUSTOM"
 }
 

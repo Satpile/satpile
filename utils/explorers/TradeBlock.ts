@@ -4,20 +4,18 @@ import AbstractExplorer from "./AbstractExplorer";
 
 const wait = async (ms: number) => new Promise((resolve => setTimeout(resolve, ms)));
 
-export default class Mempool extends AbstractExplorer implements Explorer {
-
-    constructor(public url: string) {
-        super();
-    }
+export default class TradeBlock extends AbstractExplorer implements Explorer {
 
     async fetch(address: string, addressContent: AddressValue): Promise<AddressValue> {
         try {
             await wait(Math.floor(Math.random()*1000)); // Reduce number of concurrent requests
-            let request = await fetch(`${this.url}/api/address/` + address);
-            const parsed = await request.json();
-
-            let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
-            const txCount = parsed.chain_stats.tx_count;
+            let request = await fetch(`https://tradeblock.com/blockchain/api/v2.0/btc/balance/` + address);
+            const [parsed] = await request.json();
+            if(!parsed){
+                throw new Error("TradeBlock error");
+            }
+            let result = parsed.confirmed_bal*1e8;
+            const txCount = parsed.num_txns_confirmed;
 
             return {
                 balance: result,
