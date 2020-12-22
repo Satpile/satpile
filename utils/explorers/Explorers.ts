@@ -16,7 +16,7 @@ let explorers = [
     {name: "blockchair.com", pattern: "https://blockchair.com/bitcoin/address/{address}"},
     {name: "blockstream.info", pattern: "https://blockstream.info/address/{address}", explorerApi: ExplorerApi.BLOCKSTREAM_INFO},
     {name: "tradeblock.com", pattern: "https://tradeblock.com/bitcoin/address/{address}", explorerApi: ExplorerApi.TRADEBLOCK_COM},
-    {name: "blockcypher.com", pattern: "https://live.blockcypher.com/btc/address/{address}", explorerApi: ExplorerApi.BLOCKCYPHER_COM},
+    {name: "blockcypher.com", pattern: "https://live.blockcypher.com/btc/address/{address}", /*explorerApi: ExplorerApi.BLOCKCYPHER_COM disabled because of rate limiting*/},
     {name: "coinmarketcap.com", pattern: "https://blockchain.coinmarketcap.com/address/bitcoin/{address}"},
     {name: "blockchain.com", pattern: "https://www.blockchain.com/btc/address/{address}"},
     {name: "smartbit.com.au", pattern: "https://www.smartbit.com.au/address/{address}", explorerApi: ExplorerApi.SMARTBIT_COM_AU},

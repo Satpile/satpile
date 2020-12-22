@@ -14,6 +14,8 @@ import {useI18n, useLockState, useSettings} from "../utils/Settings";
 import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 import {Folder, FolderType} from "../utils/Types";
 import {AddFolderToolbar} from "../components/AddFolderToolbar";
+import store from "../store/store";
+
 
 const TopRightActions = ({showToolbar, onShowToolbar, showAddToolbar, onShowAddToolbar, folderCount, onClose}) => {
 
@@ -91,19 +93,28 @@ export default connect(state => ({
         }
     }, [folders]);
 
+
+    //Refresh errored addresses
+    useEffect(() => {
+        const interval = setInterval(() => {
+            BalanceFetcher.filterAndFetchBalances(true, true);
+        }, 10*1000);
+
+        return () => clearInterval(interval);
+    }, [])
+
     useEffect(() => {
         if (settings.refresh > 0) {
             const interval = setInterval(() => {
-                // @ts-ignore
-                let lastReloadTimestamp = (new Date(lastReloadTime)) / 1000;
+                let lastReloadTimestamp = (new Date(store.getState().lastReloadTime)).getTime() / 1000;
                 let currentTimestamp = Date.now() / 1000;
                 if ((currentTimestamp - lastReloadTimestamp) > settings.refresh) {
-                    BalanceFetcher.backgroundFetch();
+                    BalanceFetcher.filterAndFetchBalances(true, false);
                 }
-            }, 10 * 1000);
+            }, 60 * 1000);
             return () => clearInterval(interval);
         }
-    }, [settings.refresh, lastReloadTime]);
+    }, [settings.refresh]);
 
 
     const closeModal = () => {

@@ -4,7 +4,7 @@ import Mempool from "./explorers/Mempool";
 import store from "../store/store";
 import {Toast} from "../components/Toast";
 import {i18n} from '../translations/i18n';
-import {Explorer, ExplorerApi, Folder} from "./Types";
+import {AddressesList, Explorer, ExplorerApi, Folder} from "./Types";
 import * as BackgroundFetch from "expo-background-fetch";
 import {Platform, StatusBar} from "react-native";
 import {Notifications} from "./Notifications";
@@ -13,6 +13,7 @@ import {Electrum} from "./explorers/Electrum";
 import TradeBlock from "./explorers/TradeBlock";
 import SmartBit from "./explorers/SmartBit";
 import BlockCypher from "./explorers/BlockCypher";
+import {AddressStatusType} from "../components/AddressStatus";
 
 export default class BalanceFetcher {
 
@@ -22,13 +23,35 @@ export default class BalanceFetcher {
         }
     }
 
-    static async filterAndFetchBalances(showError: boolean = true) {
+    static getErroredAddresses() {
+        return Object
+            .entries(store.getState().addresses)
+            .reduce((list, [address, value]) => {
+                if(value.status === AddressStatusType.ERROR){
+                    return {
+                        ...list,
+                        [address]: value
+                    }
+                }
+                return list;
+            }, {});
+    }
+
+    static async filterAndFetchBalances(showError: boolean = true, onlyErrorAddresses = false) {
+        const addressesToFetch : AddressesList = onlyErrorAddresses ?
+            this.getErroredAddresses() : store.getState().addresses;
+
+        if(Object.keys(addressesToFetch).length === 0){
+            return null;
+        }
+
         this.showNetworkActivity(true);
         let networkState = await NetInfo.fetch();
         this.showNetworkActivity(false);
         if (networkState.isConnected) {
             this.showNetworkActivity(true);
-            const diff = await this.getExplorer(store.getState().settings.explorer).fetchAndUpdate(store.getState().addresses);
+
+            const diff = await this.getExplorer(store.getState().settings.explorer).fetchAndUpdate(addressesToFetch);
             BalanceFetcher.afterBalanceFetch(showError);
             this.showNetworkActivity(false);
             return diff;
@@ -44,11 +67,11 @@ export default class BalanceFetcher {
             case ExplorerApi.BLOCKSTREAM_INFO: return new Mempool("https://blockstream.info");
             case ExplorerApi.TRADEBLOCK_COM: return new TradeBlock();
             case ExplorerApi.SMARTBIT_COM_AU: return new SmartBit();
-            case ExplorerApi.BLOCKCYPHER_COM: return new BlockCypher();
+            //case ExplorerApi.BLOCKCYPHER_COM: return new BlockCypher(); //Disabled because of rate limit
             case ExplorerApi.CUSTOM:
                 return this.getCustomExplorerInstance();
             default:
-            case ExplorerApi.MEMPOOL_SPACE: return new Mempool("https://mempool.space");
+            case ExplorerApi.MEMPOOL_SPACE: return new Mempool("https://mempool.space", 1000/50);
         }
     }
 

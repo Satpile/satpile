@@ -11,7 +11,6 @@ export default class BlockCypher extends AbstractExplorer implements Explorer {
             await wait(Math.floor(Math.random()*1000)); // Reduce number of concurrent requests
             let request = await fetch(`https://api.blockcypher.com/v1/btc/main/addrs/` + address);
             const parsed = await request.json();
-
             let result = parsed.balance;
             const txCount = parsed.n_tx;
 

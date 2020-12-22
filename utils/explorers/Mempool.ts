@@ -2,18 +2,26 @@ import {AddressStatusType} from "../../components/AddressStatus";
 import {AddressValue, Explorer} from "../Types";
 import AbstractExplorer from "./AbstractExplorer";
 
-const wait = async (ms: number) => new Promise((resolve => setTimeout(resolve, ms)));
-
 export default class Mempool extends AbstractExplorer implements Explorer {
 
-    constructor(public url: string) {
+    constructor(public url: string, public cooldown: number = 0) {
         super();
+    }
+
+    public isCoolDownImplemented(): boolean{
+        return true;
+    }
+
+    protected getBaseCountdown(): number {
+        return this.cooldown;
     }
 
     async fetch(address: string, addressContent: AddressValue): Promise<AddressValue> {
         try {
-            await wait(Math.floor(Math.random()*1000)); // Reduce number of concurrent requests
             let request = await fetch(`${this.url}/api/address/` + address);
+            if(request.status !== 200){
+                throw new Error(request.status+"");
+            }
             const parsed = await request.json();
 
             let result = parsed.chain_stats.funded_txo_sum - parsed.chain_stats.spent_txo_sum;
