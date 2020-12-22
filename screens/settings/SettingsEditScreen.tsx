@@ -3,7 +3,7 @@ import {i18n, updateLocale} from "../../translations/i18n";
 import {Appbar, Headline, Text, useTheme} from "react-native-paper";
 import * as React from "react";
 import {Image, StyleSheet, View} from "react-native";
-import {askPermission, defaultCustomElectrum, durationToText, explorerToName, useSettings} from "../../utils/Settings";
+import {askPermission, defaultCustomElectrum, durationToText, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
 import {Linking} from "expo";
@@ -15,6 +15,7 @@ import {LockSettingsScreen} from "./LockSettingsScreen";
 import {ExplorerApi} from "../../utils/Types";
 import CustomExplorerSettings from "./CustomExplorerSettings";
 import explorers from "../../utils/explorers/Explorers";
+import {useKeyBoardHeight} from "../../utils/Keyboard";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
@@ -28,6 +29,8 @@ export default function SettingsEditScreen({navigation, route}) {
         headerTitle: () => <MainTitle title={title || i18n.t('settings.title')}/>,
         headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
     });
+
+    const keyboardHeight = useKeyBoardHeight();
 
     let settingsData: SettingsData = [];
 
@@ -202,7 +205,9 @@ export default function SettingsEditScreen({navigation, route}) {
             return <LockSettingsScreen />;
     }
 
-    return <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+    return <View
+        style={{flex:1, backgroundColor: theme.colors.background, paddingBottom: keyboardHeight}}
+    >
         <CustomSettingsScreen settings={settingsData}/>
     </View>;
 

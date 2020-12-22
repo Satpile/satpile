@@ -1,7 +1,8 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import {Button, Dialog, Paragraph, Portal, TextInput} from "react-native-paper";
-import {Keyboard, LayoutAnimation, Platform, StatusBar, TextInputProps, View} from "react-native";
+import {StatusBar, TextInputProps, View} from "react-native";
 import {i18n} from "../translations/i18n";
+import {useKeyBoardHeight} from "../utils/Keyboard";
 
 declare type PromptModalProps = {
     title: string,
@@ -44,32 +45,7 @@ export default function PromptModal(props: PromptModalProps){
         props.onClose();
     }
 
-    if (Platform.OS === "ios") {
-
-
-        useEffect(() => {
-            Keyboard.addListener("keyboardWillShow", _keyboardWillShow);
-            Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
-
-            // cleanup function
-            return () => {
-                Keyboard.removeListener("keyboardWillShow", _keyboardWillShow);
-                Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
-            };
-        }, []);
-
-        const _keyboardWillShow = (event) => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            updateKeyboardHeight(event.endCoordinates.height)
-        };
-
-        const _keyboardDidHide = (event) => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            updateKeyboardHeight(event.endCoordinates.height)
-        };
-    }
-
-    const [keyboardHeight, updateKeyboardHeight] = useState(0);
+    const keyboardHeight = useKeyBoardHeight();
 
     return (
         props.visible && (<Portal>
