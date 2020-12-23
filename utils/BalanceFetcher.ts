@@ -70,6 +70,7 @@ export default class BalanceFetcher {
             //case ExplorerApi.BLOCKCYPHER_COM: return new BlockCypher(); //Disabled because of rate limit
             case ExplorerApi.CUSTOM:
                 return this.getCustomExplorerInstance();
+            case ExplorerApi.MEMPOOL_SPACE_ONION: return new Mempool("http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion", 1000/50);
             default:
             case ExplorerApi.MEMPOOL_SPACE: return new Mempool("https://mempool.space", 1000/50);
         }

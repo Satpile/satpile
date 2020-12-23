@@ -2,6 +2,7 @@ import {ExplorerApi} from "../Types";
 
 let icons = {
     "mempool.space": require('../../assets/explorers/mempool.space.png'),
+    "mempool.space (via tor)": require('../../assets/explorers/mempool.space.png'),
     "blockchair.com": require('../../assets/explorers/blockchair.com.png'),
     "blockstream.info": require('../../assets/explorers/blockstream.info.png'),
     "tradeblock.com": require('../../assets/explorers/tradeblock.com.png'),
@@ -13,6 +14,7 @@ let icons = {
 
 let explorers = [
     {name: "mempool.space", pattern: "https://mempool.space/address/{address}", explorerApi: ExplorerApi.MEMPOOL_SPACE},
+    {name: "mempool.space (via tor)", pattern: "https://mempool.space/address/{address}", explorerApi: ExplorerApi.MEMPOOL_SPACE_ONION, desc: "mempoolhqx4i...j6mlo2r6ad.onion"},
     {name: "blockchair.com", pattern: "https://blockchair.com/bitcoin/address/{address}"},
     {name: "blockstream.info", pattern: "https://blockstream.info/address/{address}", explorerApi: ExplorerApi.BLOCKSTREAM_INFO},
     {name: "tradeblock.com", pattern: "https://tradeblock.com/bitcoin/address/{address}", explorerApi: ExplorerApi.TRADEBLOCK_COM},
@@ -26,7 +28,15 @@ let explorers = [
 ].map(explorer => ({...explorer, icon: icons[explorer.name]}));
 
 export default explorers;
-
+export const explorersByExplorerApi = explorers.reduce((list, explorer) => {
+    if(explorer.explorerApi){
+        return {
+            ...list,
+            [explorer.explorerApi]: explorer
+        }
+    }
+    return list;
+}, {});
 
 /**
  https://mempool.space/address/1MUz4VMYui5qY1mxUiG8BQ1Luv6tqkvaiL

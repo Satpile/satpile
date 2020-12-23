@@ -86,13 +86,14 @@ export default function SettingsEditScreen({navigation, route}) {
                          onPress: () => {
                              updateSettings({explorer: explorer.explorerApi});
                          },
+                         subtitle: explorer.desc,
                          renderBeforeAccessory: () => {
                              return <Image source={explorer.icon || require('../../assets/icon.png')} style={{
                                  width: 24,
                                  height: 24,
                                  borderRadius: 3,
                                  backgroundColor: 'white',
-                                 marginRight: 4
+                                 marginRight: 8
                              }}/>
                          }
                     }))

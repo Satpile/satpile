@@ -8,6 +8,7 @@ import {Appearance} from "react-native-appearance";
 import {Linking} from "expo";
 import {CustomExplorerOptions, ExplorerApi, ListOrderType} from "./Types";
 import React, {useContext} from "react";
+import {explorersByExplorerApi} from "./explorers/Explorers";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -139,12 +140,7 @@ export const useLockState = () => {
 
 export function explorerToName(explorer: ExplorerApi) {
     switch (explorer) {
-        case ExplorerApi.BLOCKSTREAM_INFO: return "blockstream.info";
         case ExplorerApi.CUSTOM: return i18n.t("settings.explorer.custom");
-        case ExplorerApi.TRADEBLOCK_COM: return "tradeblock.com";
-        case ExplorerApi.BLOCKCYPHER_COM: return "blockcypher.com";
-        case ExplorerApi.SMARTBIT_COM_AU: return "smartbit.com.au";
-        default:
-        case ExplorerApi.MEMPOOL_SPACE: return "mempool.space";
+        default: return explorersByExplorerApi[explorer].name;
     }
 }
