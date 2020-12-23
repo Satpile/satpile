@@ -1,7 +1,7 @@
 {
   "scripts": {
     "start": "react-native start",
-    "postinstall": "./node_modules/.bin/rn-nodeify --install buffer,events,process,stream,util,inherits,path,assert --hack;",
+    "postinstall": "patch-package && ./node_modules/.bin/rn-nodeify --install buffer,events,process,stream,util,inherits,path,assert --hack;",
     "ios": "react-native run-ios",
     "android": "react-native run-android"
   },
@@ -39,6 +39,7 @@
     "expo-web-browser": "~8.6.0",
     "i18n-js": "^3.5.1",
     "isaac": "0.0.5",
+    "patch-package": "^6.2.2",
     "path-browserify": "0.0.0",
     "process": "^0.11.10",
     "react": "16.13.1",
