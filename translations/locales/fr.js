@@ -87,7 +87,7 @@ module.exports = {
             test: "Tester la connexion"
         },
         website: 'Actualités',
-        buy: 'Acheter',
+        buy: 'Acheter du Bitcoin',
         shop: 'Magasin'
     },
     share_qrcode:'Exporter le QRCode',
