@@ -62,7 +62,7 @@ export default class BalanceFetcher {
         return null;
     }
 
-    private static getExplorer(explorer: ExplorerApi): Explorer {
+    public static getExplorer(explorer: ExplorerApi): Explorer {
         switch (explorer) {
             case ExplorerApi.BLOCKSTREAM_INFO: return new Mempool("https://blockstream.info");
             case ExplorerApi.TRADEBLOCK_COM: return new TradeBlock();

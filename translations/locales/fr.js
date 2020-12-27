@@ -119,5 +119,12 @@ module.exports = {
     generate_new_addresses: "Générer de nouvelles adresses",
     info_xpub: "Vous pouvez ajouter une adresse XPUB (xpub/ypub/zpub) et automatiquement suive ses adresses dérivées.",
     advanced_users_only: "Utilisateurs avancés uniquement",
-    should_not_change: "Tout devrait fonctionner sans avoir à éditer ceci"
+    should_not_change: "Tout devrait fonctionner sans avoir à éditer ceci",
+    tor: {
+        status: {
+            CONNECTED: "Connecté au daemon TOR",
+            CONNECTING: "Connexion au daemon TOR en cours...",
+            DISCONNECTED: "Daemon TOR déconnecté"
+        }
+    }
 };

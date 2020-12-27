@@ -15,6 +15,7 @@ import {ReorderToolbar} from "../components/SwipeList/ReorderToolbar";
 import {Folder, FolderType} from "../utils/Types";
 import {AddFolderToolbar} from "../components/AddFolderToolbar";
 import store from "../store/store";
+import {TorStatus} from "../components/TorStatus";
 
 
 const TopRightActions = ({showToolbar, onShowToolbar, showAddToolbar, onShowAddToolbar, folderCount, onClose}) => {
@@ -147,6 +148,7 @@ export default connect(state => ({
 
     return (
         <View style={{flex: 1, backgroundColor: theme.colors.background}}>
+            <TorStatus />
             {showAddModal &&
                 (<PromptModal
                     title={i18n.t('new_folder')}

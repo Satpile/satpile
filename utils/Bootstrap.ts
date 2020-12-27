@@ -7,8 +7,9 @@ import {Notifications} from "./Notifications";
 
 export async function bootstrap() {
   LogBox.ignoreLogs([
-      "Cannot update a component from inside", //TODO: investigate what triggers this
-      "Using Math.random is not cryptographically secure" //Already fixed but still triggers wrning
+      "Cannot update a component from inside", //TODO: investigate what triggers this, (appears to be in react navigation)
+      "Using Math.random is not cryptographically secure", //Already fixed but still triggers warning
+      "Stopping Tor daemon."
   ]);
 
   if (Platform.OS === 'android') {

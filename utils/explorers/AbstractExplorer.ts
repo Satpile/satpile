@@ -10,6 +10,10 @@ export default abstract class AbstractExplorer implements Explorer {
 
     abstract fetch(address: string, addressContent: AddressValue): Promise<AddressValue>;
 
+    needsTor(): boolean {
+        return false;
+    }
+
     public isCoolDownImplemented(): boolean{
         return false;
     }

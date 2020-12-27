@@ -129,5 +129,12 @@ module.exports = {
     generate_new_addresses: "Generate new addresses",
     info_xpub: "You can add an XPUB wallet (xpub/ypub/zpub) address and automatically track its derived addresses.",
     advanced_users_only: "Advanced users only",
-    should_not_change: "Everything should be working without editing this"
+    should_not_change: "Everything should be working without editing this",
+    tor: {
+        status: {
+            CONNECTED: "Connected to TOR daemon",
+            CONNECTING: "Connecting to TOR daemon...",
+            DISCONNECTED: "Disconnected from TOR daemon"
+        }
+    }
 };

@@ -7,6 +7,9 @@ import * as Actions from "../../store/actions";
 export default abstract class AbstractBatchableExplorer implements Explorer {
 
     abstract fetch(addressesList: AddressesList): Promise<{address: string, addressContent: AddressValue}[]>;
+    needsTor(): boolean {
+        return false;
+    }
 
     protected abstract getChunkSize(): number;
 

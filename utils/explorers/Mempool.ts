@@ -26,6 +26,10 @@ export default class Mempool extends AbstractExplorer implements Explorer {
         return tor.get(url);
     }
 
+    needsTor(): boolean {
+        return this.url.endsWith(".onion");
+    }
+
     async fetch(address: string, addressContent: AddressValue): Promise<AddressValue> {
         try {
             let request;

@@ -17,6 +17,7 @@ import {Asset} from "expo-asset";
 import {bootstrap} from "./utils/Bootstrap";
 import LockScreen from "./screens/LockScreen";
 import {useAppStateEffect} from "./utils/AppStateHook";
+import {TorContextProvider} from "./utils/TorManager";
 
 bootstrap();
 
@@ -54,9 +55,11 @@ export default function App(){
                     {loadingState === 'after_loaded' &&
                     <>
                         <StatusBar animated={true} backgroundColor={"#f47c1c"} barStyle={"light-content"}/>
-                        <LockScreen>
-                            <Navigator/>
-                        </LockScreen>
+                        <TorContextProvider>
+                            <LockScreen>
+                                <Navigator/>
+                            </LockScreen>
+                        </TorContextProvider>
                     </>
                     }
                     <ToastHolder/>

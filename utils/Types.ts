@@ -52,7 +52,8 @@ export type Folder = {
 }
 
 export interface Explorer {
-    fetchAndUpdate(AddressesList): Promise<AddressesBalanceDifference[]>
+    fetchAndUpdate(AddressesList): Promise<AddressesBalanceDifference[]>;
+    needsTor(): boolean;
 }
 
 export interface CustomExplorerOptions {
