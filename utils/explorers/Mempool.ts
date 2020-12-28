@@ -2,9 +2,8 @@ import {AddressStatusType} from "../../components/AddressStatus";
 import {AddressValue, Explorer} from "../Types";
 import AbstractExplorer from "./AbstractExplorer";
 import Tor from "react-native-tor";
+import {torClient} from "../TorManager";
 
-
-const tor = Tor();
 
 
 export default class Mempool extends AbstractExplorer implements Explorer {
@@ -22,8 +21,8 @@ export default class Mempool extends AbstractExplorer implements Explorer {
     }
 
     private async fetchTor(url: string) {
-        await tor.startIfNotStarted();
-        return tor.get(url);
+        await torClient.startIfNotStarted();
+        return torClient.get(url);
     }
 
     needsTor(): boolean {

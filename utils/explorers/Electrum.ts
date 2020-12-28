@@ -1,22 +1,36 @@
-import ElectrumCli from './ElectrumClient';
+import {ElectrumClient} from './ElectrumClient';
 import * as bitcoin from 'bitcoinjs-lib';
 import {AddressesBalanceDifference, AddressesList, AddressValue, Explorer, ElectrumOptions} from '../Types';
 import {Toast} from "../../components/Toast";
 import {i18n} from "../../translations/i18n";
 import {AddressStatusType} from "../../components/AddressStatus";
 import AbstractExplorer from "./AbstractExplorer";
+import {torClient} from "../TorManager";
+
 
 export class Electrum extends AbstractExplorer implements Explorer {
-    private client : typeof ElectrumCli;
+    private client : ElectrumClient;
     constructor(public options: ElectrumOptions) {
         super();
     }
 
+
+    needsTor(): boolean {
+        return this.options.host.endsWith(".onion");
+    }
+
     public async connect(){
         try{
-            const client = new ElectrumCli(this.options.port, this.options.host, this.options.protocol);
+            const client = new ElectrumClient({
+                port: this.options.port,
+                address: this.options.host,
+                useTlS: this.options.protocol === "tls",
+                socks5: this.options.host.endsWith(".onion") ? {
+                    port: await torClient.startIfNotStarted(),
+                    host: "localhost"
+                } : undefined
+            });
             await client.connect();
-            await client.server_ping();
             this.client = client;
             return client;
         }catch(e) {
@@ -83,6 +97,10 @@ export class Electrum extends AbstractExplorer implements Explorer {
             };
         }
 
+    }
+
+    close(){
+        return this.client.close();
     }
 
 }

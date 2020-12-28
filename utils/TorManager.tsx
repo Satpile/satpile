@@ -58,3 +58,4 @@ export function TorContextProvider({children}) {
 export function useTorContext(){
     return useContext(TorContext);
 }
+export {client as torClient};
