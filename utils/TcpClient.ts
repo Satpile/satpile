@@ -12,7 +12,7 @@ const connectErrors = {
     [0x08]: "address type not supported",
 };
 
-export class TorTcpClient {
+export class TcpClient {
     private socket: typeof net.Socket = null;
 
     private state: "noinit"|"greeting"|"connecting"|"connected" = "noinit";
@@ -40,7 +40,7 @@ export class TorTcpClient {
     }
 
     async connect(){
-        return new Promise<TorTcpClient['socket']>((resolve, reject) => {
+        return new Promise<TcpClient['socket']>((resolve, reject) => {
 
             this.socket.on('connect', () => {
                 console.log("connected to proxy");

@@ -1,4 +1,4 @@
-import {TorTcpClient} from "../TorTcpClient";
+import {TcpClient} from "../TcpClient";
 
 interface ElectrumClientOption{
     socks5?: {host: string, port: number},
@@ -22,7 +22,7 @@ export class ElectrumClient {
 
     async connect(){
         if(this.options.socks5){
-            const proxySocket = new TorTcpClient(
+            const proxySocket = new TcpClient(
                 this.options.socks5.host,
                 this.options.socks5.port,
                 this.options.address,
