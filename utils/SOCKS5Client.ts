@@ -12,7 +12,7 @@ const connectErrors = {
     [0x08]: "address type not supported",
 };
 
-export class TcpClient {
+export class SOCKS5Client {
     private socket: typeof net.Socket = null;
 
     private state: "noinit"|"greeting"|"connecting"|"connected" = "noinit";
@@ -40,7 +40,7 @@ export class TcpClient {
     }
 
     async connect(){
-        return new Promise<TcpClient['socket']>((resolve, reject) => {
+        return new Promise<SOCKS5Client['socket']>((resolve, reject) => {
 
             this.socket.on('connect', () => {
                 console.log("connected to proxy");

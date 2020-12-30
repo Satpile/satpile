@@ -113,7 +113,7 @@ export default function SettingsEditScreen({navigation, route}) {
                              },
                              onPress: () => {
                                  if(settings.explorer !== ExplorerApi.CUSTOM){
-                                     updateSettings({explorer: ExplorerApi.CUSTOM, explorerOption: defaultCustomElectrum()});
+                                     updateSettings({explorer: ExplorerApi.CUSTOM, explorerOption: settings.explorerOption || defaultCustomElectrum()});
                                  }
                              },
                              renderBeforeAccessory: () => {
