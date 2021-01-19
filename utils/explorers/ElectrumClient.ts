@@ -64,7 +64,7 @@ export class ElectrumClient {
 
         const interval = setInterval(() => {
             this.serverPing().catch();
-        }, 5000);
+        }, 15000);
 
         socket.on("close", (_) => {
             clearInterval(interval);
@@ -133,10 +133,10 @@ export class ElectrumClient {
 
                 const onTimeout = () => {
                     this.requests.delete(id);
-                    reject("No response after 5000ms");
+                    reject("No response after 15000ms");
                 }
 
-                const timeout = setTimeout(onTimeout, 5000); //TODO: put in options or constant
+                const timeout = setTimeout(onTimeout, 15000); //TODO: put in options or constant
                 this.requests.set(id, onResponse);
             });
         }else{

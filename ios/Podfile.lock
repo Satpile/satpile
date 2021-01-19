@@ -263,7 +263,7 @@ PODS:
     - React-Core
   - react-native-tcp (6.3.0):
     - React
-  - react-native-tor (0.1.4):
+  - react-native-tor (0.1.5):
     - React
   - react-native-view-shot (3.1.2):
     - React
@@ -649,7 +649,7 @@ SPEC CHECKSUMS:
   react-native-netinfo: e36c1bb6df27ab84aa933679b3f5bbf9d180b18f
   react-native-safe-area-context: 86612d2c9a9e94e288319262d10b5f93f0b395f5
   react-native-tcp: 5e814866a2904c3cffb704d70f8e6b1fe55ffe38
-  react-native-tor: 91b14b980673fe428803fe6ae9a8889a9f3168b4
+  react-native-tor: 2d1260ed81552d90b58237539a54fab3f34c4b1e
   react-native-view-shot: 08c46c9e8e92f6681e8f2ffa55ac3d06e7e99070
   React-RCTActionSheet: 89a0ca9f4a06c1f93c26067af074ccdce0f40336
   React-RCTAnimation: 1bde3ecc0c104c55df246eda516e0deb03c4e49b

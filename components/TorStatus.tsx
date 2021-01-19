@@ -22,7 +22,7 @@ export function TorStatus() {
     const color = statusToColor(state);
     const i18n = useI18n();
 
-    const needsTor = useMemo(() => BalanceFetcher.getExplorer(settings.explorer).needsTor(), [settings.explorer]);
+    const needsTor = useMemo(() => BalanceFetcher.getExplorer(settings.explorer).needsTor(), [settings]);
 
     useEffect(() => {
         setShow(true);
