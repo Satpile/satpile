@@ -1,6 +1,6 @@
 import React, {useEffect, useMemo, useState} from "react";
 import {TorStatusType, useTorContext} from "../utils/TorManager";
-import {LayoutAnimation, View} from "react-native";
+import {LayoutAnimation, Platform, View} from "react-native";
 import {useI18n, useSettings} from "../utils/Settings";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import {Text} from "react-native-paper";
@@ -29,7 +29,7 @@ export function TorStatus() {
         if(state === TorStatusType.CONNECTED && needsTor){
             const timeout = setTimeout(() => {
                 setShow(show => {
-                    if(show){
+                    if(show && Platform.OS === "ios"){
                         LayoutAnimation.configureNext(LayoutAnimation.create(200, LayoutAnimation.Types.easeInEaseOut));
                     }
 
@@ -45,7 +45,7 @@ export function TorStatus() {
         paddingVertical: (show && needsTor) ? 2 : 0,
         height: (show && needsTor) ? undefined : 0
     }}><Text style={{
-        color: "rgb(255,255,255)",
-        textAlign: "center"
+        color: (show && needsTor) ? "rgb(255,255,255)" : "rgba(0,0,0,0)",
+        textAlign: "center",
     }}>{i18n.t(`tor.status.${state}`)}</Text></View>
 }

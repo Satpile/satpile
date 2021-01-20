@@ -33,7 +33,7 @@ export function TorContextProvider({children}) {
         const interval = setInterval(async () => {
             const status = await client.getDaemonStatus();
             let ourStatus;
-            switch (status.toUpperCase().replaceAll('"', "")){
+            switch (status.toUpperCase().replace(/"/g,"")){
                 case 'NOTINIT': ourStatus = TorStatusType.DISCONNECTED;
                 break;
                 case 'STARTING': ourStatus = TorStatusType.CONNECTING;
