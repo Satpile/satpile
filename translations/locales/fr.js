@@ -88,7 +88,9 @@ module.exports = {
         },
         website: 'Actualités',
         buy: 'Acheter du Bitcoin',
-        shop: 'Magasin'
+        shop: 'Magasin',
+        display_unit_btc_sats: "Unité : sats / ₿",
+        hide_empty: "Cacher les adresses vides"
     },
     share_qrcode:'Exporter le QRCode',
     notification: {
@@ -126,5 +128,9 @@ module.exports = {
             CONNECTING: "Connexion au daemon TOR en cours...",
             DISCONNECTED: "Daemon TOR déconnecté"
         }
+    },
+    hidden_addresses: {
+        one: "1 adresse vide a été cachée",
+        other: "%{count} adresses vides ont été cachées"
     }
 };

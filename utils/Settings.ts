@@ -7,7 +7,7 @@ import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
 import {Linking} from "expo";
 import {CustomExplorerOptions, ExplorerApi, ListOrderType} from "./Types";
-import React, {useContext} from "react";
+import React, {useCallback, useContext} from "react";
 import {explorersByExplorerApi} from "./explorers/Explorers";
 
 export const REFRESH_TASK = "REFRESH_TASK";
@@ -28,6 +28,8 @@ export interface Settings {
     security: SecuritySetting;
     explorer: ExplorerApi;
     explorerOption?: CustomExplorerOptions;
+    displayUnit?: "sats" | "bitcoin";
+    hideEmptyAddresses?: boolean;
 }
 
 export function defaultCustomElectrum(): CustomExplorerOptions {
@@ -51,7 +53,9 @@ export function defaultSettings(): Settings {
             passphrase: null,
             enableBiometrics: false
         },
-        explorer: ExplorerApi.MEMPOOL_SPACE
+        explorer: ExplorerApi.MEMPOOL_SPACE,
+        displayUnit: "sats",
+        hideEmptyAddresses: false
     }
 }
 
@@ -62,9 +66,9 @@ export function defaultSettings(): Settings {
 export function useSettings(): [Settings, (settings: Partial<Settings>) => void] {
     const dispatch = useDispatch();
     const settings = useSelector(state => ({settings: state.settings})).settings;
-    const updateSettings = (newSettings: Partial<Settings>) => {
+    const updateSettings = useCallback((newSettings: Partial<Settings>) => {
         dispatch({type: 'UPDATE_SETTINGS', settings: newSettings});
-    }
+    }, [dispatch]);
 
     return [settings, updateSettings]
 };

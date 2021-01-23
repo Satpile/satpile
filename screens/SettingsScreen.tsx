@@ -13,6 +13,8 @@ import * as WebBrowser from 'expo-web-browser';
 import Constants from "expo-constants";
 import {BLOG_URL, COMPANY, FEEDBACK_URL, TWITTER_URL, BUY_URL, SHOP_URL} from "../utils/Constants";
 import {CustomSettingsScreen} from "../components/CustomSettingsScreen";
+import SatoshiText from "../components/SatoshiText";
+import {convertSatoshiToString} from "../utils/Helper";
 
 export default function SettingsScreen({navigation}) {
 
@@ -58,6 +60,22 @@ export default function SettingsScreen({navigation}) {
                     renderAccessory: () => <Switch value={settings.darkMode} onValueChange={(value) => {
                         updateSettings({darkMode: value})
                     }}/>,
+                },
+                {
+                    title: i18n.t("settings.hide_empty"),
+                    renderAccessory: () => <Switch value={settings.hideEmptyAddresses} onValueChange={(value) => {
+                        updateSettings({hideEmptyAddresses: value})
+                    }}/>,
+                },
+                {
+                    title: i18n.t("settings.display_unit_btc_sats"),
+                    renderAccessory: () => <Switch  value={settings.displayUnit === "bitcoin"} onValueChange={(value) => {
+                        updateSettings({displayUnit: value ? "bitcoin" : "sats"})
+                    }}/>,
+                    subtitle: `${convertSatoshiToString(123456789000, false, settings.displayUnit)} ${settings.displayUnit === "sats" ? "sats" : "₿"}`,
+                    subtitleStyle: {
+                        opacity: 0.5
+                    }
                 },
                 {
                     title: i18n.t("settings.icloud"),

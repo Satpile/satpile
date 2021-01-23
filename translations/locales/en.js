@@ -98,7 +98,9 @@ module.exports = {
         },
         website: 'News',
         buy: 'Buy Bitcoin',
-        shop: 'Shop'
+        shop: 'Shop',
+        display_unit_btc_sats: "Display unit : sats / ₿",
+        hide_empty: "Hide zero sat addresses"
     },
     share_qrcode:'Export QRCode',
     notification: {
@@ -136,5 +138,9 @@ module.exports = {
             CONNECTING: "Connecting to TOR daemon...",
             DISCONNECTED: "Disconnected from TOR daemon"
         }
+    },
+    hidden_addresses: {
+        one: "1 empty address was hidden",
+        other: "%{count} empty addresses were hidden"
     }
 };

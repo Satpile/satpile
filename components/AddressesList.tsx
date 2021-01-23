@@ -1,18 +1,25 @@
-import React, {useState} from "react";
+import React, {useMemo, useState} from "react";
 import {Alert} from "react-native";
-import {List} from 'react-native-paper';
+import {List, Text} from 'react-native-paper';
 import AddressesListItem from "./AddressesListItem";
 import {useNavigation} from '@react-navigation/native';
 import {i18n} from '../translations/i18n';
 import {SwipeList} from "./SwipeList/SwipeList";
 import {ReorderButtons} from "./SwipeList/ReorderButtons";
 import {FolderType} from "../utils/Types";
+import {useSettings} from "../utils/Settings";
 
 export default function AddressesList({addresses, onRefresh, afterRefresh, onDelete, balances, folders, folder, showEditSort, onSort}) {
 
     const [refreshing, setRefreshing] = useState(false);
-
+    const [settings] = useSettings();
     const navigation = useNavigation();
+
+    const filteredAddresses = useMemo(() => {
+        return settings.hideEmptyAddresses ? addresses.filter(address => {
+            return (balances[address.address]?.balance || 0) > 0;
+        }) : addresses;
+    }, [settings.displayUnit, balances, addresses])
 
     const _onRefresh = async () => {
         setRefreshing(true)
@@ -46,7 +53,7 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
         <>
             <List.Subheader>{i18n.t('addresses')} : </List.Subheader>
             <SwipeList
-                data={addresses}
+                data={filteredAddresses}
                 render={row => {
                     return <>
                         <AddressesListItem
@@ -78,6 +85,11 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
                         backgroundColor: 'red'
                     }
                 ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false} disableSwipe={showEditSort || folder.type === FolderType.XPUB_WALLET}/>
+
+            {(settings.hideEmptyAddresses && addresses.length-filteredAddresses>0) ?
+                <Text style={{textAlign: "center"}}>{i18n.t('hidden_addresses', {count: addresses.length-filteredAddresses})}</Text>
+                : null
+            }
         </>
     )
 }

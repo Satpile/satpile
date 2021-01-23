@@ -3,9 +3,21 @@ import {AddingEnum, FolderType} from "./Types";
 import validate from 'bitcoin-address-validation';
 
 
-export function convertSatoshiToString(satoshi, prependSign = false){
+function numberWithCommas(x) {
+    const parts = x.toString().split(".");
+    parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    return parts.join(".");
+}
 
-    const string = Math.round(satoshi).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+export function convertSatoshiToString(satoshi, prependSign = false, unit: "sats"|"bitcoin" = "sats"){
+    let string = "";
+    if(unit === "bitcoin"){
+        string = numberWithCommas((satoshi/1e8).toFixed(8));
+    }else{
+        string = numberWithCommas(Math.round(satoshi));
+    }
+
+
     if(satoshi > 0 && prependSign){
         return `+ ${string}`;
     }
