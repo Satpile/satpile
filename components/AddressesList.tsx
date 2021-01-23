@@ -87,7 +87,7 @@ export default function AddressesList({addresses, onRefresh, afterRefresh, onDel
                 ]} refreshing={refreshing} onRefresh={() => _onRefresh()} showClose={false} disableSwipe={showEditSort || folder.type === FolderType.XPUB_WALLET}/>
 
             {(settings.hideEmptyAddresses && addresses.length-filteredAddresses>0) ?
-                <Text style={{textAlign: "center"}}>{i18n.t('hidden_addresses', {count: addresses.length-filteredAddresses})}</Text>
+                <Text style={{textAlign: "center"}}>{i18n.t('hidden_addresses', {count: addresses.length-filteredAddresses.length})}</Text>
                 : null
             }
         </>
