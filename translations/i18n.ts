@@ -3,9 +3,10 @@ import * as Localization from "expo-localization";
 
 const fr = require('./locales/fr.js');
 const en = require('./locales/en.js');
+const de = require('./locales/de.js');
 
 i18n.fallbacks = true;
-i18n.translations = {fr, en};
+i18n.translations = {fr, en, de};
 
 //Changes the set locale to the one in the settings when the settings are reloaded
 /*Settings.addLoadListener(() => {
