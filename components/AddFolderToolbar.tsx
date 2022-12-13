@@ -23,7 +23,7 @@ export function AddFolderToolbar({display, onHide, onAddFolder}: AddFolderToolba
         }}>
             <Appbar.Action style={{
                 marginTop: 0
-            }} color={theme.colors.onBackground} icon="folder" onPress={() => {
+            }} color={theme.colors.onSurface} icon="folder" onPress={() => {
                 onHide();
                 onAddFolder();
             }}>Text</Appbar.Action>
@@ -38,7 +38,7 @@ export function AddFolderToolbar({display, onHide, onAddFolder}: AddFolderToolba
             underlayColor={theme.dark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)"}
             >
                 <>
-                    <MaterialCommunityIcons name={"wallet"} color={theme.colors.onBackground} size={24} />
+                    <MaterialCommunityIcons name={"wallet"} color={theme.colors.onSurface} size={24} />
                     <Text style={{
                         fontSize: 8,
                         position: "absolute",

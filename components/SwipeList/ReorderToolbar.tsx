@@ -17,10 +17,10 @@ export function ReorderToolbar({display, onToggleArrows, onReorder, alreadySorte
 
     return (
         <Toolbar display={display}>
-            <Appbar.Action color={theme.colors.onBackground} icon="sort" onPress={() => {
+            <Appbar.Action color={theme.colors.onSurface} icon="sort" onPress={() => {
                 onToggleArrows();
             }}/>
-            <Appbar.Action  color={theme.colors.onBackground} icon="sort-alphabetical-variant" onPress={() => {
+            <Appbar.Action  color={theme.colors.onSurface} icon="sort-alphabetical-variant" onPress={() => {
                 LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
                 if(alreadySorted){
                     onReorder("alphabetically-desc");

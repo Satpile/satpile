@@ -52,7 +52,7 @@ export function ReorderButtons({show, showUp, showDown, onClickUp, onClickDown, 
             borderLeftWidth: 10,
         }}
     >
-        <Appbar.Action disabled={!showDown} key={"down"} style={{opacity: showDown ? 1 : 0}} color={theme.colors.onBackground} icon="chevron-down" onPress={onClickDown}/>
-        <Appbar.Action disabled={!showUp} key={"up"} style={{opacity: showUp ? 1 : 0}} color={theme.colors.onBackground} icon="chevron-up" onPress={onClickUp}/>
+        <Appbar.Action disabled={!showDown} key={"down"} style={{opacity: showDown ? 1 : 0}} color={theme.colors.onSurface} icon="chevron-down" onPress={onClickDown}/>
+        <Appbar.Action disabled={!showUp} key={"up"} style={{opacity: showUp ? 1 : 0}} color={theme.colors.onSurface} icon="chevron-up" onPress={onClickUp}/>
     </View>;
 }

@@ -50,7 +50,7 @@ export default function CustomExplorerSettings(){
         marginHorizontal: 4,
         borderWidth: 2,
         borderRadius: 12,
-        borderColor: theme.colors.onBackground
+        borderColor: theme.colors.onSurface
     }}>
         <TextInput
             disabled={testing}

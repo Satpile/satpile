@@ -33,7 +33,7 @@ export const Tooltip = ({text, children}: Props) => {
             </Text>
         }
 
-        backgroundColor={theme.colors.onBackground}
+        backgroundColor={theme.colors.onSurface}
         overlayColor={"transparent"}
         containerStyle={{
             borderRadius: 0
