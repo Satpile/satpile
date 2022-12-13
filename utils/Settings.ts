@@ -5,7 +5,7 @@ import {Alert, Platform} from "react-native";
 import * as Permissions from "expo-permissions";
 import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
-import {Linking} from "expo";
+import Linking from "expo-linking";
 import {CustomExplorerOptions, ExplorerApi, ListOrderType} from "./Types";
 import React, {useCallback, useContext} from "react";
 import {explorersByExplorerApi} from "./explorers/Explorers";

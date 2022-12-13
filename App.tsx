@@ -3,7 +3,6 @@ import React, {useState} from 'react';
 import store, {loadStore} from "./store/store";
 import {StatusBar, StyleSheet, View} from 'react-native';
 import {Provider} from 'react-redux';
-import AppLoading from "expo-app-loading";
 import AnimatedSplashScreen from "./components/AnimatedSplashScreen";
 import {ToastHolder} from "./components/Toast";
 import {ThemeHolder} from "./utils/Theme";
@@ -18,6 +17,7 @@ import {bootstrap} from "./utils/Bootstrap";
 import LockScreen from "./screens/LockScreen";
 import {useAppStateEffect} from "./utils/AppStateHook";
 import {TorContextProvider} from "./utils/TorManager";
+import {LoadingScreen} from "./components/LoadingScreen";
 
 bootstrap();
 
@@ -35,13 +35,12 @@ export default function App(){
     })
 
     if (loadingState === 'loading') {
-        return <AppLoading
+        return <LoadingScreen
             startAsync={preLoadAssets}
             onFinish={() => {
                 BalanceFetcher.filterAndFetchBalances();
                 setLoadingState("loaded")
             }}
-            onError={(_)=>{}}
         />
     }
 

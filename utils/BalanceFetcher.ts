@@ -40,7 +40,7 @@ export default class BalanceFetcher {
     static async filterAndFetchBalances(showError: boolean = true, onlyErrorAddresses = false) {
         const addressesToFetch : AddressesList = onlyErrorAddresses ?
             this.getErroredAddresses() : store.getState().addresses;
-
+        console.log(addressesToFetch);
         if(Object.keys(addressesToFetch).length === 0){
             return null;
         }
