@@ -96,7 +96,7 @@ export type PermissionType =
 const getStatusFromPermissionType = async (permission: PermissionType) => {
     switch (permission){
         case "camera":
-            return Camera.getPermissionsAsync();
+            return Camera.getCameraPermissionsAsync()
         case "notifications":
             return Notifications.getPermissionsAsync();
     }
