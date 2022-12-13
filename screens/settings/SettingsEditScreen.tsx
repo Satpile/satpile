@@ -15,6 +15,7 @@ import {ExplorerApi} from "../../utils/Types";
 import CustomExplorerSettings from "./CustomExplorerSettings";
 import explorers from "../../utils/explorers/Explorers";
 import {useKeyBoardHeight} from "../../utils/Keyboard";
+import {useEffect} from "react";
 
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
@@ -24,10 +25,12 @@ export default function SettingsEditScreen({navigation, route}) {
     const [settings, updateSettings] = useSettings();
     const theme = useTheme();
 
-    navigation.setOptions({
-        headerTitle: () => <MainTitle title={title || i18n.t('settings.title')}/>,
-        headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
-    });
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => <MainTitle title={title || i18n.t('settings.title')}/>,
+            headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
+        });
+    }, [navigation, title, i18n]);
 
     const keyboardHeight = useKeyBoardHeight();
 

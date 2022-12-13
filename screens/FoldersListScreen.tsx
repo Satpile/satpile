@@ -60,25 +60,26 @@ export default connect(state => ({
     const theme = useTheme();
     const i18n = useI18n();
     const lockState = useLockState();
-
-    navigation.setOptions({
-        headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={lockState.locked ? null : totalBalance} />,
-        headerLeft: _ => <Appbar.Action color="white" icon="cog" onPress={() => { navigation.navigate('Settings') }}/>
-        ,
-        headerRight: _ =>
-            <TopRightActions
-                onClose={() => {
-                    setShowToolbar(false);
-                    setShowEditSort(false);
-                    setShowAddFolderToolbar(false);
-                }}
-                folderCount={folders.length}
-                onShowAddToolbar={() => setShowAddFolderToolbar(true)}
-                onShowToolbar={() => setShowToolbar(true)}
-                showAddToolbar={showAddFolderToolbar}
-                showToolbar={showToolbar}
-            />
-    });
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: _ => <DynamicTitle title={i18n.t('home')} satAmount={lockState.locked ? null : totalBalance} />,
+            headerLeft: _ => <Appbar.Action color="white" icon="cog" onPress={() => { navigation.navigate('Settings') }}/>
+            ,
+            headerRight: _ =>
+                <TopRightActions
+                    onClose={() => {
+                        setShowToolbar(false);
+                        setShowEditSort(false);
+                        setShowAddFolderToolbar(false);
+                    }}
+                    folderCount={folders.length}
+                    onShowAddToolbar={() => setShowAddFolderToolbar(true)}
+                    onShowToolbar={() => setShowToolbar(true)}
+                    showAddToolbar={showAddFolderToolbar}
+                    showToolbar={showToolbar}
+                />
+        });
+    }, [navigation, lockState, totalBalance, folders, showAddFolderToolbar, showToolbar])
 
     const updateTotalBalance = function(){
         let newTotal = folders.reduce((total, folder) => {

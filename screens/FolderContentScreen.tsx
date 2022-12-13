@@ -1,5 +1,5 @@
 import {LayoutAnimation, StyleSheet, View} from "react-native";
-import React, {useMemo, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import DynamicTitle from "../components/DynamicTitle";
 import {Appbar, FAB, useTheme} from "react-native-paper";
 import ReloadButton from "../components/ReloadButton";
@@ -43,40 +43,42 @@ export default connect(state => ({
         return null;
     }
 
-    navigation.setOptions({
-        headerTitle: props => <DynamicTitle title={folder.name} icon={folder.type === FolderType.XPUB_WALLET ? "md-wallet" : "md-folder"} satAmount={folder.totalBalance} onPress={() => { setShowRenameModal(true) }}/>,
-        headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
-        headerRight: props => (
-            <View style={{display: "flex", flexDirection: "row"}}>
-                {folder.addresses.length > 1 && folder.type === FolderType.SIMPLE && <Appbar.Action
-                    key={"open"}
-                    color="white"
-                    icon={showReorderToolbar ? "close" : "dots-vertical"}
-                    style={showReorderToolbar ? {} : {
-                        marginRight: 0,
-                        paddingLeft: 5,
-                        width: 24
-                    }}
-                   onPress={() => {
-                       setShowReorderToolbar(!showReorderToolbar);
-                       setShowEditSort(false);
-                   }}/>}
-                {showReorderToolbar ? null : (folder.type === FolderType.SIMPLE && <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>)}
-                {folder.type === FolderType.XPUB_WALLET ?
-                    <Appbar.Action
-                        key={"add"}
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: props => <DynamicTitle title={folder.name} icon={folder.type === FolderType.XPUB_WALLET ? "md-wallet" : "md-folder"} satAmount={folder.totalBalance} onPress={() => { setShowRenameModal(true) }}/>,
+            headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
+            headerRight: props => (
+                <View style={{display: "flex", flexDirection: "row"}}>
+                    {folder.addresses.length > 1 && folder.type === FolderType.SIMPLE && <Appbar.Action
+                        key={"open"}
                         color="white"
-                        icon={showLoadMoreToolbar ? "close" : "plus"}
-                        onPress={() => setShowLoadMoreToolbar(!showLoadMoreToolbar)}/>
-                    : null
-                }
-            </View>),
+                        icon={showReorderToolbar ? "close" : "dots-vertical"}
+                        style={showReorderToolbar ? {} : {
+                            marginRight: 0,
+                            paddingLeft: 5,
+                            width: 24
+                        }}
+                        onPress={() => {
+                            setShowReorderToolbar(!showReorderToolbar);
+                            setShowEditSort(false);
+                        }}/>}
+                    {showReorderToolbar ? null : (folder.type === FolderType.SIMPLE && <Appbar.Action key={"add"} color="white" icon="plus" onPress={() => navigation.navigate('Add', {folder})}/>)}
+                    {folder.type === FolderType.XPUB_WALLET ?
+                        <Appbar.Action
+                            key={"add"}
+                            color="white"
+                            icon={showLoadMoreToolbar ? "close" : "plus"}
+                            onPress={() => setShowLoadMoreToolbar(!showLoadMoreToolbar)}/>
+                        : null
+                    }
+                </View>),
 
-        headerTitleContainerStyle: {
-            width: '100%',
-            paddingHorizontal: 80
-        }
-    });
+            headerTitleContainerStyle: {
+                width: '100%',
+                paddingHorizontal: 80
+            }
+        });
+    }, [navigation, folder, showLoadMoreToolbar, showReorderToolbar]);
 
     const submitRenameModal = (newName) => {
         store.dispatch(Actions.renameFolder(folder, newName));

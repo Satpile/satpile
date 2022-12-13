@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {ActivityIndicator, Alert, Modal, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
 import {Appbar, Button, HelperText, Text, TextInput, useTheme, Headline} from "react-native-paper";
@@ -28,22 +28,6 @@ export default connect(state => ({
     const [loading, setLoading] = useState(false);
 
     const addingType = route.params.folder ? AddingEnum.ADDRESS : AddingEnum.XPUB_WALLET;
-
-    navigation.setOptions({
-        headerTitle: () => <MainTitle title={i18n.t('add')}/>,
-        headerLeft: props =>
-            <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>
-        ,
-        headerRight: props =>
-            <TouchableOpacity onPress={() => saveAddress()}>
-                <Text style={{
-                    color: 'white',
-                    fontSize: 20,
-                    paddingLeft: 15,
-                    paddingRight: 15
-                }}>{i18n.t('done')}</Text>
-            </TouchableOpacity>
-    });
 
     const startScan = () => {
         setShowScanner(true);
@@ -114,6 +98,24 @@ export default connect(state => ({
             return false;
         }
     }
+
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => <MainTitle title={i18n.t('add')}/>,
+            headerLeft: props =>
+                <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>
+            ,
+            headerRight: props =>
+                <TouchableOpacity onPress={() => saveAddress()}>
+                    <Text style={{
+                        color: 'white',
+                        fontSize: 20,
+                        paddingLeft: 15,
+                        paddingRight: 15
+                    }}>{i18n.t('done')}</Text>
+                </TouchableOpacity>
+        });
+    }, [i18n, saveAddress, navigation]);
 
     return (
         <View style={{flex: 1, paddingTop: 20, backgroundColor: theme.colors.background, flexDirection: 'column'}}>

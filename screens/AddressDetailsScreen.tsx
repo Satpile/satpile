@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Alert, Clipboard, Modal, Platform, Share, StyleSheet, TouchableOpacity, View} from "react-native";
 import {i18n} from '../translations/i18n';
 import {Appbar, Button, Text, Title, useTheme} from "react-native-paper";
@@ -31,11 +31,12 @@ export default function AddressDetailsScreen({navigation, route}) {
     }
 
     const balance = addresses[address.address].balance;
-
-    navigation.setOptions({
-        headerTitle: () => <DynamicTitle title={address.name} satAmount={balance} onPress={() => setShowRenameModal(true)}/>,
-        headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>
-    });
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => <DynamicTitle title={address.name} satAmount={balance} onPress={() => setShowRenameModal(true)}/>,
+            headerLeft: props => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>
+        });
+    }, [navigation, address, balance]);
 
     const submitRenameModal = (newName) => {
         store.dispatch(Actions.renameAddress(folder, address, newName));

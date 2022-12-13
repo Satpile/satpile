@@ -15,17 +15,19 @@ import {BLOG_URL, COMPANY, FEEDBACK_URL, TWITTER_URL, BUY_URL, SHOP_URL} from ".
 import {CustomSettingsScreen} from "../components/CustomSettingsScreen";
 import SatoshiText from "../components/SatoshiText";
 import {convertSatoshiToString} from "../utils/Helper";
+import {useEffect} from "react";
 
 export default function SettingsScreen({navigation}) {
 
     const [settings, updateSettings] = useSettings();
 
     const theme = useTheme();
-
-    navigation.setOptions({
-        headerTitle: () => <MainTitle title={i18n.t('settings.title')}/>,
-        headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
-    });
+    useEffect(() => {
+        navigation.setOptions({
+            headerTitle: () => <MainTitle title={i18n.t('settings.title')}/>,
+            headerLeft: () => <Appbar.BackAction color={"white"} onPress={() => navigation.goBack()}/>,
+        });
+    }, [i18n, navigation]);
 
 
     const settingsData: SettingsData = [
