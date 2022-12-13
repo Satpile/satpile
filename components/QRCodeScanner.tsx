@@ -1,9 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {BarCodeScanner} from "expo-barcode-scanner";
 import {Image, StatusBar, StyleSheet, View} from "react-native";
-import * as Permissions from "expo-permissions";
 import {Appbar, Subheading} from "react-native-paper";
-
 import validate from 'bitcoin-address-validation';
 import {i18n} from "../translations/i18n";
 import {askPermission} from "../utils/Settings";
@@ -18,7 +16,7 @@ export function QRCodeScanner({onAddressScanned, onCancel, scanningType}) {
     }, [])
 
     const getPermissionsAsync = async () => {
-        const result = await askPermission(Permissions.CAMERA, i18n.t('permission.camera'))
+        const result = await askPermission("camera", i18n.t('permission.camera'))
         if(!result){
             onCancel();
         }else{

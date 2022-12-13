@@ -6,11 +6,10 @@ import {Image, StyleSheet, View} from "react-native";
 import {askPermission, defaultCustomElectrum, durationToText, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
-import {Linking} from "expo";
+import Linking from "expo-linking";
 import {TWITTER_URL} from "../../utils/Constants";
 import {Legal} from "./Legal";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
-import * as Permissions from 'expo-permissions';
 import {LockSettingsScreen} from "./LockSettingsScreen";
 import {ExplorerApi} from "../../utils/Types";
 import CustomExplorerSettings from "./CustomExplorerSettings";
@@ -61,7 +60,7 @@ export default function SettingsEditScreen({navigation, route}) {
                                 return null;
                             },
                             onPress: async () => {
-                                if(value.value === -1 || await askPermission(Permissions.NOTIFICATIONS, i18n.t("permission.notification"))){
+                                if(value.value === -1 || await askPermission("notifications", i18n.t("permission.notification"))){
                                     updateSettings({refresh: value.value})
                                 }
                             }

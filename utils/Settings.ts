@@ -2,13 +2,14 @@ import {useDispatch, useSelector} from "react-redux";
 import {i18n} from "../translations/i18n";
 import * as Localization from "expo-localization";
 import {Alert, Platform} from "react-native";
-import * as Permissions from "expo-permissions";
-import {PermissionType} from "expo-permissions";
 import {Appearance} from "react-native-appearance";
 import Linking from "expo-linking";
 import {CustomExplorerOptions, ExplorerApi, ListOrderType} from "./Types";
 import React, {useCallback, useContext} from "react";
 import {explorersByExplorerApi} from "./explorers/Explorers";
+import * as Camera from "expo-camera";
+import * as Notifications from "expo-notifications";
+import {PermissionStatus} from "expo-modules-core";
 
 export const REFRESH_TASK = "REFRESH_TASK";
 
@@ -73,19 +74,58 @@ export function useSettings(): [Settings, (settings: Partial<Settings>) => void]
     return [settings, updateSettings]
 };
 
+export type PermissionType =
+    | 'camera'
+    | 'notifications'
+    // | 'cameraRoll'
+    // | 'mediaLibrary'
+    // | 'mediaLibraryWriteOnly'
+    // | 'audioRecording'
+    // | 'location'
+    // | 'locationForeground'
+    // | 'locationBackground'
+    // | 'userFacingNotifications'
+    // | 'contacts'
+    // | 'calendar'
+    // | 'reminders'
+    // | 'motion'
+    // | 'systemBrightness'
+;
+
+
+const getStatusFromPermissionType = async (permission: PermissionType) => {
+    switch (permission){
+        case "camera":
+            return Camera.getPermissionsAsync();
+        case "notifications":
+            return Notifications.getPermissionsAsync();
+    }
+    return null;
+}
+
+const askPermissionForType = async(permission: PermissionType) => {
+    switch (permission){
+        case "camera":
+            return Camera.requestCameraPermissionsAsync();
+        case "notifications":
+            return Notifications.requestPermissionsAsync();
+    }
+    return null;
+}
+
 /**
  * Asks for permission and show error message on failure
  * @param permission
  * @param errorMessage
  */
 export async function askPermission(permission: PermissionType, errorMessage: string): Promise<boolean> {
-    const {status: existingStatus} = await Permissions.getAsync(permission);
+    const {status: existingStatus} = await getStatusFromPermissionType(permission);
     let finalStatus = existingStatus;
-    if (existingStatus !== 'granted') {
-        const {status} = await Permissions.askAsync(permission);
+    if (existingStatus !== PermissionStatus.GRANTED) {
+        const {status} = await askPermissionForType(permission);
         finalStatus = status;
     }
-    if (finalStatus !== 'granted') {
+    if (finalStatus !== PermissionStatus.GRANTED) {
         await new Promise(resolve => { //Promisify Alert.alert
             Alert.alert(i18n.t('error'), errorMessage, [
                 {
