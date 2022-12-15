@@ -114,11 +114,13 @@ export default class BalanceFetcher {
     static async backgroundFetch() {
         try{
             const diffs = await BalanceFetcher.filterAndFetchBalances(false);
+            if(!diffs || diffs.length === 0){
+                return BackgroundFetch.BackgroundFetchResult.NoData;
+            }
             await Notifications.sendUpdateNotification(diffs);
-
-            return diffs.length ? BackgroundFetch.Result.NewData : BackgroundFetch.Result.Failed;
+            return BackgroundFetch.BackgroundFetchResult.NewData;
         }catch(e){
-            return BackgroundFetch.Result.Failed;
+            return BackgroundFetch.BackgroundFetchResult.Failed;
         }
     }
 }
