@@ -1,16 +1,23 @@
 {
-  "builds": {
-    "android": {
-      "release": {
-        "workflow": "generic",
-        "gradleCommand": ":app:assembleRelease",
-        "artifactPath": "android/app/build/outputs/apk/release/app-release.apk"
+  "cli": {
+    "version": ">= 3.0.0"
+  },
+  "build": {
+    "development": {
+      "distribution": "internal",
+      "android": {
+        "gradleCommand": ":app:assembleDebug"
+      },
+      "ios": {
+        "buildConfiguration": "Debug"
       }
     },
-    "ios": {
-      "release": {
-        "workflow": "generic"
-      }
-    }
+    "preview": {
+      "distribution": "internal"
+    },
+    "production": {}
+  },
+  "submit": {
+    "production": {}
   }
 }

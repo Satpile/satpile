@@ -1,5 +1,6 @@
 import {defaultSettings, Settings} from "../../utils/Settings";
 import {Action} from "../actions/actions";
+import {ExplorerApi} from "../../utils/Types";
 
 
 const settings = (state: Partial<Settings> = {}, action: Action): Settings => {
@@ -9,6 +10,9 @@ const settings = (state: Partial<Settings> = {}, action: Action): Settings => {
     switch (action.type) {
         case 'LOAD_DATA':
             //When we load the data from memory we want to merge the saved settings with the default settings
+            if(action.state?.settings?.explorer === "SMARTBIT_COM_AU"){
+                action.state.settings.explorer = ExplorerApi.MEMPOOL_SPACE;
+            }
             return {...defaultSettings(), ...action.state.settings};
 
         case 'UPDATE_SETTINGS':

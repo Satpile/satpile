@@ -11,7 +11,6 @@ import {Notifications} from "./Notifications";
 import {DERIVATION_BATCH_SIZE, generateNextNAddresses, shouldDeriveMoreAddresses} from "./XPubAddresses";
 import {Electrum} from "./explorers/Electrum";
 import TradeBlock from "./explorers/TradeBlock";
-import SmartBit from "./explorers/SmartBit";
 import BlockCypher from "./explorers/BlockCypher";
 import {AddressStatusType} from "../components/AddressStatus";
 
@@ -66,8 +65,13 @@ export default class BalanceFetcher {
         switch (explorer) {
             case ExplorerApi.BLOCKSTREAM_INFO: return new Mempool("https://blockstream.info");
             case ExplorerApi.TRADEBLOCK_COM: return new TradeBlock();
-            case ExplorerApi.SMARTBIT_COM_AU: return new SmartBit();
             //case ExplorerApi.BLOCKCYPHER_COM: return new BlockCypher(); //Disabled because of rate limit
+            case ExplorerApi.ELECTRUM_BLOCKSTREAM:
+                return new Electrum({
+                    host: "blockstream.info",
+                    port: 700,
+                    protocol: "tls"
+                });
             case ExplorerApi.CUSTOM:
                 return this.getCustomExplorerInstance();
             case ExplorerApi.MEMPOOL_SPACE_ONION: return new Mempool("http://mempoolhqx4isw62xs7abwphsq7ldayuidyx2v2oethdhhj6mlo2r6ad.onion", 1000/50);

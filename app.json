@@ -7,7 +7,7 @@
       "ios",
       "android"
     ],
-    "version": "1.6.6",
+    "version": "1.7.1",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "splash": {
@@ -43,7 +43,9 @@
     "android": {
       "package": "com.satpile.app",
       "permissions": [
-        "USE_FINGERPRINT", "USE_BIOMETRIC", "CAMERA"
+        "USE_FINGERPRINT",
+        "USE_BIOMETRIC",
+        "CAMERA"
       ]
     },
     "androidStatusBar": {
@@ -55,6 +57,11 @@
       "icon": "./assets/icon_notification.png",
       "color": "#f47c1c",
       "androidCollapsedTitle": "Satpile"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "bdedafa1-90de-458e-a855-e12346630b02"
+      }
     }
   }
 }

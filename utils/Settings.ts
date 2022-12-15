@@ -3,7 +3,7 @@ import {i18n} from "../translations/i18n";
 import * as Localization from "expo-localization";
 import {Alert, Platform} from "react-native";
 import { Appearance } from 'react-native';
-import Linking from "expo-linking";
+import * as Linking from 'expo-linking';
 import {CustomExplorerOptions, ExplorerApi, ListOrderType} from "./Types";
 import React, {useCallback, useContext} from "react";
 import {explorersByExplorerApi} from "./explorers/Explorers";

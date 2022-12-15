@@ -7,7 +7,7 @@ import {i18n} from "../translations/i18n";
 import {MainTitle} from "../components/DynamicTitle";
 import {durationToText, explorerToName, useSettings} from "../utils/Settings";
 import {Ionicons, FontAwesome} from '@expo/vector-icons';
-import Linking from "expo-linking";
+import * as Linking from 'expo-linking';
 import * as StoreReview from 'expo-store-review';
 import * as WebBrowser from 'expo-web-browser';
 import Constants from "expo-constants";

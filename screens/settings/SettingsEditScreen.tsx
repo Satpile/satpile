@@ -6,14 +6,14 @@ import {Image, StyleSheet, View} from "react-native";
 import {askPermission, defaultCustomElectrum, durationToText, useSettings} from "../../utils/Settings";
 import {SettingsData} from "@taccolaa/react-native-settings-screen";
 import {Ionicons} from "@expo/vector-icons";
-import Linking from "expo-linking";
+import * as Linking from 'expo-linking';
 import {TWITTER_URL} from "../../utils/Constants";
 import {Legal} from "./Legal";
 import {CustomSettingsScreen} from "../../components/CustomSettingsScreen";
 import {LockSettingsScreen} from "./LockSettingsScreen";
 import {ExplorerApi} from "../../utils/Types";
 import CustomExplorerSettings from "./CustomExplorerSettings";
-import explorers from "../../utils/explorers/Explorers";
+import explorers, {electrumServers} from "../../utils/explorers/Explorers";
 import {useKeyBoardHeight} from "../../utils/Keyboard";
 import {useEffect} from "react";
 
@@ -76,7 +76,9 @@ export default function SettingsEditScreen({navigation, route}) {
                  {
                      type: "SECTION",
                      header: i18n.t("settings.explorer.http_api"),
-                     rows: explorers.filter(explorer => "explorerApi" in explorer).map(explorer => ({
+                     rows: explorers.filter(
+                         explorer => "explorerApi" in explorer
+                     ).map(explorer => ({
                          title: explorer.name,
                          showDisclosureIndicator: false,
                          renderAccessory: () => {

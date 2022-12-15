@@ -8,7 +8,6 @@ import {ThemeHolder} from "./utils/Theme";
 import BalanceFetcher from "./utils/BalanceFetcher";
 import * as TaskManager from 'expo-task-manager';
 import {Ionicons} from '@expo/vector-icons';
-
 import {REFRESH_TASK} from "./utils/Settings";
 import {Navigator} from "./navigation/Navigator";
 import {Asset} from "expo-asset";
