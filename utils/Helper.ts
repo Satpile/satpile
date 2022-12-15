@@ -1,6 +1,6 @@
 import runes from "runes";
 import {AddingEnum, FolderType} from "./Types";
-import validate from 'bitcoin-address-validation';
+import addressValidation from 'bitcoin-address-validation';
 
 
 function numberWithCommas(x) {
@@ -68,5 +68,5 @@ export function isAddressValid(address: string, type: AddingEnum) {
         return /^[xyz]pub[A-Za-z0-9]+/.test(address);
     }
 
-    return validate(address) !== false;
+    return addressValidation(address) !== false;
 }

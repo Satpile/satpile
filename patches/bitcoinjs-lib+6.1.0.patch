@@ -1,0 +1,42 @@
+diff --git a/node_modules/bitcoinjs-lib/src/ecc_lib.js b/node_modules/bitcoinjs-lib/src/ecc_lib.js
+index eaa8a53..091f83b 100644
+--- a/node_modules/bitcoinjs-lib/src/ecc_lib.js
++++ b/node_modules/bitcoinjs-lib/src/ecc_lib.js
+@@ -8,7 +8,7 @@ function initEccLib(eccLib) {
+     _ECCLIB_CACHE.eccLib = eccLib;
+   } else if (eccLib !== _ECCLIB_CACHE.eccLib) {
+     // new instance, verify it
+-    verifyEcc(eccLib);
++    //verifyEcc(eccLib);
+     _ECCLIB_CACHE.eccLib = eccLib;
+   }
+ }
+@@ -54,17 +54,17 @@ function verifyEcc(ecc) {
+       h('fffffffffffffffffffffffffffffffffffffffffffffffffffffffefffffc2f'),
+     ),
+   );
+-  assert(typeof ecc.xOnlyPointAddTweak === 'function');
+-  tweakAddVectors.forEach(t => {
+-    const r = ecc.xOnlyPointAddTweak(h(t.pubkey), h(t.tweak));
+-    if (t.result === null) {
+-      assert(r === null);
+-    } else {
+-      assert(r !== null);
+-      assert(r.parity === t.parity);
+-      assert(Buffer.from(r.xOnlyPubkey).equals(h(t.result)));
+-    }
+-  });
++  // assert(typeof ecc.xOnlyPointAddTweak === 'function');
++  // tweakAddVectors.forEach(t => {
++  //   const r = ecc.xOnlyPointAddTweak(h(t.pubkey), h(t.tweak));
++  //   if (t.result === null) {
++  //     assert(r === null);
++  //   } else {
++  //     assert(r !== null);
++  //     assert(r.parity === t.parity);
++  //     assert(Buffer.from(r.xOnlyPubkey).equals(h(t.result)));
++  //   }
++  // });
+ }
+ function assert(bool) {
+   if (!bool) throw new Error('ecc library invalid');

@@ -1,6 +1,8 @@
 import * as BTC from "bitcoinjs-lib";
 import {AddressesList, Folder, FolderAddress, FolderType, FolderXPubBranch} from "./Types";
 import * as b58 from "bs58check";
+import { BIP32Interface } from "bip32";
+import {bip32} from "./BitcoinJS";
 
 export const STARTING_DERIVATION_PATH = "0/0,1/0";
 export const DERIVATION_BATCH_SIZE = 10;
@@ -8,7 +10,7 @@ export const DERIVATION_BATCH_SIZE = 10;
 export function generateAddresses(paths: string[], xpub: string): FolderAddress[] {
     const network = BTC.networks.bitcoin;
     const convertedPubKey = ['y', 'z'].includes(xpub[0]) ? convertPubToXPub(xpub) : xpub;
-    const address = BTC.bip32.fromBase58(convertedPubKey, network);
+    const address: BIP32Interface = bip32.fromBase58(convertedPubKey, network);
     return paths.map(path => {
         const result = {
             name: path,

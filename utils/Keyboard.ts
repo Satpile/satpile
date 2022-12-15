@@ -6,13 +6,14 @@ export function useKeyBoardHeight(defaultHeight = 0) {
 
 
         useEffect(() => {
-            Keyboard.addListener("keyboardWillShow", _keyboardWillShow);
-            Keyboard.addListener("keyboardDidHide", _keyboardDidHide);
+            const subs = [
+                Keyboard.addListener("keyboardWillShow", _keyboardWillShow),
+                Keyboard.addListener("keyboardDidHide", _keyboardDidHide)
+            ];
 
             // cleanup function
             return () => {
-                Keyboard.removeListener("keyboardWillShow", _keyboardWillShow);
-                Keyboard.removeListener("keyboardDidHide", _keyboardDidHide);
+                subs.forEach(sub => sub.remove());
             };
         }, []);
 

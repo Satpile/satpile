@@ -14,9 +14,9 @@ export const useAppState = () => {
     const lastAppState = usePrevious(appState);
 
     useEffect(() => {
-        AppState.addEventListener("change", _handleAppStateChange);
+        const sub = AppState.addEventListener("change", _handleAppStateChange);
         return () => {
-            AppState.removeEventListener("change", _handleAppStateChange);
+            sub.remove();
         };
     }, []);
 

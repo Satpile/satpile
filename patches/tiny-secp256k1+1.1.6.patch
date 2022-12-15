@@ -1,0 +1,29 @@
+diff --git a/node_modules/tiny-secp256k1/js.js b/node_modules/tiny-secp256k1/js.js
+index 5e0fd45..1813735 100644
+--- a/node_modules/tiny-secp256k1/js.js
++++ b/node_modules/tiny-secp256k1/js.js
+@@ -265,6 +265,16 @@ function verify (hash, q, signature, strict) {
+   return v.eq(r)
+ }
+ 
++function isUint8Array(value: Uint8Array): boolean {
++  return value instanceof Uint8Array;
++}
++
++export const X_ONLY_PUBLIC_KEY_SIZE = 32;
++export function isXOnlyPoint(p: Uint8Array): boolean { //add missing for bitcoinlib-js
++  return isUint8Array(p) && p.length === X_ONLY_PUBLIC_KEY_SIZE;
++}
++
++
+ module.exports = {
+   isPoint,
+   isPointCompressed,
+@@ -278,5 +288,6 @@ module.exports = {
+   privateSub,
+   sign,
+   signWithEntropy,
+-  verify
++  verify,
++  isXOnlyPoint
+ }

@@ -4,9 +4,13 @@ import * as TaskManager from "expo-task-manager";
 import {REFRESH_TASK} from "./Settings";
 import BalanceFetcher from "./BalanceFetcher";
 import {Notifications} from "./Notifications";
+import * as bitcoin from "bitcoinjs-lib";
+import * as ecc from "tiny-secp256k1";
 
 export async function bootstrap() {
-  LogBox.ignoreLogs([
+    bitcoin.initEccLib(ecc);
+
+    LogBox.ignoreLogs([
       "Cannot update a component from inside", //TODO: investigate what triggers this, (appears to be in react navigation)
       "Using Math.random is not cryptographically secure", //Already fixed but still triggers warning
       "Stopping Tor daemon."

@@ -1,7 +1,7 @@
 import React, {useContext, useEffect, useMemo, useState} from "react";
 import Tor from "react-native-tor";
 
-const client = {};// Tor();
+const client = new Tor();
 
 export enum TorStatusType {
     DISCONNECTED =  "DISCONNECTED",
@@ -31,19 +31,19 @@ export function TorContextProvider({children}) {
 
     useEffect(() => {
         const interval = setInterval(async () => {
-            //const status = await client.getDaemonStatus();
+            const status = await client.getDaemonStatus();
             let ourStatus;
-            // switch (status.toUpperCase().replace(/"/g,"")){
-            //     case 'NOTINIT': ourStatus = TorStatusType.DISCONNECTED;
-            //     break;
-            //     case 'STARTING': ourStatus = TorStatusType.CONNECTING;
-            //     break;
-            //     case 'DONE': ourStatus = TorStatusType.CONNECTED;
-            //     break;
-            //     default: ourStatus = TorStatusType.DISCONNECTED;
-            //     break;
-            // }
-            // setTorState(ourStatus);
+            switch (status.toUpperCase().replace(/"/g,"")){
+                case 'NOTINIT': ourStatus = TorStatusType.DISCONNECTED;
+                break;
+                case 'STARTING': ourStatus = TorStatusType.CONNECTING;
+                break;
+                case 'DONE': ourStatus = TorStatusType.CONNECTED;
+                break;
+                default: ourStatus = TorStatusType.DISCONNECTED;
+                break;
+            }
+            setTorState(ourStatus);
         }, 500);
         return () => clearInterval(interval);
     }, []);

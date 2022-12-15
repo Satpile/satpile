@@ -55,6 +55,7 @@ export class Electrum extends AbstractExplorer implements Explorer {
         try{
             diff = await this.runQueries(addresses);
         }catch (e){
+            console.error("Electrum error", e);
             throw e;
         }finally {
             this.client.close();
