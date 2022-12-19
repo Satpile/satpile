@@ -9,7 +9,7 @@ module.exports = {
     scan_qr_code: 'Naskenovat QRcode',
     cancel: 'Zrušit',
     done: 'Uložit',
-    invalid_address: Neplatná adresa',
+    invalid_address: 'Neplatná adresa',
     success_added: 'Adresa byla úspěšně přidána',
     error_added: 'Chyba při přidávání adresy',
     address_copied: 'Adresa zkopírovaná do schránky',
@@ -32,7 +32,7 @@ module.exports = {
         abbr_day_names: ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"],
         day_names: ["Neděle", "Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota"],
         abbr_month_names: [null, "Led", "Ún", "Bře", "Dub", "Kvě", "Čer", "Čenec", "Srp", "Zář", "Říj", "Lis", "Pro"],
-        month_names: [null, "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen, "Září", "Říjen", "Listopad", "Prosinec"]
+        month_names: [null, "Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"]
     },
     no_network: "Chyba: Nelze se připojit k síti",
     connection_error: "Nelze se připojit k serveru \n{{server}}",
