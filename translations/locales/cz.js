@@ -145,9 +145,3 @@ module.exports = {
     }
 };
 
-
-{
-    "NSCameraUsageDescription": "Umožnit aplikaci Satpile přístup k fotoaparátu pro skenování QR kódů a zrychlit a usnadnit import adres.",
-    "NSFaceIDUsageDescription": "Povolit aplikaci Satpile používat k odemykání FaceID"
-}
-
