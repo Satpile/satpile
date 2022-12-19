@@ -39,7 +39,8 @@
     "locales": {
       "fr": "./translations/permissions/fr.json",
       "en": "./translations/permissions/en.json",
-      "de": "./translations/permissions/de.json"
+      "de": "./translations/permissions/de.json",
+      "cz": "./translations/permissions/cz.json"
     },
     "android": {
       "package": "com.satpile.app",
