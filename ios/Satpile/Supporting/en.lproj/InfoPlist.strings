@@ -1,2 +1,0 @@
-NSCameraUsageDescription = "Allow Satpile to access your camera to read QR codes and import addresses quickly and easily";
-NSFaceIDUsageDescription = "Allow Satpile to use FaceID to unlock the app";
