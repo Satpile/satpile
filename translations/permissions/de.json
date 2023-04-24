@@ -1,5 +1,4 @@
 {
-    "NSCameraUsageDescription": "Erlaube Satpile Zugriff auf deine Kamera, um QR Codes zu scannen und das Importieren von Adressen schneller und einfacher zu machen",
-    "NSFaceIDUsageDescription": "Erlaube Satpile FaceID zu nutzen, um die App zu entsperren"
+  "NSCameraUsageDescription": "Erlaube Satpile Zugriff auf deine Kamera, um QR Codes zu scannen und das Importieren von Adressen schneller und einfacher zu machen",
+  "NSFaceIDUsageDescription": "Erlaube Satpile FaceID zu nutzen, um die App zu entsperren"
 }
-    

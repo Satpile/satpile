@@ -1,34 +1,32 @@
-import {Keyboard, LayoutAnimation, Platform} from "react-native";
-import {useEffect, useState} from "react";
+import { Keyboard, LayoutAnimation, Platform } from "react-native";
+import { useEffect, useState } from "react";
 
 export function useKeyBoardHeight(defaultHeight = 0) {
-    if (Platform.OS === "ios") {
+  if (Platform.OS === "ios") {
+    useEffect(() => {
+      const subs = [
+        Keyboard.addListener("keyboardWillShow", _keyboardWillShow),
+        Keyboard.addListener("keyboardDidHide", _keyboardDidHide),
+      ];
 
+      // cleanup function
+      return () => {
+        subs.forEach((sub) => sub.remove());
+      };
+    }, []);
 
-        useEffect(() => {
-            const subs = [
-                Keyboard.addListener("keyboardWillShow", _keyboardWillShow),
-                Keyboard.addListener("keyboardDidHide", _keyboardDidHide)
-            ];
+    const _keyboardWillShow = (event) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      updateKeyboardHeight(event.endCoordinates.height);
+    };
 
-            // cleanup function
-            return () => {
-                subs.forEach(sub => sub.remove());
-            };
-        }, []);
+    const _keyboardDidHide = (event) => {
+      LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
+      updateKeyboardHeight(defaultHeight);
+    };
+  }
 
-        const _keyboardWillShow = (event) => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            updateKeyboardHeight(event.endCoordinates.height);
-        };
+  const [keyboardHeight, updateKeyboardHeight] = useState(defaultHeight);
 
-        const _keyboardDidHide = (event) => {
-            LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
-            updateKeyboardHeight(defaultHeight);
-        };
-    }
-
-    const [keyboardHeight, updateKeyboardHeight] = useState(defaultHeight);
-
-    return keyboardHeight;
+  return keyboardHeight;
 }

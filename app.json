@@ -3,10 +3,7 @@
     "name": "Satpile",
     "slug": "satpile",
     "privacy": "public",
-    "platforms": [
-      "ios",
-      "android"
-    ],
+    "platforms": ["ios", "android"],
     "version": "1.7.3",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -18,9 +15,7 @@
     "updates": {
       "enabled": false
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.satpile.app",
@@ -28,9 +23,7 @@
         "usesNonExemptEncryption": false
       },
       "infoPlist": {
-        "UIBackgroundModes": [
-          "fetch"
-        ],
+        "UIBackgroundModes": ["fetch"],
         "NSCameraUsageDescription": "This app uses the camera to scan QR codes.",
         "NSFaceIDUsageDescription": "Allow Satpile to use FaceID to unlock the app"
       },
@@ -44,11 +37,7 @@
     },
     "android": {
       "package": "com.satpile.app",
-      "permissions": [
-        "USE_FINGERPRINT",
-        "USE_BIOMETRIC",
-        "CAMERA"
-      ]
+      "permissions": ["USE_FINGERPRINT", "USE_BIOMETRIC", "CAMERA"]
     },
     "androidStatusBar": {
       "barStyle": "light-content",
@@ -65,8 +54,6 @@
         "projectId": "bdedafa1-90de-458e-a855-e12346630b02"
       }
     },
-    "plugins": [
-      "expo-localization"
-    ]
+    "plugins": ["expo-localization"]
   }
 }
