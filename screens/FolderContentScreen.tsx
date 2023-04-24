@@ -100,12 +100,31 @@ export default function FolderContentScreen({ navigation, route }) {
                 />
               )}
           {folder.type === FolderType.XPUB_WALLET ? (
-            <Appbar.Action
-              key={"add"}
-              color="white"
-              icon={showLoadMoreToolbar ? "close" : "plus"}
-              onPress={() => setShowLoadMoreToolbar(!showLoadMoreToolbar)}
-            />
+            <>
+              {!showLoadMoreToolbar && (
+                <Appbar.Action
+                  key={"settings"}
+                  color="white"
+                  icon={"dots-vertical"}
+                  style={{
+                    marginRight: 0,
+                    paddingLeft: 5,
+                    width: 24,
+                  }}
+                  onPress={() =>
+                    navigation.navigate("WalletSettings", {
+                      folder: folder.uid,
+                    })
+                  }
+                />
+              )}
+              <Appbar.Action
+                key={"add"}
+                color="white"
+                icon={showLoadMoreToolbar ? "close" : "plus"}
+                onPress={() => setShowLoadMoreToolbar(!showLoadMoreToolbar)}
+              />
+            </>
           ) : null}
         </View>
       ),

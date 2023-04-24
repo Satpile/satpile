@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -10,15 +10,14 @@ import { i18n } from "../translations/i18n";
 import {
   Appbar,
   Button,
+  Headline,
   HelperText,
   Text,
   TextInput,
   useTheme,
-  Headline,
 } from "react-native-paper";
 import QRCodeButton from "../components/QRCodeButton";
 import { MainTitle } from "../components/DynamicTitle";
-import { connect } from "react-redux";
 import {
   addAddressToFolder,
   addDerivedAddresses,
@@ -35,7 +34,8 @@ import {
   STARTING_DERIVATION_PATH,
 } from "../utils/XPubAddresses";
 import { DerivationPathSelector } from "../components/DerivationPathSelector";
-import { useTypedDispatch, useTypedSelector } from "../store/store";
+import { useTypedDispatch } from "../store/store";
+import { generatePrivateWallet } from "../utils/Seed";
 
 export default function AddScreen({ navigation, route }) {
   const dispatch = useTypedDispatch();
@@ -49,9 +49,15 @@ export default function AddScreen({ navigation, route }) {
   );
   const [loading, setLoading] = useState(false);
 
-  const addingType = route.params.folder
-    ? AddingEnum.ADDRESS
-    : AddingEnum.XPUB_WALLET;
+  const addingType = useMemo(() => {
+    if (route.params.folder) {
+      return AddingEnum.ADDRESS;
+    }
+    if (route.params.seed) {
+      return AddingEnum.XPUB_WALLET_WITH_SEED;
+    }
+    return AddingEnum.XPUB_WALLET;
+  }, [route]);
 
   const startScan = () => {
     setShowScanner(true);
@@ -83,59 +89,68 @@ export default function AddScreen({ navigation, route }) {
           duration: 1500,
         });
         navigation.goBack();
-      } else {
-        const newFolder: Folder = {
-          uid: generateUid(),
-          version: "v2",
-          name: name,
-          addresses: [],
-          totalBalance: 0,
-          orderAddresses: "custom",
-          type: FolderType.XPUB_WALLET,
-          address: address,
-          xpubConfig: {
-            branches: derivationStartingPath
-              .split(",")
-              .map((path) => ({ nextPath: path, addresses: [] })),
-          },
-        };
-
-        dispatch(addFolder(newFolder));
-        setLoading(true);
-        setTimeout(() => {
-          //Wrap in settimeout to update the UI first
-          try {
-            newFolder.xpubConfig.branches.forEach((branch) => {
-              const firstAddresses = initializeAddressesDerivation(
-                newFolder,
-                branch
-              );
-              dispatch(addDerivedAddresses(newFolder, branch, firstAddresses));
-            });
-
-            BalanceFetcher.filterAndFetchBalances(false);
-            Toast.showToast({
-              type: "top",
-              message: i18n.t("success_added"),
-              duration: 1500,
-            });
-            navigation.goBack();
-
-            setTimeout(() => {
-              navigation.navigate("FolderContent", { folder: newFolder });
-            }, 300);
-          } catch (e) {
-            dispatch(removeFolder(newFolder));
-            Toast.showToast({
-              type: "top",
-              message: i18n.t("error_added"),
-              duration: 2000,
-            });
-          } finally {
-            setLoading(false);
-          }
-        }, 0);
+        return true;
       }
+
+      let seed: string | undefined = undefined;
+      if (addingType === AddingEnum.XPUB_WALLET_WITH_SEED) {
+        const { mnemonic, zpub } = await generatePrivateWallet();
+        seed = mnemonic;
+        address = zpub;
+      }
+
+      const newFolder: Folder = {
+        uid: generateUid(),
+        version: "v2",
+        name: name,
+        addresses: [],
+        totalBalance: 0,
+        orderAddresses: "custom",
+        type: FolderType.XPUB_WALLET,
+        address: address,
+        xpubConfig: {
+          branches: derivationStartingPath
+            .split(",")
+            .map((path) => ({ nextPath: path, addresses: [] })),
+        },
+        seed,
+      };
+
+      dispatch(addFolder(newFolder));
+      setLoading(true);
+      setTimeout(() => {
+        //Wrap in settimeout to update the UI first
+        try {
+          newFolder.xpubConfig.branches.forEach((branch) => {
+            const firstAddresses = initializeAddressesDerivation(
+              newFolder,
+              branch
+            );
+            dispatch(addDerivedAddresses(newFolder, branch, firstAddresses));
+          });
+
+          BalanceFetcher.filterAndFetchBalances(false);
+          Toast.showToast({
+            type: "top",
+            message: i18n.t("success_added"),
+            duration: 1500,
+          });
+          navigation.goBack();
+
+          setTimeout(() => {
+            navigation.navigate("FolderContent", { folder: newFolder });
+          }, 300);
+        } catch (e) {
+          dispatch(removeFolder(newFolder));
+          Toast.showToast({
+            type: "top",
+            message: i18n.t("error_added"),
+            duration: 2000,
+          });
+        } finally {
+          setLoading(false);
+        }
+      }, 0);
 
       return true;
     } else {
@@ -187,36 +202,41 @@ export default function AddScreen({ navigation, route }) {
         }}
         value={nameInput}
       />
+      {addingType !== AddingEnum.XPUB_WALLET_WITH_SEED && (
+        <>
+          <View>
+            <TextInput
+              style={{ ...styles.textInput, justifyContent: "flex-start" }}
+              onChangeText={(text) => {
+                setAddressInput(text);
+              }}
+              value={addressInput}
+              label={i18n.t("address")}
+            />
+            <HelperText
+              type="error"
+              visible={
+                !isAddressValid(addressInput, addingType) &&
+                addressInput.length > 0
+              }
+            >
+              {i18n.t("invalid_address")}
+            </HelperText>
+          </View>
 
-      <View>
-        <TextInput
-          style={{ ...styles.textInput, justifyContent: "flex-start" }}
-          onChangeText={(text) => {
-            setAddressInput(text);
-          }}
-          value={addressInput}
-          label={i18n.t("address")}
-        />
-        <HelperText
-          type="error"
-          visible={
-            !isAddressValid(addressInput, addingType) && addressInput.length > 0
-          }
-        >
-          {i18n.t("invalid_address")}
-        </HelperText>
-      </View>
-
-      <View>
-        <QRCodeButton
-          onPress={() => {
-            !saving && startScan();
-          }}
-        />
-      </View>
-
+          <View>
+            <QRCodeButton
+              onPress={() => {
+                !saving && startScan();
+              }}
+            />
+          </View>
+        </>
+      )}
       <Button style={{ marginTop: 40 }} onPress={() => saveAddress()}>
-        {i18n.t("done")}
+        {addingType === AddingEnum.XPUB_WALLET_WITH_SEED
+          ? i18n.t("generate")
+          : i18n.t("done")}
       </Button>
       {loading && (
         <View>

@@ -12,6 +12,7 @@ import AddressDetailsScreen from "../screens/AddressDetailsScreen";
 import SettingsEditScreen from "../screens/settings/SettingsEditScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
+import WalletSettingsScreen from "../screens/WalletSettingsScreen";
 
 const Stack = createStackNavigator();
 
@@ -42,6 +43,7 @@ export function Navigator() {
       >
         <Stack.Screen name="Home" component={FoldersListScreen} />
         <Stack.Screen name="FolderContent" component={FolderContentScreen} />
+        <Stack.Screen name="WalletSettings" component={WalletSettingsScreen} />
         <Stack.Screen name="Add" component={AddScreen} />
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="AddressDetails" component={AddressDetailsScreen} />

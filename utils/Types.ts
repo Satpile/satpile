@@ -51,6 +51,7 @@ export type Folder = {
     nextPath?: string;
     branches?: FolderXPubBranch[];
   };
+  seed?: string;
 };
 
 export interface Explorer {
@@ -86,6 +87,7 @@ export enum ExplorerApi {
 
 export enum AddingEnum {
   XPUB_WALLET = "XPUB_WALLET",
+  XPUB_WALLET_WITH_SEED = "XPUB_WALLET_WITH_SEED",
   ADDRESS = "ADDRESS",
 }
 

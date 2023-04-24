@@ -73,10 +73,13 @@ export function isSorted<T extends { name: string }>(array: T[]) {
   return true;
 }
 
-export function isAddressValid(address: string, type: AddingEnum) {
-  if (type === AddingEnum.XPUB_WALLET) {
-    return /^[xyz]pub[A-Za-z0-9]+/.test(address);
+export function isAddressValid(address: string, type: AddingEnum): boolean {
+  switch (type) {
+    case AddingEnum.ADDRESS:
+      return addressValidation(address) !== false;
+    case AddingEnum.XPUB_WALLET:
+      return /^[xyz]pub[A-Za-z0-9]+/.test(address);
+    case AddingEnum.XPUB_WALLET_WITH_SEED:
+      return address === "";
   }
-
-  return addressValidation(address) !== false;
 }

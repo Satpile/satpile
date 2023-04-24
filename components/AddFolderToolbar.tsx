@@ -38,39 +38,65 @@ export function AddFolderToolbar({
           onAddFolder();
         }}
       />
-      <TouchableHighlight
-        style={{
-          marginRight: 5,
-          padding: 5,
-          borderRadius: 17,
-        }}
+      <IconWithText
+        icon={"wallet"}
+        text={"XPUB"}
         onPress={() => {
           onHide();
           navigation.navigate("Add", { folder: null });
         }}
-        underlayColor={
-          theme.dark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)"
-        }
-      >
-        <>
-          <MaterialCommunityIcons
-            name={"wallet"}
-            color={theme.colors.onSurface}
-            size={24}
-          />
-          <Text
-            style={{
-              fontSize: 8,
-              position: "absolute",
-              bottom: -3,
-              left: 5,
-              width: "100%",
-            }}
-          >
-            XPUB
-          </Text>
-        </>
-      </TouchableHighlight>
+      />
+      <IconWithText
+        icon={"wallet"}
+        text={"SEED"}
+        onPress={() => {
+          onHide();
+          navigation.navigate("Add", { folder: null, seed: true }); //TODO: update Add screen to support seed generation
+          //TODO: update store to support seed generation
+        }}
+      />
     </Toolbar>
+  );
+}
+
+function IconWithText({
+  icon,
+  text,
+  onPress,
+}: {
+  icon: React.ComponentProps<typeof MaterialCommunityIcons>["name"];
+  text: string;
+  onPress: () => void;
+}) {
+  const theme = useTheme();
+  return (
+    <TouchableHighlight
+      style={{
+        marginRight: 5,
+        padding: 5,
+        borderRadius: 17,
+      }}
+      onPress={onPress}
+      underlayColor={theme.dark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.25)"}
+    >
+      <>
+        <MaterialCommunityIcons
+          name={icon}
+          color={theme.colors.onSurface}
+          size={24}
+        />
+        <Text
+          style={{
+            fontSize: 8,
+            position: "absolute",
+            bottom: -3,
+            left: 5,
+            width: "100%",
+          }}
+        >
+          {text}
+        </Text>
+      </>
+    </TouchableHighlight>
   );
 }

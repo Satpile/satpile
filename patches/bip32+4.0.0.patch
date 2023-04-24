@@ -1,0 +1,32 @@
+diff --git a/node_modules/bip32/src/bip32.js b/node_modules/bip32/src/bip32.js
+index 9888131..b7981ff 100644
+--- a/node_modules/bip32/src/bip32.js
++++ b/node_modules/bip32/src/bip32.js
+@@ -132,11 +132,11 @@ function BIP32Factory(ecc) {
+         neutered() {
+             return fromPublicKeyLocal(this.publicKey, this.chainCode, this.network, this.depth, this.index, this.parentFingerprint);
+         }
+-        toBase58() {
++        toBase58(customVersion) {
+             const network = this.network;
+-            const version = !this.isNeutered()
++            const version = customVersion || (!this.isNeutered()
+                 ? network.bip32.private
+-                : network.bip32.public;
++                : network.bip32.public);
+             const buffer = Buffer.allocUnsafe(78);
+             // 4 bytes: version bytes
+             buffer.writeUInt32BE(version, 0);
+diff --git a/node_modules/bip32/types/bip32.d.ts b/node_modules/bip32/types/bip32.d.ts
+index de1ccee..65f0b7c 100644
+--- a/node_modules/bip32/types/bip32.d.ts
++++ b/node_modules/bip32/types/bip32.d.ts
+@@ -29,7 +29,7 @@ export interface BIP32Interface extends Signer {
+     fingerprint: Buffer;
+     isNeutered(): boolean;
+     neutered(): BIP32Interface;
+-    toBase58(): string;
++    toBase58(customVersion?: number): string;
+     toWIF(): string;
+     derive(index: number): BIP32Interface;
+     deriveHardened(index: number): BIP32Interface;
