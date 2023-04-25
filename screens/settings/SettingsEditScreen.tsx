@@ -247,6 +247,10 @@ export default function SettingsEditScreen({ navigation, route }) {
                   .{"\n"}
                   {i18n.t("settings.about_content.2")}
                 </Text>
+                <Headline>{i18n.t("settings.about_thanks")}</Headline>
+                <Text style={styles.simpleText}>
+                  {i18n.t("settings.about_thanks_content")}
+                </Text>
               </View>
             );
           },

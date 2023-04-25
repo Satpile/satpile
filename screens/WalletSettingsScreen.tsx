@@ -1,5 +1,5 @@
-import { Appbar, Text, useTheme } from "react-native-paper";
-import { View } from "react-native";
+import { Appbar, Text, Title, useTheme } from "react-native-paper";
+import { Clipboard, Share, View } from "react-native";
 import { useTypedDispatch, useTypedSelector } from "../store/store";
 import React, { useEffect, useState } from "react";
 import { Folder, FolderType } from "../utils/Types";
@@ -9,6 +9,18 @@ import DynamicTitle from "../components/DynamicTitle";
 import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
 import { DisplaySeed } from "../components/DisplaySeed";
+import { QRCodeModal } from "../components/QRCodeModal";
+import { ActionButton } from "../components/ActionButton";
+import { Toast } from "../components/Toast";
+
+const copyAddress = (address: string) => {
+  Clipboard.setString(address);
+  Toast.showToast({
+    duration: 1500,
+    message: i18n.t("address_copied"),
+    type: "bottom",
+  });
+};
 
 export default function WalletSettingsScreen() {
   const { params } = useRoute();
@@ -72,12 +84,50 @@ export default function WalletSettingsScreen() {
           defaultValue={folder.name}
         />
       )}
+
+      <View style={{ flexDirection: "row", paddingVertical: 20 }}>
+        <View style={{ flex: 1, paddingLeft: 20 }}>
+          <Title>{folder.name}</Title>
+          <Text selectable={true}>{folder.address}</Text>
+          <View
+            style={{
+              display: "flex",
+              alignContent: "center",
+              width: 140,
+              alignSelf: "center",
+              marginTop: 12,
+            }}
+          >
+            <ActionButton
+              text={i18n.t("copy")}
+              onPress={() => Clipboard.setString(folder.address)}
+            />
+            <ActionButton
+              text={i18n.t("export")}
+              onPress={() => Share.share({ message: folder.address })}
+              icon={"export"}
+              color={"black"}
+            />
+          </View>
+        </View>
+        <View
+          style={{
+            flex: 1,
+            alignItems: "center",
+          }}
+        >
+          <QRCodeModal content={folder.address} />
+        </View>
+      </View>
+      {folder.seed && (
+        <Text>
+          {i18n.t("seed_derivation_path")}
+          {"\n"}
+          Derivation path : m/84'/0'/0'/0/index{"\n"}
+          Derivation path for change: m/84'/0'/0'/1/index
+        </Text>
+      )}
       {folder.seed && <DisplaySeed seed={folder.seed} />}
-      <Text>{folder.address}</Text>
-      <Text>Hardened derivation path : m/84'/0'/0'</Text>
-      <Text>
-        Full derivation path : m/84'/0'/0'/{"{0,1}"}/{"{0,1,2,3,4...}"}
-      </Text>
     </View>
   );
 }

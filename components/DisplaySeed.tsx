@@ -1,12 +1,15 @@
 import { StyleSheet, View } from "react-native";
 import { useState } from "react";
-import { Button, Text } from "react-native-paper";
+import { Button, Text, Title } from "react-native-paper";
+import { i18n } from "../translations/i18n";
 
 export function DisplaySeed({ seed }: { seed: string }) {
   const [showSeed, setShowSeed] = useState(false);
-  // show a button to show the seed
+
   return (
     <View style={style.container}>
+      <Title>Seed</Title>
+      <Text style={{ marginBottom: 20 }}>{i18n.t("seed_warning")}</Text>
       <View style={style.seedContainer}>
         {seed.split(" ").map((w, i) => (
           <Text key={i} style={style.text}>
@@ -29,10 +32,8 @@ export function DisplaySeed({ seed }: { seed: string }) {
 const style = StyleSheet.create({
   text: {
     fontSize: 18,
-
     lineHeight: 30,
     width: "33%",
-    // textAlign: "center",
   },
   seedContainer: {
     flexDirection: "row",

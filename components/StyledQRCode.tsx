@@ -2,7 +2,13 @@ import QRCode from "react-native-qrcode-svg";
 import React from "react";
 import { View } from "react-native";
 
-export function QRCodeAddress({ address, size }) {
+export function StyledQRCode({
+  content,
+  size,
+}: {
+  content: string;
+  size: number;
+}) {
   const padding = Math.floor(size * 0.05);
   return (
     <View
@@ -13,7 +19,7 @@ export function QRCodeAddress({ address, size }) {
         display: "flex",
       }}
     >
-      <QRCode value={"bitcoin:" + address.address} size={size} />
+      <QRCode value={content} size={size} />
     </View>
   );
 }

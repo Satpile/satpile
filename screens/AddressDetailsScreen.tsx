@@ -17,12 +17,11 @@ import * as Actions from "../store/actions";
 import ReloadButton from "../components/ReloadButton";
 import { Toast } from "../components/Toast";
 import ExplorerList from "../components/ExplorersList";
-import ViewShot from "react-native-view-shot";
-import * as Sharing from "expo-sharing";
-import { QRCodeAddress } from "../components/QRCodeAddress";
 import PromptModal from "../components/PromptModal";
 import { Folder, FolderType } from "../utils/Types";
 import { useTypedDispatch, useTypedSelector } from "../store/store";
+import { ActionButton } from "../components/ActionButton";
+import { QRCodeModal } from "../components/QRCodeModal";
 
 export default function AddressDetailsScreen({ navigation, route }) {
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -160,17 +159,10 @@ export default function AddressDetailsScreen({ navigation, route }) {
           <View
             style={{
               flex: 1,
-              justifyContent: "flex-start",
               alignItems: "center",
             }}
           >
-            <TouchableOpacity
-              onPress={async () => {
-                setBigQRCode(true);
-              }}
-            >
-              <QRCodeAddress address={address} size={150} />
-            </TouchableOpacity>
+            <QRCodeModal content={`bitcoin:${address}`} />
           </View>
         </View>
         <View style={{ flex: 1 }}>
@@ -178,104 +170,8 @@ export default function AddressDetailsScreen({ navigation, route }) {
         </View>
         <ReloadButton />
       </View>
-
-      <Modal
-        visible={bigQRCode}
-        animated={true}
-        onDismiss={() => setBigQRCode(false)}
-        onRequestClose={() => setBigQRCode(false)}
-        presentationStyle={"fullScreen"}
-        animationType={"slide"}
-      >
-        <View
-          style={{
-            ...StyleSheet.absoluteFillObject,
-            justifyContent: "center",
-            alignItems: "center",
-            backgroundColor: theme.colors.background,
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              setBigQRCode(false);
-            }}
-          >
-            <ViewShot
-              ref={(ref) => (QRCodeRef = ref)}
-              options={{ format: "png", result: "tmpfile" }}
-            >
-              <QRCodeAddress address={address} size={280} />
-            </ViewShot>
-          </TouchableOpacity>
-          <ActionButton
-            text={i18n.t("share_qrcode")}
-            style={{ marginTop: 10 }}
-            color={"black"}
-            icon={"export"}
-            onPress={async () => {
-              let uri = await QRCodeRef.capture();
-              shareImage(uri);
-            }}
-          />
-          <Button
-            style={{ marginBottom: -80, marginTop: 80 }}
-            onPress={() => setBigQRCode(false)}
-          >
-            {i18n.t("close")}
-          </Button>
-        </View>
-      </Modal>
     </View>
   );
-}
-
-let ActionButton = ({ onPress, text, ...props }) => {
-  const theme = useTheme();
-  props.color = props.color === "black" ? theme.colors.text : props.color;
-
-  return (
-    <Button
-      contentStyle={{
-        alignSelf: "flex-start",
-        ...(!props.icon ? { paddingLeft: 5 } : {}),
-      }}
-      labelStyle={{
-        marginVertical: 6,
-      }}
-      style={{
-        marginVertical: 3,
-      }}
-      mode={"outlined"}
-      compact={true}
-      onPress={onPress}
-      {...props}
-    >
-      {text}
-    </Button>
-  );
-};
-
-async function shareImage(uri) {
-  switch (Platform.OS) {
-    case "android":
-      if (await Sharing.isAvailableAsync()) {
-        Sharing.shareAsync(uri, {
-          mimeType: "image/png",
-        });
-      }
-      break;
-    case "ios":
-      Share.share(
-        {
-          title: "QRCode",
-          url: uri,
-        },
-        {
-          dialogTitle: "Share QRCode",
-        }
-      );
-      break;
-  }
 }
 
 const styles = StyleSheet.create({

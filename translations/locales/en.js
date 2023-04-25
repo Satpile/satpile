@@ -109,6 +109,10 @@ module.exports = {
 
       "We appreciate your feedback and comments.",
     ],
+    about_thanks: "Thanks",
+    about_thanks_content:
+      "- German translation (big thanks to @bitflib!)\n" +
+      "- Czech translation (big thanks to @matko_deo!)",
     security: {
       title: "Security",
       warning:
@@ -184,4 +188,7 @@ module.exports = {
     one: "1 empty address was hidden",
     other: "%{count} empty addresses were hidden",
   },
+  generate: "Generate",
+  seed_warning: "Do not share this!",
+  seed_derivation_path: "The zpub was generated according to bip84",
 };
