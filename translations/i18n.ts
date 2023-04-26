@@ -1,13 +1,14 @@
 import i18n from "i18n-js";
 import * as Localization from "expo-localization";
+import { useEffect } from "react";
 
 const fr = require("./locales/fr.js");
 const en = require("./locales/en.js");
 const de = require("./locales/de.js");
-const cz = require("./locales/cz.js");
+const cs = require("./locales/cs.js");
 
 i18n.fallbacks = true;
-i18n.translations = { fr, en, de, cz };
+i18n.translations = { fr, en, de, cs };
 
 //Changes the set locale to the one in the settings when the settings are reloaded
 /*Settings.addLoadListener(() => {

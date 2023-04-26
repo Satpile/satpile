@@ -33,7 +33,7 @@
       "fr": "./translations/permissions/fr.json",
       "en": "./translations/permissions/en.json",
       "de": "./translations/permissions/de.json",
-      "cz": "./translations/permissions/cz.json"
+      "cs": "./translations/permissions/cs.json"
     },
     "android": {
       "package": "com.satpile.app",

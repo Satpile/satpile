@@ -28,6 +28,10 @@ const settings = (state: Partial<Settings> = {}, action: Action): Settings => {
       if (action.state?.settings?.explorer === "SMARTBIT_COM_AU") {
         action.state.settings.explorer = ExplorerApi.MEMPOOL_SPACE;
       }
+
+      if (action.state?.settings?.locale === "cz") {
+        action.state.settings.locale = "cs";
+      }
       return { ...defaultSettings(), ...action.state.settings };
 
     case "UPDATE_SETTINGS":
