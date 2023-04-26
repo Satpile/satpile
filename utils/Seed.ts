@@ -24,7 +24,6 @@ export async function generatePrivateWallet(): Promise<{
     .fromSeed(seed)
     .derivePath(bip84Constants.bitcoin.path);
   const zpub = derivedNode.neutered().toBase58(bip84Constants.bitcoin.public);
-  console.log("zpub", zpub);
-  console.log(derivedNode);
+
   return { mnemonic, zpub };
 }

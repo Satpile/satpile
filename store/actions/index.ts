@@ -28,7 +28,6 @@ import {
 
 export const loadData = async () => {
   let state = await AddressesStorage.loadState();
-  console.log("LOADING DATA", state);
   return { type: "LOAD_DATA", state: state };
 };
 

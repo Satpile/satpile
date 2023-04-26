@@ -41,7 +41,6 @@ export default class Mempool extends AbstractExplorer implements Explorer {
       } else {
         request = await fetch(`${this.url}/api/address/` + address);
         const text = await request.text();
-        console.log({ text, h: request.headers });
         parsed = JSON.parse(text);
         if (request.status !== 200) {
           console.error("error", request.status, text);

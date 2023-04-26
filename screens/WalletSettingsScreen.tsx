@@ -100,7 +100,7 @@ export default function WalletSettingsScreen() {
           >
             <ActionButton
               text={i18n.t("copy")}
-              onPress={() => Clipboard.setString(folder.address)}
+              onPress={() => copyAddress(folder.address)}
             />
             <ActionButton
               text={i18n.t("export")}
