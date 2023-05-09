@@ -27,6 +27,7 @@ export enum ActionType {
   UPDATE_SINGLE_ADDRESS = "UPDATE_SINGLE_ADDRESS",
   UPDATE_LAST_RELOAD_TIME = "UPDATE_LAST_RELOAD_TIME",
   ADD_DERIVED_ADDRESSES = "ADD_DERIVED_ADDRESSES",
+  UPDATE_REFRESH_STATUS = "UPDATE_REFRESH_STATUS",
 }
 
 interface BaseAction<Type extends ActionType> {
@@ -130,6 +131,11 @@ export interface ActionAddDerivedAddresses
   branch: FolderXPubBranch;
 }
 
+export interface ActionUpdateRefreshStatus
+  extends BaseAction<ActionType.UPDATE_REFRESH_STATUS> {
+  status: boolean;
+}
+
 export type Action =
   | ActionClear
   | ActionLoadData
@@ -148,4 +154,5 @@ export type Action =
   | ActionUpdateAddress
   | ActionUpdateSingleAddress
   | ActionUpdateLastReloadTime
-  | ActionAddDerivedAddresses;
+  | ActionAddDerivedAddresses
+  | ActionUpdateRefreshStatus;

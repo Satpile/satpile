@@ -133,8 +133,15 @@ export default function FoldersListScreen({ navigation }) {
 
   //Refresh errored addresses
   useEffect(() => {
+    let running = false;
     const interval = setInterval(() => {
-      BalanceFetcher.filterAndFetchBalances(true, true);
+      if (running) {
+        return;
+      }
+      running = true;
+      BalanceFetcher.filterAndFetchBalances(true, true).finally(() => {
+        running = false;
+      });
     }, 10 * 1000);
 
     return () => clearInterval(interval);

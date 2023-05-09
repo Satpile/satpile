@@ -1,18 +1,28 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
-import { connect, useSelector } from "react-redux";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import { i18n } from "../translations/i18n";
 import { useSettings } from "../utils/Settings";
-import { useTypedDispatch, useTypedSelector } from "../store/store";
+import { useTypedSelector } from "../store/store";
+import { AddressStatusType } from "./AddressStatus";
 
 export default function ReloadButton() {
-  const { lastReloadTime, folders } = useTypedSelector((state) => ({
-    lastReloadTime: state.lastReloadTime,
-    folders: state.folders,
-  }));
-  const [settings, updatSettings] = useSettings(); //Call useSettings hook to refresh text when settings change
+  const { lastReloadTime, folders, loading, hasError } = useTypedSelector(
+    (state) => ({
+      lastReloadTime: state.lastReloadTime,
+      folders: state.folders,
+      loading: state.loading,
+      hasError: Object.entries(state.addresses).some(
+        ([key, value]) => value.status === AddressStatusType.ERROR
+      ),
+    })
+  );
+
+  //Call useSettings hook to refresh text when settings change
+  //Should not be needed if we used a useTranslation hook but would require some work
+  const [settings, updateSettings] = useSettings();
+
   if (folders.length === 0) return null;
 
   return (
@@ -44,10 +54,17 @@ export default function ReloadButton() {
           </Text>
           <Ionicons
             style={{ paddingTop: 1, paddingLeft: 3 }}
-            name={"md-refresh-circle"}
+            name={hasError ? "warning" : "md-refresh-circle"}
             color={"gray"}
             size={20}
           />
+          {loading && (
+            <ActivityIndicator
+              style={{ paddingLeft: 5 }}
+              size={"small"}
+              color={"gray"}
+            />
+          )}
         </View>
       </TouchableOpacity>
     </View>

@@ -22,6 +22,12 @@ import { Folder, FolderType } from "../utils/Types";
 import { useTypedDispatch, useTypedSelector } from "../store/store";
 import { ActionButton } from "../components/ActionButton";
 import { QRCodeModal } from "../components/QRCodeModal";
+import {
+  AddressStatusIndicator,
+  AddressStatusType,
+} from "../components/AddressStatus";
+import { useI18n } from "../utils/Settings";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function AddressDetailsScreen({ navigation, route }) {
   const [showRenameModal, setShowRenameModal] = useState(false);
@@ -47,6 +53,8 @@ export default function AddressDetailsScreen({ navigation, route }) {
   }
 
   const balance = addresses[address.address].balance;
+  const addressValue = addresses[address.address];
+
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => (
@@ -168,6 +176,18 @@ export default function AddressDetailsScreen({ navigation, route }) {
         <View style={{ flex: 1 }}>
           <ExplorerList address={address.address} />
         </View>
+        {addressValue && addressValue.status === AddressStatusType.ERROR && (
+          <View
+            style={{
+              padding: 20,
+            }}
+          >
+            <Text>
+              <AddressStatusIndicator status={addressValue.status} />
+              {i18n.t("address_error")}
+            </Text>
+          </View>
+        )}
         <ReloadButton />
       </View>
     </View>

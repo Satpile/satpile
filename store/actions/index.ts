@@ -155,3 +155,10 @@ export const addDerivedAddresses = (
     branch,
   };
 };
+
+export const updateLoaderStatus = (status: boolean): Action => {
+  return {
+    type: ActionType.UPDATE_REFRESH_STATUS,
+    status,
+  };
+};

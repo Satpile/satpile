@@ -191,4 +191,6 @@ module.exports = {
   generate: "Generate",
   seed_warning: "Do not share this!",
   seed_derivation_path: "The zpub was generated according to bip84",
+  address_error:
+    "An error occured the last time this address was refreshed. You can wait or try to refresh again.",
 };

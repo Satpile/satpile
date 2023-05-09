@@ -41,11 +41,10 @@ export default class Mempool extends AbstractExplorer implements Explorer {
       } else {
         request = await fetch(`${this.url}/api/address/` + address);
         const text = await request.text();
-        parsed = JSON.parse(text);
         if (request.status !== 200) {
-          console.error("error", request.status, text);
           throw new Error(request.status + "");
         }
+        parsed = JSON.parse(text);
       }
 
       let result =
@@ -58,7 +57,6 @@ export default class Mempool extends AbstractExplorer implements Explorer {
         transactionCount: txCount,
       };
     } catch (e) {
-      console.log(e);
       return {
         balance: addressContent.balance,
         status: AddressStatusType.ERROR,

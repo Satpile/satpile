@@ -15,14 +15,24 @@ import {
 } from "./XPubAddresses";
 import { Electrum } from "./explorers/Electrum";
 import TradeBlock from "./explorers/TradeBlock";
-import BlockCypher from "./explorers/BlockCypher";
 import { AddressStatusType } from "../components/AddressStatus";
+import { generateUid } from "./Helper";
 
 export default class BalanceFetcher {
-  static showNetworkActivity(show: boolean) {
+  private static currentFetchId: string = "none";
+  static showNetworkActivity(fetchId: string, show: boolean) {
+    if (BalanceFetcher.currentFetchId !== fetchId) {
+      console.log(
+        "currentFetchId !== fetchId",
+        BalanceFetcher.currentFetchId,
+        fetchId
+      );
+      return;
+    }
     if (Platform.OS === "ios") {
       StatusBar.setNetworkActivityIndicatorVisible(show);
     }
+    store.dispatch(Actions.updateLoaderStatus(show));
   }
 
   static getErroredAddresses() {
@@ -47,22 +57,20 @@ export default class BalanceFetcher {
     const addressesToFetch: AddressesList = onlyErrorAddresses
       ? this.getErroredAddresses()
       : store.getState().addresses;
-    console.log(addressesToFetch);
+
     if (Object.keys(addressesToFetch).length === 0) {
       return null;
     }
+    const fetchUUID = generateUid();
+    BalanceFetcher.currentFetchId = fetchUUID;
 
-    this.showNetworkActivity(true);
+    this.showNetworkActivity(fetchUUID, true);
     let networkState = await NetInfo.fetch();
-    this.showNetworkActivity(false);
     if (networkState.isConnected) {
-      this.showNetworkActivity(true);
-
       const diff = await this.getExplorer(
         store.getState().settings.explorer
       ).fetchAndUpdate(addressesToFetch);
-      BalanceFetcher.afterBalanceFetch(showError);
-      this.showNetworkActivity(false);
+      BalanceFetcher.afterBalanceFetch(fetchUUID, showError);
       return diff;
     } else if (showError) {
       Toast.showToast({
@@ -71,7 +79,7 @@ export default class BalanceFetcher {
         duration: 1500,
       });
     }
-
+    this.showNetworkActivity(fetchUUID, false);
     return null;
   }
 
@@ -113,9 +121,10 @@ export default class BalanceFetcher {
     return null;
   }
 
-  private static afterBalanceFetch(showError: boolean) {
+  private static afterBalanceFetch(fetchUUID: string, showError: boolean) {
     store.dispatch(Actions.updateFoldersTotal(store.getState().addresses));
     store.dispatch(Actions.updateLastReloadTime());
+    this.showNetworkActivity(fetchUUID, false);
     let shouldRefresh = false;
     store.getState().folders.forEach((folder: Folder) => {
       if (folder.xpubConfig) {

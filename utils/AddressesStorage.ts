@@ -43,7 +43,7 @@ export default class AddressesStorage {
 
       return JSON.parse(rawData);
     } catch (error) {
-      console.log(error);
+      console.log({ error });
       return this.defaultState;
     }
   }
