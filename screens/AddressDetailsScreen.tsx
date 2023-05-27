@@ -170,7 +170,7 @@ export default function AddressDetailsScreen({ navigation, route }) {
               alignItems: "center",
             }}
           >
-            <QRCodeModal content={`bitcoin:${address}`} />
+            <QRCodeModal content={`bitcoin:${address.address}`} />
           </View>
         </View>
         <View style={{ flex: 1 }}>
