@@ -1,11 +1,11 @@
 import React from "react";
 import { ActivityIndicator, Text, TouchableOpacity, View } from "react-native";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome5, Ionicons } from "@expo/vector-icons";
 import BalanceFetcher from "../utils/BalanceFetcher";
 import { i18n } from "../translations/i18n";
 import { useSettings } from "../utils/Settings";
 import { useTypedSelector } from "../store/store";
-import { AddressStatusType } from "./AddressStatus";
+import { addressStatusColor, AddressStatusType } from "./AddressStatus";
 
 export default function ReloadButton() {
   const { lastReloadTime, folders, loading, hasError } = useTypedSelector(
@@ -52,17 +52,25 @@ export default function ReloadButton() {
                 " " +
                 i18n.l("date.formats.long", new Date(lastReloadTime))}
           </Text>
-          <Ionicons
-            style={{ paddingTop: 1, paddingLeft: 3 }}
-            name={hasError ? "warning" : "md-refresh-circle"}
-            color={"gray"}
-            size={20}
-          />
-          {loading && (
+          {loading ? (
             <ActivityIndicator
               style={{ paddingLeft: 5 }}
               size={"small"}
               color={"gray"}
+            />
+          ) : (
+            <Ionicons
+              style={{ paddingTop: 1, paddingLeft: 3 }}
+              name={"md-refresh-circle"}
+              color={"gray"}
+              size={20}
+            />
+          )}
+          {hasError && (
+            <FontAwesome5
+              name="hourglass-half"
+              size={16}
+              color={addressStatusColor(AddressStatusType.ERROR)}
             />
           )}
         </View>

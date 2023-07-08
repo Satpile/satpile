@@ -8,6 +8,12 @@ function numberWithCommas(x) {
   return parts.join(".");
 }
 
+function groupDecimals(x: string): string {
+  const [int, decimals] = x.split(".");
+  const [a, b, c, d, e, f, g, h] = decimals.split("");
+  return `${int}.${a}${b} ${c}${d}${e} ${f}${g}${h}`;
+}
+
 export function convertSatoshiToString(
   satoshi,
   prependSign = false,
@@ -15,7 +21,7 @@ export function convertSatoshiToString(
 ) {
   let string = "";
   if (unit === "bitcoin") {
-    string = numberWithCommas((satoshi / 1e8).toFixed(8));
+    string = groupDecimals(numberWithCommas((satoshi / 1e8).toFixed(8)));
   } else {
     string = numberWithCommas(Math.round(satoshi));
   }

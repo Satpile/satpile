@@ -1,0 +1,35 @@
+name: "Build and Deploy"
+# this should trigger on tag creation
+# tags should follow x.y.z format
+#first we install and type check with npx tsc --noEmit
+#then we build and submit to appstore connect whith eas build --platform ios --auto-submit
+#add the current tag as envvar "APP_VERSION" to the build
+
+on:
+  push:
+    tags:
+      - "*.*.*"
+
+jobs:
+  submit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Type check
+        run: npx tsc --noEmit
+      - name: Setup Expo and EAS
+        uses: expo/expo-github-action@v8
+        with:
+          eas-version: latest
+          token: ${{ secrets.EXPO_TOKEN }}
+      - name: Build and submit
+        run: eas build --platform ios --auto-submit
+        env:
+          APP_VERSION: ${{ github.ref }}
+

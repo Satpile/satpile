@@ -117,7 +117,7 @@ export default function SettingsScreen({ navigation }) {
             />
           ),
           subtitle: `${convertSatoshiToString(
-            123456789000,
+            123456789,
             false,
             settings.displayUnit
           )} ${settings.displayUnit === "sats" ? "sats" : "₿"}`,
