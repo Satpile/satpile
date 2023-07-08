@@ -23,7 +23,10 @@ jobs:
         with:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
-      - name: Build and submit
-        run: eas build --platform ios --auto-submit --non-interactive --no-wait
+      - name: Set APP_VERSION in .env
+        run: echo "APP_VERSION=$APP_VERSION" >> .env
         env:
           APP_VERSION: ${{ github.ref_name }}
+      - name: Build and submit
+        run: eas build --platform ios --auto-submit --non-interactive --no-wait
+
