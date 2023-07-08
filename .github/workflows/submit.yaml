@@ -8,6 +8,8 @@ on:
 jobs:
   submit:
     runs-on: ubuntu-latest
+    env:
+      APP_VERSION: ${{ github.ref_name }}
     steps:
       - uses: actions/checkout@v3
       - uses: actions/setup-node@v3
@@ -24,9 +26,7 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
       - name: Set APP_VERSION in .env
-        run: echo "APP_VERSION=$APP_VERSION" >> .env
-        env:
-          APP_VERSION: ${{ github.ref_name }}
+        run: echo "EXPO_PUBLIC_APP_VERSION=$APP_VERSION" >> .env
       - name: Build and submit
         run: eas build --platform ios --auto-submit --non-interactive --no-wait
 
