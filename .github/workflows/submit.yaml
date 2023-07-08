@@ -1,9 +1,4 @@
 name: "Build and Deploy"
-# this should trigger on tag creation
-# tags should follow x.y.z format
-#first we install and type check with npx tsc --noEmit
-#then we build and submit to appstore connect whith eas build --platform ios --auto-submit
-#add the current tag as envvar "APP_VERSION" to the build
 
 on:
   push:
@@ -29,7 +24,6 @@ jobs:
           eas-version: latest
           token: ${{ secrets.EXPO_TOKEN }}
       - name: Build and submit
-        run: eas build --platform ios --auto-submit --non-interactive
+        run: eas build --platform ios --auto-submit --non-interactive --no-wait
         env:
-          APP_VERSION: ${{ github.ref }}
-
+          APP_VERSION: ${{ github.ref_name }}
