@@ -111,8 +111,7 @@ module.exports = {
     ],
     about_thanks: "Thanks",
     about_thanks_content:
-      "- German translation (big thanks to @bitflib!)\n" +
-      "- Czech translation (big thanks to @matko_deo!)",
+      "- German translation: @bitflib\n" + "- Czech translation: @matko_deo",
     security: {
       title: "Security",
       warning:

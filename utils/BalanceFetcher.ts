@@ -123,7 +123,18 @@ export default class BalanceFetcher {
 
   private static afterBalanceFetch(fetchUUID: string, showError: boolean) {
     store.dispatch(Actions.updateFoldersTotal(store.getState().addresses));
-    store.dispatch(Actions.updateLastReloadTime());
+    if (
+      !store.getState().folders.some((folder: Folder) => {
+        return folder.addresses.some((address) => {
+          return (
+            store.getState().addresses[address.address]?.status ===
+            AddressStatusType.ERROR
+          );
+        });
+      })
+    ) {
+      store.dispatch(Actions.updateLastReloadTime());
+    }
     this.showNetworkActivity(fetchUUID, false);
     let shouldRefresh = false;
     store.getState().folders.forEach((folder: Folder) => {
