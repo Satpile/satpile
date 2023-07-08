@@ -27,7 +27,7 @@
         "NSFaceIDUsageDescription": "Allow Satpile to use FaceID to unlock the app"
       },
       "appStoreUrl": "https://apps.apple.com/us/app/satpile/id1510284403",
-      "buildNumber": 1
+      "buildNumber": "1"
     },
     "locales": {
       "fr": "./translations/permissions/fr.json",
