@@ -24,6 +24,7 @@
     "bitcoinjs-lib": "^6.1.0",
     "bs58check": "^2.1.2",
     "buffer": "^5.6.0",
+    "dotenv": "^16.3.1",
     "events": "^3.2.0",
     "expo": "~48.0.18",
     "expo-background-fetch": "~11.1.1",
