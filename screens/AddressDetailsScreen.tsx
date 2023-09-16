@@ -193,11 +193,3 @@ export default function AddressDetailsScreen({ navigation, route }) {
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  button: {
-    marginHorizontal: 0,
-    marginVertical: 0,
-    padding: 0,
-  },
-});

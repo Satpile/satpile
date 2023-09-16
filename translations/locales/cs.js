@@ -7,6 +7,7 @@ module.exports = {
   address: "Adresa",
   addresses: "Adresy",
   scan_qr_code: "Naskenovat QRcode",
+  scan_seedqr: "Naskenovat SeedQR",
   cancel: "Zrušit",
   done: "Uložit",
   invalid_address: "Neplatná adresa",

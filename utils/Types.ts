@@ -52,6 +52,7 @@ export type Folder = {
     branches?: FolderXPubBranch[];
   };
   seed?: string;
+  seedPassphrase?: string;
 };
 
 export interface Explorer {

@@ -6,6 +6,8 @@ import validate from "bitcoin-address-validation";
 import { i18n } from "../translations/i18n";
 import { askPermission } from "../utils/Settings";
 import { isAddressValid } from "../utils/Helper";
+import { AddingEnum } from "../utils/Types";
+import { generateMnemonicFromSeedQRData } from "../utils/Seed";
 
 export function QRCodeScanner({ onAddressScanned, onCancel, scanningType }) {
   const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(null);
@@ -26,6 +28,19 @@ export function QRCodeScanner({ onAddressScanned, onCancel, scanningType }) {
   const onScan = (result) => {
     if (result.type === BarCodeScanner.Constants.BarCodeType.qr) {
       let address = result.data.replace("bitcoin:", "");
+
+      if (scanningType === AddingEnum.XPUB_WALLET_WITH_SEED) {
+        try {
+          const seed = generateMnemonicFromSeedQRData(address);
+          if (seed) {
+            onAddressScanned(seed);
+            return;
+          }
+        } catch (e) {
+          console.log(e);
+        }
+      }
+
       if (isAddressValid(address, scanningType)) {
         onAddressScanned(address);
       }
@@ -47,6 +62,7 @@ export function QRCodeScanner({ onAddressScanned, onCancel, scanningType }) {
           onBarCodeScanned={(v) => {
             onScan(v);
           }}
+          barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
         />
       )}
       <Appbar.Header

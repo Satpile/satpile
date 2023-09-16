@@ -1,6 +1,7 @@
 import runes from "runes";
 import { AddingEnum, FolderType } from "./Types";
 import addressValidation from "bitcoin-address-validation";
+import { validateMnemonic } from "bip39";
 
 function numberWithCommas(x) {
   const parts = x.toString().split(".");
@@ -86,6 +87,17 @@ export function isAddressValid(address: string, type: AddingEnum): boolean {
     case AddingEnum.XPUB_WALLET:
       return /^[xyz]pub[A-Za-z0-9]+/.test(address);
     case AddingEnum.XPUB_WALLET_WITH_SEED:
-      return address === "";
+      return true;
+  }
+}
+
+export function isSeedValid(seed: string, type: AddingEnum): boolean {
+  switch (type) {
+    case AddingEnum.ADDRESS:
+      return true;
+    case AddingEnum.XPUB_WALLET:
+      return true;
+    case AddingEnum.XPUB_WALLET_WITH_SEED:
+      return validateMnemonic(seed);
   }
 }

@@ -31,13 +31,15 @@ export default function ExplorerList({ address }) {
 
       <ScrollView bounces={false}>
         <View style={{ paddingTop: 10 }}>
-          {Explorers.map((explorer) => (
-            <Explorer
-              key={explorer.name}
-              explorer={explorer}
-              address={address}
-            />
-          ))}
+          {Explorers.filter((explorer) => "pattern" in explorer).map(
+            (explorer) => (
+              <Explorer
+                key={explorer.name}
+                explorer={explorer}
+                address={address}
+              />
+            )
+          )}
         </View>
       </ScrollView>
     </View>

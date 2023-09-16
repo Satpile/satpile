@@ -8,12 +8,32 @@ export default class AddressesStorage {
     lastReloadTime: "",
     addresses: {},
   };
-
+  static enqueuedStateToSaveTimeout = null;
+  static lastStateSavedAt = 0;
   static async saveState(state) {
-    try {
-      await AsyncStorage.setItem("state", JSON.stringify(state));
-    } catch (error) {
-      console.error(error);
+    console.log("Saving state");
+    const save = async () => {
+      AddressesStorage.lastStateSavedAt = Date.now();
+      console.log("Actually saving state");
+      try {
+        await AsyncStorage.setItem("state", JSON.stringify(state));
+      } catch (error) {
+        console.error(error);
+      }
+    };
+
+    if (AddressesStorage.lastStateSavedAt + 1000 < Date.now()) {
+      await save();
+    } else {
+      if (AddressesStorage.enqueuedStateToSaveTimeout !== null) {
+        clearTimeout(AddressesStorage.enqueuedStateToSaveTimeout);
+        AddressesStorage.enqueuedStateToSaveTimeout = null;
+      }
+
+      AddressesStorage.enqueuedStateToSaveTimeout = setTimeout(
+        save,
+        AddressesStorage.lastStateSavedAt + 1000 - Date.now()
+      );
     }
   }
 

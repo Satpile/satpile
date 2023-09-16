@@ -7,6 +7,7 @@ module.exports = {
   address: "Adresse",
   addresses: "Adressen",
   scan_qr_code: "Scanne QR Code",
+  scan_seedqr: "Scanne SeedQR",
   cancel: "Abbrechen",
   done: "Speichern",
   invalid_address: "Ungültige Adresse",
