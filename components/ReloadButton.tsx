@@ -14,14 +14,14 @@ export default function ReloadButton() {
       folders: state.folders,
       loading: state.loading,
       hasError: Object.entries(state.addresses).some(
-        ([key, value]) => value.status === AddressStatusType.ERROR
+        ([_key, value]) => value.status === AddressStatusType.ERROR
       ),
     })
   );
 
   //Call useSettings hook to refresh text when settings change
   //Should not be needed if we used a useTranslation hook but would require some work
-  const [settings, updateSettings] = useSettings();
+  useSettings();
 
   if (folders.length === 0) return null;
 

@@ -1,7 +1,8 @@
-import { Text, View } from "react-native";
+import { View } from "react-native";
 import React, { useEffect } from "react";
 
 import * as SplashScreen from "expo-splash-screen";
+
 export const LoadingScreen = ({
   startAsync,
   onFinish,

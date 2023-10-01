@@ -1,7 +1,6 @@
 import { useTheme } from "../utils/Theme";
 import React, { useLayoutEffect, useRef } from "react";
 import { LayoutAnimation, View, ViewStyle } from "react-native";
-import { ListOrderType } from "../utils/Types";
 
 interface ToolbarProps {
   display: boolean;

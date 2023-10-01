@@ -28,7 +28,7 @@ export default function App() {
     TaskManager.defineTask(REFRESH_TASK, BalanceFetcher.backgroundFetch);
   }
 
-  useAppStateEffect((appState, lastAppState) => {
+  useAppStateEffect((appState, _lastAppState) => {
     if (appState === "active") {
       BalanceFetcher.filterAndFetchBalances();
     }

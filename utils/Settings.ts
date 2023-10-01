@@ -133,7 +133,7 @@ export async function askPermission(
 }
 
 export function useI18n() {
-  const [settings] = useSettings();
+  useSettings();
   return i18n;
 }
 
@@ -152,7 +152,7 @@ export const LockScreenContext = React.createContext({
   lock: () => {},
   enabled: false,
   biometricUnlocking: false,
-  setBiometricUnlocking: (biometricUnlocking: boolean) => {},
+  setBiometricUnlocking: (_biometricUnlocking: boolean) => {},
 });
 export const LockContextConsumer = LockScreenContext.Consumer;
 

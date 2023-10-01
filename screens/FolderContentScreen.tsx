@@ -9,7 +9,7 @@ import { i18n } from "../translations/i18n";
 import EmptyScreenContent from "../components/EmptyScreenContent";
 import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
-import store, { useTypedDispatch, useTypedSelector } from "../store/store";
+import { useTypedDispatch, useTypedSelector } from "../store/store";
 import { ReorderToolbar } from "../components/SwipeList/ReorderToolbar";
 import { Folder, FolderType } from "../utils/Types";
 import { isSorted } from "../utils/Helper";

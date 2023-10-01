@@ -8,24 +8,24 @@ import {
 } from "../../utils/Types";
 import AddressesStorage from "../../utils/AddressesStorage";
 import {
-  ActionType,
+  Action,
+  ActionAddAddress,
+  ActionAddDerivedAddresses,
   ActionAddFolder,
+  ActionLoadData,
+  ActionRemoveAddress,
   ActionRemoveFolder,
-  ActionRenameFolder,
   ActionRenameAddress,
+  ActionRenameFolder,
+  ActionSortFolderAddresses,
+  ActionSortFolders,
+  ActionSwapFolderAddresses,
+  ActionSwapFolders,
+  ActionType,
+  ActionUpdateAddress,
   ActionUpdateFolderTotal,
   ActionUpdateLastReloadTime,
-  ActionAddAddress,
-  ActionUpdateAddress,
-  ActionRemoveAddress,
   ActionUpdateSingleAddress,
-  ActionSwapFolders,
-  ActionSwapFolderAddresses,
-  ActionSortFolders,
-  ActionAddDerivedAddresses,
-  ActionSortFolderAddresses,
-  Action,
-  ActionLoadData,
 } from "./actions";
 
 export const loadData = async (): Promise<ActionLoadData> => {
@@ -155,7 +155,7 @@ export const sortFolders = (foldersOrder: ListOrderType): ActionSortFolders => {
 export const sortFolderAddresses = (
   folderOrder: ListOrderType,
   folder: Folder
-): Action => {
+): ActionSortFolderAddresses => {
   return {
     type: ActionType.SORT_FOLDER_ADDRESSES,
     folderOrder,

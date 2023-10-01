@@ -72,9 +72,8 @@ const TopRightActions = ({
 
 export default function FoldersListScreen() {
   const navigation = useNavigation();
-  const { folders, lastReloadTime } = useTypedSelector((state) => ({
+  const { folders } = useTypedSelector((state) => ({
     folders: state.folders,
-    lastReloadTime: state.lastReloadTime,
   }));
   const dispatch = useTypedDispatch();
   const [totalBalance, setTotalBalance] = useState(0);

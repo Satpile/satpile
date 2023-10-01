@@ -6,7 +6,7 @@ import {
   Portal,
   TextInput,
 } from "react-native-paper";
-import { StatusBar, TextInputProps, View } from "react-native";
+import { StatusBar, View } from "react-native";
 import { i18n } from "../translations/i18n";
 import { useKeyBoardHeight } from "../utils/Keyboard";
 

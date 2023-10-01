@@ -1,6 +1,6 @@
 import React from "react";
-import { TouchableHighlight, View } from "react-native";
-import { List, Text, useTheme } from "react-native-paper";
+import { TouchableHighlight } from "react-native";
+import { List, useTheme } from "react-native-paper";
 import SatoshiText from "./SatoshiText";
 import { Folder, FolderType } from "../utils/Types";
 

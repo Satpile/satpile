@@ -1,7 +1,6 @@
 import React, { useMemo, useState } from "react";
 import { View } from "react-native";
 import { Button, Text } from "react-native-paper";
-import { useTheme } from "../utils/Theme";
 import PromptModal from "./PromptModal";
 import { i18n } from "../translations/i18n";
 import { getNextNPaths } from "../utils/XPubAddresses";
@@ -21,7 +20,6 @@ function isPathValid(path: string): boolean {
 }
 
 export function DerivationPathSelector({ value, onChange }: Props) {
-  const theme = useTheme();
   const [showEditModal, setShowEditModal] = useState(false);
   const pathsExamples = useMemo(() => generatePathsExample(value), [value]);
 

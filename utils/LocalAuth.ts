@@ -26,7 +26,7 @@ export default class LocalAuth {
       .then((value) => {
         return value.success ? AuthResult.SUCCESS : AuthResult.FAIL;
       })
-      .catch((e) => {
+      .catch((_) => {
         return AuthResult.FAIL;
       });
   }

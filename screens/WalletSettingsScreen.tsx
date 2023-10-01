@@ -114,16 +114,15 @@ export default function WalletSettingsScreen() {
   const { params } = useRoute<RouteProp<ParamsList, "WalletSettings">>();
   const navigation = useNavigation();
   const folderId = params.folder;
-  const { folders, addressesBalance } = useTypedSelector((state) => ({
+  const { folders } = useTypedSelector((state) => ({
     folders: state.folders,
-    addressesBalance: state.addresses,
   }));
   const [showPassphraseModal, setShowPassphraseModal] = useState(false);
   const dispatch = useTypedDispatch();
   const [showRenameModal, setShowRenameModal] = useState(false);
   const theme = useTheme();
   const foundFolder = folders.find((folder) => folder.uid === folderId);
-  const { duplicate, loading } = useDuplicateWallet();
+  const { duplicate } = useDuplicateWallet();
   const { t } = useI18n();
   useEffect(() => {
     if (!foundFolder) {

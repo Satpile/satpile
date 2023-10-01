@@ -4,7 +4,6 @@ import FoldersListItem from "./FoldersListItem";
 import { useNavigation } from "@react-navigation/native";
 import { i18n } from "../translations/i18n";
 import { SwipeList } from "./SwipeList/SwipeList";
-import { useTheme } from "../utils/Theme";
 import { ReorderButtons } from "./SwipeList/ReorderButtons";
 import { Folder } from "../utils/Types";
 
@@ -26,7 +25,7 @@ function FoldersList({
   onSort,
 }: Props) {
   const [refreshing, setRefreshing] = useState(false);
-  const theme = useTheme();
+
   async function refresh() {
     setRefreshing(true);
     await onRefresh();

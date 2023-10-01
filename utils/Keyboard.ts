@@ -25,7 +25,7 @@ export function useKeyBoardHeight(defaultHeight = 0) {
       updateKeyboardHeight(event.endCoordinates.height);
     };
 
-    const _keyboardDidHide: KeyboardEventListener = (event) => {
+    const _keyboardDidHide: KeyboardEventListener = (_event) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       updateKeyboardHeight(defaultHeight);
     };

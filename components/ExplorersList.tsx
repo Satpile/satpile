@@ -64,8 +64,6 @@ function Explorer({
     return explorer.pattern.replace("{address}", address);
   };
 
-  const theme = useTheme();
-
   return (
     <TouchableOpacity onPress={onClick}>
       <View

@@ -4,7 +4,7 @@ import {
   Provider as PaperProvider,
   useTheme as useRnPaperTheme,
 } from "react-native-paper";
-import React, { createContext } from "react";
+import React from "react";
 import { useSettings } from "./Settings";
 
 type RNPaperTheme = ReactNativePaper.Theme;
@@ -46,10 +46,6 @@ const darkTheme: Theme = {
   settingsValue: "#888888",
 };
 const Themes = { lightTheme, darkTheme };
-
-const ThemeContext = createContext({
-  theme: lightTheme,
-});
 
 const ThemeHolder = ({ children }: { children: React.ReactNode }) => {
   const [settings] = useSettings();
