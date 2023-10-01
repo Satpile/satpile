@@ -36,8 +36,8 @@ export default function PromptModal(props: PromptModalProps) {
   };
 
   const _validate = () => {
-    if (!props.validationRule || props.validationRule(input)) {
-      props.onValidate(input);
+    if (!props.validationRule || props.validationRule(input || "")) {
+      props.onValidate(input || "");
       _close();
     }
   };
@@ -97,7 +97,9 @@ export default function PromptModal(props: PromptModalProps) {
               <Button onPress={_cancel}>{i18n.t("cancel")}</Button>
               <Button
                 onPress={_validate}
-                disabled={props.validationRule && !props.validationRule(input)}
+                disabled={
+                  props.validationRule && !props.validationRule(input || "")
+                }
               >
                 {props.submitLabel}
               </Button>

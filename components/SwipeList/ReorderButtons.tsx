@@ -3,6 +3,15 @@ import { Appbar } from "react-native-paper";
 import React, { useLayoutEffect, useRef, useState } from "react";
 import { useTheme } from "../../utils/Theme";
 
+type Props = {
+  show: boolean;
+  showUp: boolean;
+  showDown: boolean;
+  onClickUp: () => void;
+  onClickDown: () => void;
+  height?: number;
+};
+
 export function ReorderButtons({
   show,
   showUp,
@@ -10,7 +19,7 @@ export function ReorderButtons({
   onClickUp,
   onClickDown,
   height = 72,
-}) {
+}: Props) {
   const [hidden, setHidden] = useState(true);
   const [render, setRender] = useState(false);
   const hasMounted = useRef(false);

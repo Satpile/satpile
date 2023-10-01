@@ -11,10 +11,10 @@ type Props = {
 export const INFORMATION_EMOJI = "\u2139\uFE0F";
 export const Tooltip = ({ text, children }: Props) => {
   const theme = useTheme();
-  const [width, setWitdh] = useState<number>(undefined);
-  const [height, setHeight] = useState<number>(undefined);
+  const [width, setWitdh] = useState<number>();
+  const [height, setHeight] = useState<number>();
   return (
-    // @ts-ignore
+    // @ts-ignore - react-native-elements is not typed correctly, the children prop is missing
     <TooltipRNE
       popover={
         <Text

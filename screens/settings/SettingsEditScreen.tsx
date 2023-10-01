@@ -2,6 +2,7 @@ import { MainTitle } from "../../components/DynamicTitle";
 import { i18n, updateLocale } from "../../translations/i18n";
 import { Appbar, Headline, Text, useTheme } from "react-native-paper";
 import * as React from "react";
+import { useEffect } from "react";
 import { Image, StyleSheet, View } from "react-native";
 import {
   askPermission,
@@ -18,12 +19,21 @@ import { CustomSettingsScreen } from "../../components/CustomSettingsScreen";
 import { LockSettingsScreen } from "./LockSettingsScreen";
 import { ExplorerApi } from "../../utils/Types";
 import CustomExplorerSettings from "./CustomExplorerSettings";
-import explorers from "../../utils/explorers/Explorers";
+import explorers, { ExplorerWithApi } from "../../utils/explorers/Explorers";
 import { useKeyBoardHeight } from "../../utils/Keyboard";
-import { useEffect } from "react";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
+
+type ParamsList = {
+  SettingsEdit: {
+    title: string;
+    setting: string;
+  };
+};
 
 // This component uses a fork of react-native-settings-screen to easily display the settings items.
-export default function SettingsEditScreen({ navigation, route }) {
+export default function SettingsEditScreen() {
+  const navigation = useNavigation();
+  const route = useRoute<RouteProp<ParamsList, "SettingsEdit">>();
   const { setting, title } = route.params;
   const [settings, updateSettings] = useSettings();
   const theme = useTheme();
@@ -75,7 +85,7 @@ export default function SettingsEditScreen({ navigation, route }) {
                     />
                   );
                 }
-                return null;
+                return <></>;
               },
               onPress: async () => {
                 if (
@@ -99,7 +109,10 @@ export default function SettingsEditScreen({ navigation, route }) {
           type: "SECTION",
           header: i18n.t("settings.explorer.http_api"),
           rows: explorers
-            .filter((explorer) => "explorerApi" in explorer)
+            .filter(
+              (explorer): explorer is ExplorerWithApi =>
+                "explorerApi" in explorer
+            )
             .map((explorer) => ({
               title: explorer.name,
               showDisclosureIndicator: false,
@@ -113,7 +126,7 @@ export default function SettingsEditScreen({ navigation, route }) {
                     />
                   );
                 }
-                return null;
+                return <></>;
               },
               onPress: () => {
                 updateSettings({ explorer: explorer.explorerApi });
@@ -152,7 +165,7 @@ export default function SettingsEditScreen({ navigation, route }) {
                     />
                   );
                 }
-                return null;
+                return <></>;
               },
               onPress: () => {
                 if (settings.explorer !== ExplorerApi.CUSTOM) {
@@ -192,8 +205,10 @@ export default function SettingsEditScreen({ navigation, route }) {
       break;
     //Language setting
     case "locale":
-      let languages = Object.keys(i18n.translations).map((locale) => {
-        let localeName = i18n.translations[locale]["current_language"];
+      const languages = Object.keys(i18n.translations).map((locale) => {
+        const localeName = (
+          i18n.translations[locale] as { current_language: string }
+        )["current_language"];
 
         return {
           title: localeName,
@@ -207,7 +222,7 @@ export default function SettingsEditScreen({ navigation, route }) {
                 <Ionicons name={"md-checkmark"} color={"#f47c1c"} size={20} />
               );
             }
-            return null;
+            return <></>;
           },
           onPress: () => {
             updateLocale(locale);

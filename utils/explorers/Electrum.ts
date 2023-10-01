@@ -4,8 +4,8 @@ import {
   AddressesBalanceDifference,
   AddressesList,
   AddressValue,
-  Explorer,
   ElectrumOptions,
+  Explorer,
 } from "../Types";
 import { Toast } from "../../components/Toast";
 import { i18n } from "../../translations/i18n";
@@ -14,7 +14,7 @@ import AbstractExplorer from "./AbstractExplorer";
 import { torClient } from "../TorManager";
 
 export class Electrum extends AbstractExplorer implements Explorer {
-  private client: ElectrumClient;
+  private client?: ElectrumClient;
   constructor(public options: ElectrumOptions) {
     super();
   }
@@ -68,7 +68,7 @@ export class Electrum extends AbstractExplorer implements Explorer {
       console.error("Electrum error", e);
       throw e;
     } finally {
-      this.client.close();
+      this.client?.close();
     }
     return diff;
   }
@@ -80,18 +80,18 @@ export class Electrum extends AbstractExplorer implements Explorer {
     return reversedHash.toString("hex");
   }
 
-  async getBalance(addressHash) {
-    return await this.client.request("blockchain.scripthash.get_balance", [
+  async getBalance(addressHash: string) {
+    return this.client?.request("blockchain.scripthash.get_balance", [
       addressHash,
     ]);
   }
 
-  async getTransactions(addressHash) {
-    const result = await this.client.request(
+  async getTransactions(addressHash: string) {
+    const result = await this.client?.request(
       "blockchain.scripthash.get_history",
       [addressHash]
     );
-    return result.filter((tx) => tx.height > 0);
+    return result.filter((tx: { height: number }) => tx.height > 0);
   }
 
   async fetch(
@@ -118,6 +118,6 @@ export class Electrum extends AbstractExplorer implements Explorer {
   }
 
   close() {
-    return this.client.close();
+    return this.client?.close();
   }
 }

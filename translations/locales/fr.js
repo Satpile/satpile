@@ -189,4 +189,5 @@ module.exports = {
     "Cela dupliquera le wallet et changera la passphrase.",
   change_wallet_passphrase_placeholder: "Nouvelle passphrase, peut être vide",
   duplicate_wallet: "Dupliquer et changer la passphrase",
+  bad_custom_explorer: "La configuration de l'explorer est incorrecte",
 };

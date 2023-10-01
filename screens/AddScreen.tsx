@@ -9,7 +9,6 @@ import {
 import { i18n } from "../translations/i18n";
 import {
   Appbar,
-  Button,
   Headline,
   HelperText,
   Text,
@@ -38,8 +37,16 @@ import { useTypedDispatch } from "../store/store";
 import { generateMnemonic, generateZpubFromMnemonic } from "../utils/Seed";
 import { validateMnemonic } from "bip39";
 import { useI18n } from "../utils/Settings";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
-export default function AddScreen({ navigation, route }) {
+type ParamsList = {
+  AddScreen: { folder?: Folder; seed?: boolean };
+};
+
+export default function AddScreen() {
+  const route = useRoute<RouteProp<ParamsList, "AddScreen">>();
+
+  const navigation = useNavigation();
   const dispatch = useTypedDispatch();
   const theme = useTheme();
   const [showScanner, setShowScanner] = useState(false);
@@ -52,8 +59,8 @@ export default function AddScreen({ navigation, route }) {
   const [passphraseInput, setPassphraseInput] = useState("");
   const [loading, setLoading] = useState(false);
 
-  const [seedType, setSeedType] = useState(null);
-  const [seed, setSeed] = useState(undefined);
+  const [seedType, setSeedType] = useState<"generate" | "import" | null>(null);
+  const [seed, setSeed] = useState("");
 
   const addingType = useMemo(() => {
     if (route.params.folder) {
@@ -69,7 +76,7 @@ export default function AddScreen({ navigation, route }) {
     setShowScanner(true);
   };
 
-  const onScan = (result) => {
+  const onScan = (result: string) => {
     if (addingType === AddingEnum.XPUB_WALLET_WITH_SEED) {
       setSeed(result);
     } else {
@@ -92,7 +99,7 @@ export default function AddScreen({ navigation, route }) {
         let address = addressInput;
         let name = nameInput;
 
-        if (addingType === AddingEnum.ADDRESS) {
+        if (addingType === AddingEnum.ADDRESS && route.params.folder) {
           dispatch(
             addAddressToFolder(
               { name: name, address: address },
@@ -139,12 +146,16 @@ export default function AddScreen({ navigation, route }) {
         setTimeout(() => {
           //Wrap in settimeout to update the UI first
           try {
-            newFolder.xpubConfig.branches.forEach((branch) => {
+            newFolder.xpubConfig!.branches!.forEach((branch) => {
               const firstAddresses = initializeAddressesDerivation(
                 newFolder,
                 branch
               );
-              dispatch(addDerivedAddresses(newFolder, branch, firstAddresses));
+              if (firstAddresses && firstAddresses.length > 0) {
+                dispatch(
+                  addDerivedAddresses(newFolder, branch, firstAddresses)
+                );
+              }
             });
 
             BalanceFetcher.filterAndFetchBalances(false);
@@ -187,13 +198,13 @@ export default function AddScreen({ navigation, route }) {
   useEffect(() => {
     navigation.setOptions({
       headerTitle: () => <MainTitle title={i18n.t("add")} />,
-      headerLeft: (props) => (
+      headerLeft: () => (
         <Appbar.BackAction
           color={"white"}
           onPress={() => navigation.goBack()}
         />
       ),
-      headerRight: (props) =>
+      headerRight: () =>
         isAddressValid(addressInput, addingType) &&
         isSeedValid(seed, addingType) && (
           <TouchableOpacity
@@ -252,7 +263,7 @@ export default function AddScreen({ navigation, route }) {
           <SeedChoices
             choiceType={seedType}
             onChoiceChange={async (seedChoice) => {
-              setSeed(undefined);
+              setSeed("");
               setSeedType(seedChoice);
               if (seedChoice === "generate") {
                 const mnemonic = await generateMnemonic();
@@ -263,13 +274,10 @@ export default function AddScreen({ navigation, route }) {
           {seedType === "generate" ? (
             <View
               style={{
-                borderRadius: 5,
-                borderWidth: 1,
-                borderColor: "black",
                 padding: 10,
               }}
             >
-              {seed ? <Text selectable>{seed}</Text> : <ActivityIndicator />}
+              {seed ? null : <ActivityIndicator />}
             </View>
           ) : null}
           {seedType === "import" ? (

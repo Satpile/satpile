@@ -1,4 +1,5 @@
 import {
+  AddressesList,
   AddressValue,
   Folder,
   FolderAddress,
@@ -24,14 +25,15 @@ import {
   ActionAddDerivedAddresses,
   ActionSortFolderAddresses,
   Action,
+  ActionLoadData,
 } from "./actions";
 
-export const loadData = async () => {
+export const loadData = async (): Promise<ActionLoadData> => {
   let state = await AddressesStorage.loadState();
-  return { type: "LOAD_DATA", state: state };
+  return { type: ActionType.LOAD_DATA, state: state };
 };
 
-export const removeFolder = (folder): ActionRemoveFolder => ({
+export const removeFolder = (folder: Folder): ActionRemoveFolder => ({
   type: ActionType.REMOVE_FOLDER,
   folder: folder,
 });
@@ -41,16 +43,19 @@ export const addFolder = (folder: Folder): ActionAddFolder => ({
   folder: folder,
 });
 
-export const renameFolder = (folder, newName): ActionRenameFolder => ({
+export const renameFolder = (
+  folder: Folder,
+  newName: string
+): ActionRenameFolder => ({
   type: ActionType.RENAME_FOLDER,
   folder,
   newName,
 });
 
 export const renameAddress = (
-  folder,
-  address,
-  newName
+  folder: Folder,
+  address: FolderAddress,
+  newName: string
 ): ActionRenameAddress => ({
   type: ActionType.RENAME_ADDRESS,
   folder,
@@ -58,7 +63,9 @@ export const renameAddress = (
   newName,
 });
 
-export const updateFoldersTotal = (addresses): ActionUpdateFolderTotal => ({
+export const updateFoldersTotal = (
+  addresses: AddressesList
+): ActionUpdateFolderTotal => ({
   type: ActionType.UPDATE_FOLDERS_TOTAL,
   addressesBalance: addresses,
 });
@@ -67,7 +74,10 @@ export const updateLastReloadTime = (): ActionUpdateLastReloadTime => ({
   type: ActionType.UPDATE_LAST_RELOAD_TIME,
 });
 
-export const addAddressToFolder = (address, folder): ActionAddAddress => {
+export const addAddressToFolder = (
+  address: FolderAddress,
+  folder: Folder
+): ActionAddAddress => {
   return {
     type: ActionType.ADD_ADDRESS,
     address,
@@ -83,8 +93,8 @@ export const updateBalances = (addresses = {}): ActionUpdateAddress => {
 };
 
 export const removeAddressFromFolder = (
-  address,
-  folder
+  address: FolderAddress,
+  folder: Folder
 ): ActionRemoveAddress => {
   return {
     type: ActionType.REMOVE_ADDRESS,
@@ -104,7 +114,13 @@ export const updateSingleAddressBalance = (
   };
 };
 
-export const swapFolders = ({ folderA, folderB }): ActionSwapFolders => {
+export const swapFolders = ({
+  folderA,
+  folderB,
+}: {
+  folderA: Folder;
+  folderB: Folder;
+}): ActionSwapFolders => {
   return {
     type: ActionType.SWAP_FOLDERS,
     folderA,
@@ -116,6 +132,10 @@ export const swapFolderAddresses = ({
   folder,
   addressA,
   addressB,
+}: {
+  folder: Folder;
+  addressA: FolderAddress;
+  addressB: FolderAddress;
 }): ActionSwapFolderAddresses => {
   return {
     type: ActionType.SWAP_FOLDER_ADDRESSES,

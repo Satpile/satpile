@@ -10,8 +10,14 @@ import { List, useTheme } from "react-native-paper";
 import AddressesListItemValue from "./AddressesListItemValue";
 import { Toast } from "./Toast";
 import { i18n } from "../translations/i18n";
+import { AddressValue, FolderAddress } from "../utils/Types";
 
-export default function AddressesListItem({ address, onClick }) {
+type Props = {
+  address: FolderAddress & AddressValue;
+  onClick: (address: FolderAddress) => void;
+};
+
+export default function AddressesListItem({ address, onClick }: Props) {
   const theme = useTheme();
 
   const setClipBoard = () => {

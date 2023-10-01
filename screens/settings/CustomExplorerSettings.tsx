@@ -4,7 +4,7 @@ import {
   Platform,
   View,
 } from "react-native";
-import { Text, TextInput, Switch, Button } from "react-native-paper";
+import { Button, Switch, Text, TextInput } from "react-native-paper";
 import React, { useEffect, useState } from "react";
 import { useI18n, useSettings } from "../../utils/Settings";
 import { useTheme } from "../../utils/Theme";
@@ -37,16 +37,23 @@ export default function CustomExplorerSettings() {
   const [error, setError] = useState(false);
   const [success, setSuccess] = useState(false);
 
+  type ExplorerOption = NonNullable<typeof settings.explorerOption>;
+
   const updateExplorerOptions = (
-    options: Partial<typeof settings.explorerOption.options>
+    options: Partial<ExplorerOption["options"]>
   ) => {
     updateSettings({
       explorerOption: {
         ...settings.explorerOption,
         options: {
-          ...settings.explorerOption.options,
+          ...(settings.explorerOption?.options ?? {
+            host: "",
+            port: 0,
+            protocol: "tls",
+          }),
           ...options,
         },
+        type: "electrum",
       },
     });
   };
@@ -64,7 +71,7 @@ export default function CustomExplorerSettings() {
       <TextInput
         disabled={testing}
         label={i18n.t("settings.explorer.hostname")}
-        defaultValue={settings.explorerOption.options.host}
+        defaultValue={settings.explorerOption?.options.host}
         onChangeText={(text) => updateExplorerOptions({ host: text })}
       />
       <View
@@ -87,7 +94,7 @@ export default function CustomExplorerSettings() {
           <Text>Enable TLS/SSL</Text>
           <Switch
             disabled={testing}
-            value={settings.explorerOption.options.protocol === "tls"}
+            value={settings.explorerOption?.options.protocol === "tls"}
             onValueChange={(value) => {
               updateExplorerOptions({ protocol: value ? "tls" : "tcp" });
             }}
@@ -98,9 +105,11 @@ export default function CustomExplorerSettings() {
           disabled={testing}
           style={{ flex: 1 }}
           label={i18n.t("settings.explorer.port_number")}
-          defaultValue={settings.explorerOption.options.port + ""}
+          defaultValue={(
+            settings.explorerOption?.options.port ?? ""
+          ).toString()}
           keyboardType={"number-pad"}
-          error={settings.explorerOption.options.port === 0}
+          error={settings.explorerOption?.options.port === 0}
           onChangeText={(text) => {
             const port = Math.min(65535, parseInt(text) || 0);
             updateExplorerOptions({ port });
@@ -122,6 +131,9 @@ export default function CustomExplorerSettings() {
             setTesting(true);
             setSuccess(false);
             setError(false);
+            if (!settings.explorerOption) {
+              return;
+            }
             const electrum = new Electrum(settings.explorerOption.options);
             try {
               const client = await electrum.connect();

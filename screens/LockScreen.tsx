@@ -7,7 +7,7 @@ import {
   View,
 } from "react-native";
 import { BlurView } from "expo-blur";
-import { Button, IconButton, Paragraph, TextInput } from "react-native-paper";
+import { Button, Paragraph, TextInput } from "react-native-paper";
 import { LockScreenContext, useSettings } from "../utils/Settings";
 import { useTheme } from "../utils/Theme";
 import LocalAuth, { AuthResult } from "../utils/LocalAuth";
@@ -17,7 +17,11 @@ import { useAppStateEffect } from "../utils/AppStateHook";
 import { i18n } from "../translations/i18n";
 import { BiometricButton } from "../components/BiometricButton";
 
-export default function LockScreen({ children }) {
+export default function LockScreen({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [settings] = useSettings();
   const [locked, setLocked] = useState(!!settings.security.passphrase);
   const biometricUnlocking = useRef(false);
@@ -120,7 +124,10 @@ export default function LockScreen({ children }) {
       {locked && (
         <FrontLockScreen
           onAskBiometric={challengeUnlock}
-          onAskUnlock={async (passphrase) => {
+          onAskUnlock={async (passphrase: string) => {
+            if (!settings.security.passphrase) {
+              return true;
+            }
             if (await checkPassword(passphrase, settings.security.passphrase)) {
               setTimeout(unlock, 0);
               return true;
@@ -139,7 +146,13 @@ export default function LockScreen({ children }) {
   );
 }
 
-const FrontLockScreen = ({ onAskUnlock, onAskBiometric }) => {
+const FrontLockScreen = ({
+  onAskUnlock,
+  onAskBiometric,
+}: {
+  onAskUnlock: (passphrase: string) => Promise<boolean>;
+  onAskBiometric: () => void;
+}) => {
   const theme = useTheme();
   const [input, setInput] = useState("");
   const [checking, setChecking] = useState(false);
@@ -156,7 +169,7 @@ const FrontLockScreen = ({ onAskUnlock, onAskBiometric }) => {
     })();
   }, [settings]);
 
-  const onSubmit = async (input) => {
+  const onSubmit = async (input: string) => {
     setChecking(true);
     try {
       await onAskUnlock(input);
@@ -219,7 +232,7 @@ const FrontLockScreen = ({ onAskUnlock, onAskBiometric }) => {
             onSubmitEditing={() => onSubmit(input)}
             keyboardAppearance={settings.darkMode ? "dark" : "light"}
           />
-          {settings.security.enableBiometrics && (
+          {settings.security.enableBiometrics && !!biometricType && (
             <BiometricButton onPress={onAskBiometric} type={biometricType} />
           )}
         </View>

@@ -8,7 +8,7 @@ interface ToastOptions {
 }
 
 // Holds ref to show function from the current rendered ToastHolder
-let INTERNAL_showRef: (ToastOptions) => void;
+let INTERNAL_showRef: (options: ToastOptions) => void;
 
 export function ToastHolder() {
   const [visible, setVisible] = useState(false);
@@ -135,7 +135,7 @@ export function ToastHolder() {
 }
 
 export class Toast {
-  static awaitingToast: ToastOptions = null;
+  static awaitingToast: ToastOptions | null = null;
   static showToast(options: ToastOptions) {
     if (INTERNAL_showRef) {
       INTERNAL_showRef(options);
@@ -145,6 +145,9 @@ export class Toast {
   }
 
   static _showAwaitingToast() {
+    if (!this.awaitingToast) {
+      return;
+    }
     this.showToast(this.awaitingToast);
     this.awaitingToast = null;
   }

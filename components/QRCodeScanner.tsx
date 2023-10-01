@@ -2,15 +2,30 @@ import React, { useEffect, useState } from "react";
 import { BarCodeScanner } from "expo-barcode-scanner";
 import { Image, StatusBar, StyleSheet, View } from "react-native";
 import { Appbar, Subheading } from "react-native-paper";
-import validate from "bitcoin-address-validation";
 import { i18n } from "../translations/i18n";
 import { askPermission } from "../utils/Settings";
 import { isAddressValid } from "../utils/Helper";
 import { AddingEnum } from "../utils/Types";
 import { generateMnemonicFromSeedQRData } from "../utils/Seed";
 
-export function QRCodeScanner({ onAddressScanned, onCancel, scanningType }) {
-  const [hasCameraPermission, setHasCameraPermission] = useState<boolean>(null);
+type BarCodeEventHandler = React.ComponentProps<
+  typeof BarCodeScanner
+>["onBarCodeScanned"];
+
+type Props = {
+  onAddressScanned: (address: string) => void;
+  onCancel: () => void;
+  scanningType: AddingEnum;
+};
+
+export function QRCodeScanner({
+  onAddressScanned,
+  onCancel,
+  scanningType,
+}: Props) {
+  const [hasCameraPermission, setHasCameraPermission] = useState<
+    boolean | null
+  >(null);
 
   useEffect(() => {
     getPermissionsAsync();
@@ -25,7 +40,7 @@ export function QRCodeScanner({ onAddressScanned, onCancel, scanningType }) {
     }
   };
 
-  const onScan = (result) => {
+  const onScan: BarCodeEventHandler = (result) => {
     if (result.type === BarCodeScanner.Constants.BarCodeType.qr) {
       let address = result.data.replace("bitcoin:", "");
 

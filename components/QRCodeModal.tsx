@@ -63,7 +63,16 @@ export const QRCodeModal = ({ content }: { content: string }) => {
             color={"black"}
             icon={"export"}
             onPress={async () => {
-              let uri = await viewShotRef.current.capture();
+              if (!viewShotRef.current) {
+                return;
+              }
+
+              const uri = viewShotRef.current.capture
+                ? await viewShotRef.current.capture()
+                : "";
+              if (!uri) {
+                return;
+              }
               shareImage(uri);
             }}
           />
@@ -79,7 +88,7 @@ export const QRCodeModal = ({ content }: { content: string }) => {
   );
 };
 
-async function shareImage(uri) {
+async function shareImage(uri: string) {
   switch (Platform.OS) {
     case "android":
       if (await Sharing.isAvailableAsync()) {

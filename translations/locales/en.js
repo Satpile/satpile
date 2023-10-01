@@ -203,5 +203,6 @@ module.exports = {
   change_wallet_passphrase_description:
     "This will duplicate your wallet with the same seed and a new passphrase.",
   change_wallet_passphrase_placeholder: "New passphrase, can be empty",
-  duplicate_wallet: "Duplicate and Change passphrase",
+  duplicate_wallet: "Duplicate with new passphrase",
+  bad_custom_explorer: "Bad custom explorer configuration",
 };

@@ -1,6 +1,6 @@
 import { AddressStatusType } from "../../components/AddressStatus";
 import { Action } from "../actions/actions";
-import { AddressesList } from "../../utils/Types";
+import { AddressesList, AddressValue } from "../../utils/Types";
 
 const addresses = (state: AddressesList = {}, action: Action) => {
   switch (action.type) {
@@ -12,7 +12,7 @@ const addresses = (state: AddressesList = {}, action: Action) => {
           existingAddress.add(address.address)
         )
       );
-      let filteredAddresses = {};
+      let filteredAddresses: Record<string, AddressValue> = {};
       Object.keys(action.state.addresses).forEach((address) => {
         //We iterate over stored addresses
         if (existingAddress.has(address)) {
@@ -29,7 +29,7 @@ const addresses = (state: AddressesList = {}, action: Action) => {
         ...state,
       };
     case "ADD_DERIVED_ADDRESSES":
-      const newState = {};
+      const newState: AddressesList = {};
       action.addresses.forEach((address) => {
         newState[address.address] = {
           balance: 0,

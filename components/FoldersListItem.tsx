@@ -6,16 +6,18 @@ import { Folder, FolderType } from "../utils/Types";
 
 declare type FoldersListItemProps = {
   folder: Folder;
-  onClick: (folder) => void;
-  onLongPress: (folder) => void;
+  onClick: (folder: Folder) => void;
+  onLongPress: (folder: Folder) => void;
 };
 
-export const FolderIcon = ({ folderType }: { folderType: FolderType }) => {
+export const FolderIcon = ({ folderType }: { folderType?: FolderType }) => {
   switch (folderType) {
     case FolderType.SIMPLE:
       return <List.Icon color="#f47c1c" icon="folder" />;
     case FolderType.XPUB_WALLET:
       return <List.Icon color="#f47c1c" icon="wallet" />;
+    default:
+      return null;
   }
 };
 

@@ -48,7 +48,7 @@ export function LockSettingsScreen() {
     })();
   }, []);
 
-  const setPassphrase = async (hash) => {
+  const setPassphrase = async (hash: string) => {
     closeModal();
     updateSettings({
       security: {
@@ -111,6 +111,10 @@ export function LockSettingsScreen() {
             <Switch
               value={settingUpBiometric || !!settings.security.enableBiometrics}
               onValueChange={(value) => {
+                const passphrase = settings.security.passphrase;
+                if (!passphrase) {
+                  return;
+                }
                 if (value) {
                   lockContext.setBiometricUnlocking(true);
                   LocalAuth.promptLocalAuth()
@@ -118,7 +122,7 @@ export function LockSettingsScreen() {
                       updateSettings({
                         security: {
                           enableBiometrics: result === AuthResult.SUCCESS,
-                          passphrase: settings.security.passphrase,
+                          passphrase,
                         },
                       });
                     })
@@ -157,7 +161,17 @@ export function LockSettingsScreen() {
   );
 }
 
-const SetPasswordModal = ({ onCancel, onClose, visible, onValidate }) => {
+const SetPasswordModal = ({
+  onCancel,
+  onClose,
+  visible,
+  onValidate,
+}: {
+  onCancel: () => void;
+  onClose: () => void;
+  visible: boolean;
+  onValidate: (hash: string) => void;
+}) => {
   const [settings] = useSettings();
   const [step, setStep] = useState<"password" | "confirm">("password");
   const [tmpPassword, setTmpPassword] = useState<string | undefined>(undefined);
@@ -166,7 +180,7 @@ const SetPasswordModal = ({ onCancel, onClose, visible, onValidate }) => {
     if (!visible) {
       setStep("password");
       setTmpPassword(undefined);
-      hash.current = undefined;
+      hash.current = null;
     }
   }, [visible]);
 
@@ -209,7 +223,9 @@ const SetPasswordModal = ({ onCancel, onClose, visible, onValidate }) => {
         submitLabel={"OK"}
         onValidate={(input) => {
           if (input === tmpPassword) {
-            onValidate(hash.current);
+            if (hash.current) {
+              onValidate(hash.current);
+            }
           } else {
             Alert.alert(i18n.t("settings.security.error_match"));
             onCancel();

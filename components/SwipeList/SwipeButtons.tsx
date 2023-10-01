@@ -10,20 +10,27 @@ import { FontAwesome } from "@expo/vector-icons";
 import { useI18n } from "../../utils/Settings";
 import { SwipeAction } from "./SwipeList";
 import { useTheme } from "react-native-paper";
+import { FAIconName } from "../../utils/Types";
 
-declare type SwipeButtonsProps = {
+declare type SwipeButtonsProps<T> = {
   onClose?: () => void;
   position: "right" | "left";
-  actions: SwipeAction[];
+  actions: SwipeAction<T>[];
   showClose: boolean;
   width?: number;
   item: any;
 };
 
-export function SwipeButtons(props: SwipeButtonsProps) {
-  const { onClose, position, actions, showClose, width, item } = {
+export function SwipeButtons<T>(props: SwipeButtonsProps<T>) {
+  const {
+    onClose,
+    position,
+    actions,
+    showClose = true,
+    width,
+    item,
+  } = {
     width: 80,
-    showClose: true,
     ...props,
   };
   const i18n = useI18n();
@@ -35,7 +42,7 @@ export function SwipeButtons(props: SwipeButtonsProps) {
       onClick={onClose}
       width={width}
       text={i18n.t("close")}
-      icon={"chevron-" + position}
+      icon={`chevron-${position}`}
       backgroundColor={"#444"}
     />
   );
@@ -77,6 +84,13 @@ function SwipeButton({
   icon,
   color = "white",
   backgroundColor = "#444",
+}: {
+  onClick?: () => void;
+  width?: number;
+  text: string;
+  icon: FAIconName;
+  color?: string;
+  backgroundColor?: string;
 }) {
   return (
     <TouchableHighlight onPress={onClick} underlayColor={"#444"}>

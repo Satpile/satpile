@@ -1,6 +1,5 @@
 import i18n from "i18n-js";
 import * as Localization from "expo-localization";
-import { useEffect } from "react";
 
 const fr = require("./locales/fr.js");
 const en = require("./locales/en.js");
@@ -19,9 +18,8 @@ i18n.locale = Settings.settings.locale;
 */
 
 i18n.locale = Localization.locale;
-const updateLocale = (locale) => {
+const updateLocale = (locale: string) => {
   i18n.locale = locale;
 };
-//i18n.locale = 'fr';
 
 export { i18n, updateLocale };

@@ -22,7 +22,11 @@ const defaultTorContext: TorContextType = {
 
 const TorContext = React.createContext<TorContextType>(defaultTorContext);
 
-export function TorContextProvider({ children }) {
+export function TorContextProvider({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
   const [torState, setTorState] = useState<TorStatusType>(
     defaultTorContext.state
   );

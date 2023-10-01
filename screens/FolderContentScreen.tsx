@@ -18,15 +18,23 @@ import {
   DERIVATION_BATCH_SIZE,
   generateNextNAddresses,
 } from "../utils/XPubAddresses";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
-export default function FolderContentScreen({ navigation, route }) {
+type ParamsList = {
+  FolderContent: { folder: Folder };
+};
+
+export default function FolderContentScreen() {
+  const navigation = useNavigation();
+  const route = useRoute<RouteProp<ParamsList, "FolderContent">>();
+
   const { folders, addressesBalance } = useTypedSelector((state) => ({
     folders: state.folders,
     addressesBalance: state.addresses,
   }));
   const [showRenameModal, setShowRenameModal] = useState(false);
   const theme = useTheme();
-  const folder: Folder = folders.find(
+  const folder: Folder | undefined = folders.find(
     (folder) => folder.uid === route.params.folder.uid
   );
   const dispatch = useTypedDispatch();
@@ -49,7 +57,7 @@ export default function FolderContentScreen({ navigation, route }) {
 
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: (props) => (
+      headerTitle: () => (
         <DynamicTitle
           title={folder.name}
           icon={
@@ -61,13 +69,13 @@ export default function FolderContentScreen({ navigation, route }) {
           }}
         />
       ),
-      headerLeft: (props) => (
+      headerLeft: () => (
         <Appbar.BackAction
           color={"white"}
           onPress={() => navigation.goBack()}
         />
       ),
-      headerRight: (props) => (
+      headerRight: () => (
         <View style={{ display: "flex", flexDirection: "row" }}>
           {folder.addresses.length > 1 && folder.type === FolderType.SIMPLE && (
             <Appbar.Action
@@ -136,7 +144,7 @@ export default function FolderContentScreen({ navigation, route }) {
     });
   }, [navigation, folder, showLoadMoreToolbar, showReorderToolbar]);
 
-  const submitRenameModal = (newName) => {
+  const submitRenameModal = (newName: string) => {
     dispatch(Actions.renameFolder(folder, newName));
   };
 
@@ -162,15 +170,17 @@ export default function FolderContentScreen({ navigation, route }) {
             setLoadingMore(true);
             setTimeout(() => {
               try {
-                folder.xpubConfig.branches.forEach((branch) => {
+                (folder.xpubConfig?.branches || []).forEach((branch) => {
                   const newAddresses = generateNextNAddresses(
                     folder,
                     branch,
                     DERIVATION_BATCH_SIZE
                   );
-                  dispatch(
-                    Actions.addDerivedAddresses(folder, branch, newAddresses)
-                  );
+                  if (newAddresses && newAddresses.length > 0) {
+                    dispatch(
+                      Actions.addDerivedAddresses(folder, branch, newAddresses)
+                    );
+                  }
                 });
                 BalanceFetcher.filterAndFetchBalances();
                 setShowLoadMoreToolbar(false);

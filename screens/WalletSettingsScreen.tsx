@@ -1,19 +1,19 @@
 import { Appbar, Text, Title, useTheme } from "react-native-paper";
-import { Alert, Clipboard, ScrollView, Share, View } from "react-native";
+import { Clipboard, ScrollView, Share, View } from "react-native";
 import { useTypedDispatch, useTypedSelector } from "../store/store";
 import React, { useCallback, useEffect, useState } from "react";
 import { Folder, FolderType } from "../utils/Types";
-import { useNavigation, useRoute } from "@react-navigation/native";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { i18n } from "../translations/i18n";
 import DynamicTitle from "../components/DynamicTitle";
 import PromptModal from "../components/PromptModal";
 import * as Actions from "../store/actions";
+import { addDerivedAddresses, addFolder, removeFolder } from "../store/actions";
 import { DisplaySeed } from "../components/DisplaySeed";
 import { QRCodeModal } from "../components/QRCodeModal";
 import { ActionButton } from "../components/ActionButton";
 import { Toast } from "../components/Toast";
 import { generateUid } from "../utils/Helper";
-import { addDerivedAddresses, addFolder, removeFolder } from "../store/actions";
 import {
   initializeAddressesDerivation,
   STARTING_DERIVATION_PATH,
@@ -60,6 +60,9 @@ const useDuplicateWallet = () => {
       dispatch(addFolder(newFolder));
       setLoading(true);
       setTimeout(() => {
+        if (!newFolder.xpubConfig?.branches) {
+          return;
+        }
         //Wrap in settimeout to update the UI first
         try {
           newFolder.xpubConfig.branches.forEach((branch) => {
@@ -67,6 +70,9 @@ const useDuplicateWallet = () => {
               newFolder,
               branch
             );
+            if (!firstAddresses) {
+              return;
+            }
             dispatch(addDerivedAddresses(newFolder, branch, firstAddresses));
           });
 
@@ -100,10 +106,14 @@ const useDuplicateWallet = () => {
   return { duplicate, loading };
 };
 
+type ParamsList = {
+  WalletSettings: { folder?: string };
+};
+
 export default function WalletSettingsScreen() {
-  const { params } = useRoute();
+  const { params } = useRoute<RouteProp<ParamsList, "WalletSettings">>();
   const navigation = useNavigation();
-  const folderId = "folder" in params ? (params.folder as string) : null;
+  const folderId = params.folder;
   const { folders, addressesBalance } = useTypedSelector((state) => ({
     folders: state.folders,
     addressesBalance: state.addresses,
@@ -112,24 +122,30 @@ export default function WalletSettingsScreen() {
   const dispatch = useTypedDispatch();
   const [showRenameModal, setShowRenameModal] = useState(false);
   const theme = useTheme();
-  const folder: Folder = folders.find((folder) => folder.uid === folderId);
+  const foundFolder = folders.find((folder) => folder.uid === folderId);
   const { duplicate, loading } = useDuplicateWallet();
   const { t } = useI18n();
   useEffect(() => {
+    if (!foundFolder) {
+      navigation.goBack();
+      return;
+    }
     navigation.setOptions({
-      headerTitle: (props) => (
+      headerTitle: () => (
         <DynamicTitle
-          title={folder.name}
+          title={foundFolder.name}
           icon={
-            folder.type === FolderType.XPUB_WALLET ? "md-wallet" : "md-folder"
+            foundFolder.type === FolderType.XPUB_WALLET
+              ? "md-wallet"
+              : "md-folder"
           }
-          satAmount={folder.totalBalance}
+          satAmount={foundFolder.totalBalance}
           onPress={() => {
             setShowRenameModal(true);
           }}
         />
       ),
-      headerLeft: (props) => (
+      headerLeft: () => (
         <Appbar.BackAction
           color={"white"}
           onPress={() => navigation.goBack()}
@@ -140,20 +156,24 @@ export default function WalletSettingsScreen() {
         paddingHorizontal: 80,
       },
     });
-  }, [navigation, folder]);
+  }, [navigation, foundFolder]);
+
+  if (!foundFolder) {
+    navigation.goBack();
+    return null;
+  }
+
+  const folder = foundFolder;
 
   const submitRenameModal = (newName: string) => {
     dispatch(Actions.renameFolder(folder, newName));
   };
 
-  if (!folder) {
-    navigation.goBack();
-    return null;
-  }
   return (
     <ScrollView
       style={{
         height: "100%",
+        backgroundColor: theme.colors.background,
       }}
     >
       <View style={{ flex: 1 }}>
@@ -170,7 +190,7 @@ export default function WalletSettingsScreen() {
           />
         )}
 
-        {showPassphraseModal && (
+        {showPassphraseModal && !!folder.seed && (
           <PromptModal
             title={t("change_wallet_passphrase")}
             description={t("change_wallet_passphrase_description")}
@@ -182,6 +202,9 @@ export default function WalletSettingsScreen() {
             }}
             onClose={() => setShowPassphraseModal(false)}
             onValidate={(passphrase) => {
+              if (!folder.seed) {
+                return;
+              }
               setShowPassphraseModal(false);
               duplicate(folder.seed, folder.name, passphrase).catch((e) => {
                 Toast.showToast({
@@ -209,11 +232,11 @@ export default function WalletSettingsScreen() {
             >
               <ActionButton
                 text={i18n.t("copy")}
-                onPress={() => copyAddress(folder.address)}
+                onPress={() => copyAddress(folder.address || "")}
               />
               <ActionButton
                 text={i18n.t("export")}
-                onPress={() => Share.share({ message: folder.address })}
+                onPress={() => Share.share({ message: folder.address || "" })}
                 icon={"export"}
                 color={"black"}
               />
@@ -225,7 +248,7 @@ export default function WalletSettingsScreen() {
               alignItems: "center",
             }}
           >
-            <QRCodeModal content={folder.address} />
+            {!!folder.address && <QRCodeModal content={folder.address} />}
           </View>
         </View>
         {folder.seed && (

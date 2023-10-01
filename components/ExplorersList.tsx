@@ -2,10 +2,12 @@ import React from "react";
 import { Image, ScrollView, TouchableOpacity, View } from "react-native";
 import { Headline, Subheading, Text, useTheme } from "react-native-paper";
 import { i18n } from "../translations/i18n";
-import Explorers from "../utils/explorers/Explorers";
+import Explorers, {
+  ExplorerWithWebsitePattern,
+} from "../utils/explorers/Explorers";
 import * as WebBrowser from "expo-web-browser";
 
-export default function ExplorerList({ address }) {
+export default function ExplorerList({ address }: { address: string }) {
   const theme = useTheme();
   return (
     <View style={{ paddingLeft: 50, display: "flex", flex: 1 }}>
@@ -31,22 +33,29 @@ export default function ExplorerList({ address }) {
 
       <ScrollView bounces={false}>
         <View style={{ paddingTop: 10 }}>
-          {Explorers.filter((explorer) => "pattern" in explorer).map(
-            (explorer) => (
-              <Explorer
-                key={explorer.name}
-                explorer={explorer}
-                address={address}
-              />
-            )
-          )}
+          {Explorers.filter(
+            (explorer): explorer is ExplorerWithWebsitePattern =>
+              "pattern" in explorer
+          ).map((explorer) => (
+            <Explorer
+              key={explorer.name}
+              explorer={explorer}
+              address={address}
+            />
+          ))}
         </View>
       </ScrollView>
     </View>
   );
 }
 
-function Explorer({ explorer, address }) {
+function Explorer({
+  explorer,
+  address,
+}: {
+  explorer: ExplorerWithWebsitePattern;
+  address: string;
+}) {
   const onClick = () => {
     WebBrowser.openBrowserAsync(generateURL());
   };

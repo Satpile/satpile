@@ -13,7 +13,7 @@ export function defaultSettings(): Settings {
       passphrase: null,
       enableBiometrics: false,
     },
-    explorer: ExplorerApi.MEMPOOL_SPACE,
+    explorer: ExplorerApi.ELECTRUM_BLOCKSTREAM,
     displayUnit: "sats",
     hideEmptyAddresses: false,
   };

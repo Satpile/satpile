@@ -54,7 +54,7 @@ export class ElectrumClient {
     socket: ElectrumClient["secureSocket"] | ElectrumClient["transportSocket"]
   ) {
     let fullData = "";
-    socket.on("data", (data) => {
+    socket.on("data", (data: Buffer) => {
       fullData += data.toString();
       if (fullData.endsWith("\n")) {
         fullData
@@ -69,7 +69,7 @@ export class ElectrumClient {
       this.serverPing().catch();
     }, 15000);
 
-    socket.on("close", (_) => {
+    socket.on("close", (_: any) => {
       clearInterval(interval);
     });
   }
@@ -91,7 +91,7 @@ export class ElectrumClient {
 
   private async connectTLS() {
     await new Promise<void>((resolve, reject) => {
-      const handleError = (err) => {
+      const handleError = (err: unknown) => {
         reject(err);
       };
       this.secureSocket = tls.connect(

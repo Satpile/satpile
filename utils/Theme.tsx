@@ -10,9 +10,9 @@ import { useSettings } from "./Settings";
 type RNPaperTheme = ReactNativePaper.Theme;
 
 interface Theme extends RNPaperTheme {
-  chevron;
-  border;
-  settingsValue;
+  chevron: string;
+  border: string;
+  settingsValue: string;
   colors: RNPaperTheme["colors"] & {
     success: string;
   };
@@ -51,7 +51,7 @@ const ThemeContext = createContext({
   theme: lightTheme,
 });
 
-const ThemeHolder = ({ children }) => {
+const ThemeHolder = ({ children }: { children: React.ReactNode }) => {
   const [settings] = useSettings();
   const theme = settings.darkMode ? darkTheme : lightTheme;
   return <PaperProvider theme={theme}>{children}</PaperProvider>;

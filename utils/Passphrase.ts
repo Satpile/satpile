@@ -1,16 +1,25 @@
 import bcrypt from "react-native-bcrypt";
 import isaac from "isaac";
 
-bcrypt.setRandomFallback((len) => {
-  const buf = new Uint8Array(len);
-
-  return buf.map(() => Math.floor(isaac.random() * 256));
+bcrypt.setRandomFallback((len): number[] => {
+  const r = [];
+  for (let i = 0; i < len; i++) {
+    r.push(Math.floor(isaac.random() * 256));
+  }
+  return r;
 });
 
 export const hashPassword = async (plainText: string): Promise<string> => {
   return new Promise((resolve, reject) => {
     bcrypt.hash(plainText, 8, function (err, hash) {
-      if (err) reject(err);
+      if (err) {
+        reject(err);
+        return;
+      }
+      if (!hash) {
+        reject("No hash");
+        return;
+      }
       resolve(hash);
     });
   });

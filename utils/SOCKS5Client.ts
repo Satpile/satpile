@@ -10,7 +10,7 @@ const connectErrors = {
   [0x06]: "TTL expired",
   [0x07]: "command not supported / protocol error",
   [0x08]: "address type not supported",
-};
+} as const;
 
 export class SOCKS5Client {
   private socket: typeof net.Socket = null;
@@ -54,7 +54,7 @@ export class SOCKS5Client {
         this.sendGreeting();
       });
 
-      const onData = (data) => {
+      const onData = (data: Buffer) => {
         switch (this.state) {
           case "greeting":
             if (data.length === 2 && data[0] === 0x05 && data[1] === 0x00) {
@@ -77,7 +77,8 @@ export class SOCKS5Client {
               console.log("Connected to remote server through proxy 😎");
               console.log(this.serverAddress, this.serverPort);
             } else {
-              reject(connectErrors[response[1]]);
+              const errorCode = response[1] as keyof typeof connectErrors;
+              reject(connectErrors[errorCode] || "Unknown error " + errorCode);
             }
             break;
 
@@ -89,7 +90,7 @@ export class SOCKS5Client {
         }
       };
 
-      const onError = (err) => {
+      const onError = (err: unknown) => {
         reject(err);
       };
       this.socket.on("close", onError);

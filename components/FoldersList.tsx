@@ -6,6 +6,16 @@ import { i18n } from "../translations/i18n";
 import { SwipeList } from "./SwipeList/SwipeList";
 import { useTheme } from "../utils/Theme";
 import { ReorderButtons } from "./SwipeList/ReorderButtons";
+import { Folder } from "../utils/Types";
+
+type Props = {
+  folders: Folder[];
+  onRefresh: () => Promise<void>;
+  afterRefresh: () => void;
+  onRemove: (folder: Folder) => void;
+  showEditSort: boolean;
+  onSort: (folderA: Folder, folderB: Folder) => void;
+};
 
 function FoldersList({
   folders,
@@ -14,7 +24,7 @@ function FoldersList({
   onRemove,
   showEditSort,
   onSort,
-}) {
+}: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const theme = useTheme();
   async function refresh() {
@@ -24,7 +34,7 @@ function FoldersList({
     afterRefresh();
   }
 
-  function beforeDelete(folder) {
+  function beforeDelete(folder: Folder) {
     Alert.alert(
       i18n.t("delete"),
       i18n.t("delete_folder_sure"),

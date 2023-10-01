@@ -1,42 +1,45 @@
 import React from "react";
-import { SwipeListView } from "react-native-swipe-list-view";
+import {
+  IPropsSwipeListView,
+  SwipeListView,
+} from "react-native-swipe-list-view";
 import { SwipeButtons } from "./SwipeButtons";
 import { RefreshControl } from "react-native";
 import { useTheme } from "react-native-paper";
+import { FAIconName } from "../../utils/Types";
 
-export type SwipeAction = {
-  onclick: (item) => void;
+export type SwipeAction<T> = {
+  onclick: (item: T) => void;
   text: string;
-  icon: string;
+  icon: FAIconName;
   color: string;
   backgroundColor: string;
 };
 
-declare type SwipeListProps = {
-  data: object[];
-  render: (item) => any;
-  keyExtractor: (item) => string;
+declare type SwipeListProps<T> = {
+  data: T[];
+  render: IPropsSwipeListView<T>["renderItem"];
+  keyExtractor: (item: T) => string;
   showClose?: boolean;
-  actions: SwipeAction[];
+  actions: SwipeAction<T>[];
   refreshing: boolean;
   onRefresh: () => void;
   showPreview?: boolean;
   disableSwipe?: boolean;
 };
 
-export function SwipeList(props: SwipeListProps) {
+export function SwipeList<T>(props: SwipeListProps<T>) {
   const {
     data,
     render,
     keyExtractor,
-    showClose,
-    actions,
+    showClose = true,
+    actions = [],
     refreshing,
     onRefresh,
     showPreview,
     disableSwipe,
   } = {
-    actions: [],
     showPreview: false,
     disableSwipe: false,
     ...props,

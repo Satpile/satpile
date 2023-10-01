@@ -6,8 +6,25 @@ import { useNavigation } from "@react-navigation/native";
 import { i18n } from "../translations/i18n";
 import { SwipeList } from "./SwipeList/SwipeList";
 import { ReorderButtons } from "./SwipeList/ReorderButtons";
-import { FolderType } from "../utils/Types";
+import {
+  Folder,
+  FolderAddress,
+  FolderType,
+  AddressesList as AddressesListType,
+} from "../utils/Types";
 import { useSettings } from "../utils/Settings";
+
+type Props = {
+  addresses: FolderAddress[];
+  folders: Folder[];
+  folder: Folder;
+  balances: AddressesListType;
+  onRefresh: () => Promise<void>;
+  afterRefresh: () => void;
+  showEditSort: boolean;
+  onDelete: (address: FolderAddress) => void;
+  onSort: (addressA: FolderAddress, addressB: FolderAddress) => void;
+};
 
 export default function AddressesList({
   addresses,
@@ -19,7 +36,7 @@ export default function AddressesList({
   folder,
   showEditSort,
   onSort,
-}) {
+}: Props) {
   const [refreshing, setRefreshing] = useState(false);
   const [settings] = useSettings();
   const navigation = useNavigation();
@@ -39,7 +56,7 @@ export default function AddressesList({
     afterRefresh();
   };
 
-  const deleteAddress = (address) => {
+  const deleteAddress = (address: FolderAddress) => {
     Alert.alert(
       i18n.t("delete"),
       i18n.t("delete_address_sure"),

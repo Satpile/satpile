@@ -1,4 +1,4 @@
-import { Folder, FolderAddress, FolderType } from "../../utils/Types";
+import { Folder, FolderAddress } from "../../utils/Types";
 import { Action } from "../actions/actions";
 import { getNextNPaths } from "../../utils/XPubAddresses";
 
@@ -104,11 +104,11 @@ const folders = (state: Folder[] = [], action: Action): Folder[] => {
               //deprecated:
               //nextPath: getNextNPaths(action.addresses.slice(-1)[0].derivationPath, 2)[1]
 
-              branches: folder.xpubConfig.branches.map((branch) => {
+              branches: folder.xpubConfig?.branches?.map((branch) => {
                 if (branch.nextPath === action.branch.nextPath) {
                   return {
                     nextPath: getNextNPaths(
-                      action.addresses.slice(-1)[0].derivationPath,
+                      action.addresses.slice(-1)[0].derivationPath || "",
                       2
                     )[1],
                     addresses: [...branch.addresses, ...action.addresses],

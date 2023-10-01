@@ -1,6 +1,6 @@
 import * as NotificationsManager from "expo-notifications";
 import { AddressesBalanceDifference, Folder, FolderAddress } from "./Types";
-import { AppState, Platform } from "react-native";
+import { AppState } from "react-native";
 import { i18n } from "../translations/i18n";
 import { convertSatoshiToString, truncate } from "./Helper";
 import store from "../store/store";
@@ -22,25 +22,33 @@ export class Notifications {
     address: FolderAddress;
     folder: Folder;
     folderIndex: number;
-  } {
-    let folder: Folder = null;
-    let folderAddress: FolderAddress = null;
-    let folderIndex = -1; //If the folder has no name we use
+  } | null {
+    let result: {
+      address: FolderAddress;
+      folder: Folder;
+      folderIndex: number;
+    } | null = null;
+
+    /* let folder: Folder | null = null;
+    let folderAddress: FolderAddress | null = null;
+    let folderIndex = -1; //If the folder has no name we use*/
     store.getState().folders.forEach((folderObj: Folder, i) => {
-      if (folder) return; //skip if we found something
+      if (result) return; //skip if we found something
 
       folderObj.addresses.forEach((addressObj: FolderAddress) => {
-        if (folderAddress) return; //skip if we found something
+        if (result) return; //skip if we found something
 
         if (addressObj.address === address) {
-          folder = folderObj;
-          folderAddress = addressObj;
-          folderIndex = i;
+          result = {
+            folder: folderObj,
+            address: addressObj,
+            folderIndex: i,
+          };
         }
       });
     });
 
-    return { folder, address: folderAddress, folderIndex };
+    return result;
   }
 
   static async sendSingleUpdateNotification(diff: AddressesBalanceDifference) {
@@ -48,12 +56,13 @@ export class Notifications {
       return;
     }
 
-    const { folder, address, folderIndex } =
-      this.findFolderAndAddressFromAddress(diff.address);
+    const result = this.findFolderAndAddressFromAddress(diff.address);
 
-    if (folderIndex === -1) {
+    if (!result) {
       return;
     }
+
+    const { folder, address, folderIndex } = result;
 
     const netDiff = diff.after.balance - diff.before.balance;
     const netDiffString = convertSatoshiToString(netDiff, true) + " sats";

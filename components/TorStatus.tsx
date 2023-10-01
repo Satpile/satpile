@@ -26,7 +26,7 @@ export function TorStatus() {
   const i18n = useI18n();
 
   const needsTor = useMemo(
-    () => BalanceFetcher.getExplorer(settings.explorer).needsTor(),
+    () => !!BalanceFetcher.getExplorer(settings.explorer)?.needsTor(),
     [settings]
   );
 

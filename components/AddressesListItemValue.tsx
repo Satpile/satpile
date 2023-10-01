@@ -2,8 +2,13 @@ import React from "react";
 import { StyleSheet, View } from "react-native";
 import SatoshiText from "./SatoshiText";
 import { AddressStatusIndicator } from "./AddressStatus";
+import { AddressValue } from "../utils/Types";
 
-export default function AddressesListItemValue({ address }) {
+export default function AddressesListItemValue({
+  address,
+}: {
+  address: AddressValue;
+}) {
   return (
     <View style={styles.container}>
       <SatoshiText style={styles.addressValue} amount={address.balance} />

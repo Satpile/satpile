@@ -1,4 +1,5 @@
 import * as React from "react";
+import { useEffect } from "react";
 import { Switch, View } from "react-native";
 import { Appbar, Text } from "react-native-paper";
 import { useTheme } from "../utils/Theme";
@@ -6,24 +7,26 @@ import { SettingsData } from "@taccolaa/react-native-settings-screen"; //https:/
 import { i18n } from "../translations/i18n";
 import { MainTitle } from "../components/DynamicTitle";
 import { durationToText, explorerToName, useSettings } from "../utils/Settings";
-import { Ionicons, FontAwesome } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
 import * as Linking from "expo-linking";
 import * as StoreReview from "expo-store-review";
 import * as WebBrowser from "expo-web-browser";
 import Constants from "expo-constants";
 import {
   BLOG_URL,
+  BUY_URL,
   COMPANY,
   FEEDBACK_URL,
-  TWITTER_URL,
-  BUY_URL,
   SHOP_URL,
+  TWITTER_URL,
 } from "../utils/Constants";
 import { CustomSettingsScreen } from "../components/CustomSettingsScreen";
 import { convertSatoshiToString } from "../utils/Helper";
-import { useEffect } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { ExplorerApi } from "../utils/Types";
 
-export default function SettingsScreen({ navigation }) {
+export default function SettingsScreen() {
+  const navigation = useNavigation();
   const [settings, updateSettings] = useSettings();
 
   const theme = useTheme();
@@ -170,7 +173,10 @@ export default function SettingsScreen({ navigation }) {
           ),
           onPress: () =>
             WebBrowser.openBrowserAsync(
-              FEEDBACK_URL.replace("{version}", Constants.manifest.version)
+              FEEDBACK_URL.replace(
+                "{version}",
+                Constants.manifest?.version || "unknown"
+              )
             ),
         },
         {
@@ -227,7 +233,7 @@ export default function SettingsScreen({ navigation }) {
         },
         {
           title: i18n.t("settings.version"),
-          renderAccessory: () => <Text>{Constants.manifest.version}</Text>,
+          renderAccessory: () => <Text>{Constants.manifest?.version}</Text>,
         },
         {
           title: i18n.t("settings.copyright"),
@@ -281,16 +287,36 @@ const ItemIcon = ({
   );
 };
 
-const SettingItemValue = ({ value, type = null }) => {
+type SettingItemRefreshValue = {
+  value: number;
+  type: "refresh";
+};
+
+type SettingItemExplorerValue = {
+  value: ExplorerApi;
+  type: "explorer";
+};
+
+type SettingItemStringValue = {
+  value: string;
+  type?: null;
+};
+
+type SettingItemValueProps =
+  | SettingItemRefreshValue
+  | SettingItemExplorerValue
+  | SettingItemStringValue;
+
+const SettingItemValue = (props: SettingItemValueProps) => {
   const theme = useTheme();
   const style = { color: theme.settingsValue, marginRight: 6, fontSize: 18 };
-  let displayedValue = value;
-  switch (type) {
+  let displayedValue = props.value;
+  switch (props.type) {
     case "refresh":
-      displayedValue = durationToText(value);
+      displayedValue = durationToText(props.value);
       break;
     case "explorer":
-      displayedValue = explorerToName(value);
+      displayedValue = explorerToName(props.value);
       break;
   }
   return <Text style={style}>{displayedValue}</Text>;

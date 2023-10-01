@@ -2,7 +2,13 @@ import React, { useEffect, useState } from "react";
 import { Animated, Easing, StatusBar, StyleSheet } from "react-native";
 import { useTheme } from "react-native-paper";
 
-export default function AnimatedSplashScreen({ onAnimationDone, animate }) {
+export default function AnimatedSplashScreen({
+  onAnimationDone,
+  animate,
+}: {
+  onAnimationDone: () => void;
+  animate: boolean;
+}) {
   const [bg] = useState(new Animated.Value(0));
   const [scale] = useState(new Animated.Value(0));
   const theme = useTheme();

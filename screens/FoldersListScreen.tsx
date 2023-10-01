@@ -15,6 +15,16 @@ import { Folder, FolderType } from "../utils/Types";
 import { AddFolderToolbar } from "../components/AddFolderToolbar";
 import store, { useTypedDispatch, useTypedSelector } from "../store/store";
 import { TorStatus } from "../components/TorStatus";
+import { useNavigation } from "@react-navigation/native";
+
+type TopRightActionsProps = {
+  showToolbar: boolean;
+  onShowToolbar: () => void;
+  showAddToolbar: boolean;
+  onShowAddToolbar: () => void;
+  folderCount: number;
+  onClose: () => void;
+};
 
 const TopRightActions = ({
   showToolbar,
@@ -23,9 +33,9 @@ const TopRightActions = ({
   onShowAddToolbar,
   folderCount,
   onClose,
-}) => {
+}: TopRightActionsProps) => {
   const ActionToolbar = () =>
-    folderCount > 1 && (
+    folderCount > 1 ? (
       <Appbar.Action
         key={"open"}
         color="white"
@@ -41,7 +51,7 @@ const TopRightActions = ({
         }
         onPress={showToolbar ? onClose : onShowToolbar}
       />
-    );
+    ) : null;
 
   const ActionAddToolbar = () => (
     <Appbar.Action
@@ -60,7 +70,8 @@ const TopRightActions = ({
   );
 };
 
-export default function FoldersListScreen({ navigation }) {
+export default function FoldersListScreen() {
+  const navigation = useNavigation();
   const { folders, lastReloadTime } = useTypedSelector((state) => ({
     folders: state.folders,
     lastReloadTime: state.lastReloadTime,
@@ -78,13 +89,13 @@ export default function FoldersListScreen({ navigation }) {
   const lockState = useLockState();
   useEffect(() => {
     navigation.setOptions({
-      headerTitle: (_) => (
+      headerTitle: () => (
         <DynamicTitle
           title={i18n.t("home")}
           satAmount={lockState.locked ? null : totalBalance}
         />
       ),
-      headerLeft: (_) => (
+      headerLeft: () => (
         <Appbar.Action
           color="white"
           icon="cog"
@@ -93,7 +104,7 @@ export default function FoldersListScreen({ navigation }) {
           }}
         />
       ),
-      headerRight: (_) => (
+      headerRight: () => (
         <TopRightActions
           onClose={() => {
             setShowToolbar(false);
@@ -165,7 +176,7 @@ export default function FoldersListScreen({ navigation }) {
     setShowAddModal(false);
   };
 
-  const submitModal = async (folderName) => {
+  const submitModal = async (folderName: string) => {
     let folder: Folder = {
       uid: generateUid(),
       name: folderName,

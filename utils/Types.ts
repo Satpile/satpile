@@ -1,5 +1,6 @@
 import { AddressStatusType } from "../components/AddressStatus";
-import { Ionicons } from "@expo/vector-icons";
+import { FontAwesome, Ionicons } from "@expo/vector-icons";
+import React from "react";
 
 export type Icons = React.ComponentProps<typeof Ionicons>["name"];
 
@@ -56,7 +57,9 @@ export type Folder = {
 };
 
 export interface Explorer {
-  fetchAndUpdate(AddressesList): Promise<AddressesBalanceDifference[]>;
+  fetchAndUpdate(
+    addresses: AddressesList
+  ): Promise<AddressesBalanceDifference[]>;
   needsTor(): boolean;
 }
 
@@ -115,3 +118,5 @@ export interface Settings {
 }
 
 export const REFRESH_TASK = "REFRESH_TASK";
+
+export type FAIconName = React.ComponentProps<typeof FontAwesome>["name"];

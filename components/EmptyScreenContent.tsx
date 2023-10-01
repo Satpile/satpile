@@ -3,7 +3,12 @@ import { Text } from "react-native-paper";
 import React from "react";
 import { INFORMATION_EMOJI, Tooltip } from "./Tooltip";
 
-export default ({ text, info = undefined }) => {
+type Props = {
+  text: string;
+  info?: string;
+};
+
+export default ({ text, info = undefined }: Props) => {
   const content = (
     <Text
       style={{

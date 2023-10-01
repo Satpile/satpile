@@ -8,6 +8,7 @@ import * as ecc from "tiny-secp256k1";
 import { REFRESH_TASK } from "./Types";
 
 export async function bootstrap() {
+  // @ts-ignore
   bitcoin.initEccLib(ecc);
 
   LogBox.ignoreLogs([

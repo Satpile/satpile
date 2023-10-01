@@ -1,9 +1,9 @@
 import runes from "runes";
-import { AddingEnum, FolderType } from "./Types";
+import { AddingEnum } from "./Types";
 import addressValidation from "bitcoin-address-validation";
 import { validateMnemonic } from "bip39";
 
-function numberWithCommas(x) {
+function numberWithCommas(x: number | string): string {
   const parts = x.toString().split(".");
   parts[0] = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   return parts.join(".");
@@ -16,7 +16,7 @@ function groupDecimals(x: string): string {
 }
 
 export function convertSatoshiToString(
-  satoshi,
+  satoshi: number,
   prependSign = false,
   unit: "sats" | "bitcoin" = "sats"
 ) {
@@ -45,7 +45,7 @@ export function generateUid(size = 30) {
 
 export function truncate(
   string: string,
-  maxSize,
+  maxSize: number,
   ellipsis: "end" | "middle" | "start" = "middle"
 ) {
   const chars = runes(string);

@@ -7,8 +7,8 @@ import {
 } from "react";
 import { AppState, AppStateStatus } from "react-native";
 
-function usePrevious(value) {
-  const ref = useRef();
+function usePrevious<T>(value: T): T | undefined {
+  const ref = useRef<T>();
   useEffect(() => {
     ref.current = value;
   }, [value]);
@@ -28,7 +28,7 @@ export const useAppState = () => {
     };
   }, []);
 
-  const _handleAppStateChange = (state) => {
+  const _handleAppStateChange = (state: AppStateStatus) => {
     setAppState(state);
   };
 
@@ -36,7 +36,7 @@ export const useAppState = () => {
 };
 export const useAppStateEffect = (
   effect: (
-    appState: AppStateStatus,
+    appState?: AppStateStatus,
     lastAppState?: AppStateStatus
   ) => void | (() => void | undefined),
   dependencyList: DependencyList = []

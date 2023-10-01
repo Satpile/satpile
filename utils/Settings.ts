@@ -84,12 +84,15 @@ export async function askPermission(
   permission: PermissionType,
   errorMessage: string
 ): Promise<boolean> {
-  const { status: existingStatus } = await getStatusFromPermissionType(
+  const { status: existingStatus } = (await getStatusFromPermissionType(
     permission
-  );
+  )) || { status: PermissionStatus.UNDETERMINED };
+
   let finalStatus = existingStatus;
   if (existingStatus !== PermissionStatus.GRANTED) {
-    const { status } = await askPermissionForType(permission);
+    const { status } = (await askPermissionForType(permission)) || {
+      status: PermissionStatus.UNDETERMINED,
+    };
     finalStatus = status;
   }
   if (finalStatus !== PermissionStatus.GRANTED) {
@@ -138,7 +141,7 @@ export function useI18n() {
  * Convert a duration in second to a localized string in minutes (-1 = "Manual", [0;+oo[ = x minutes)
  * @param duration
  */
-export function durationToText(duration) {
+export function durationToText(duration: number) {
   return duration === -1
     ? i18n.t("settings.refresh_manual")
     : Math.round(duration / 60) + " " + i18n.t("minutes");

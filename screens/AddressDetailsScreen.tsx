@@ -1,24 +1,14 @@
 import React, { useEffect, useState } from "react";
-import {
-  Alert,
-  Clipboard,
-  Modal,
-  Platform,
-  Share,
-  StyleSheet,
-  TouchableOpacity,
-  View,
-} from "react-native";
+import { Alert, Clipboard, Share, View } from "react-native";
 import { i18n } from "../translations/i18n";
-import { Appbar, Button, Text, Title, useTheme } from "react-native-paper";
-import { useSelector, useStore } from "react-redux";
+import { Appbar, Text, Title, useTheme } from "react-native-paper";
 import DynamicTitle from "../components/DynamicTitle";
 import * as Actions from "../store/actions";
 import ReloadButton from "../components/ReloadButton";
 import { Toast } from "../components/Toast";
 import ExplorerList from "../components/ExplorersList";
 import PromptModal from "../components/PromptModal";
-import { Folder, FolderType } from "../utils/Types";
+import { Folder, FolderAddress, FolderType } from "../utils/Types";
 import { useTypedDispatch, useTypedSelector } from "../store/store";
 import { ActionButton } from "../components/ActionButton";
 import { QRCodeModal } from "../components/QRCodeModal";
@@ -26,27 +16,33 @@ import {
   AddressStatusIndicator,
   AddressStatusType,
 } from "../components/AddressStatus";
-import { useI18n } from "../utils/Settings";
-import { Ionicons } from "@expo/vector-icons";
+import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 
-export default function AddressDetailsScreen({ navigation, route }) {
+type ParamsList = {
+  AddressDetails: { folder: Folder; address: FolderAddress };
+};
+
+export default function AddressDetailsScreen() {
+  const navigation = useNavigation();
+  const route = useRoute<RouteProp<ParamsList, "AddressDetails">>();
+
   const [showRenameModal, setShowRenameModal] = useState(false);
   const [folders, addresses] = useTypedSelector((state) => [
     state.folders,
     state.addresses,
   ]);
   const dispatch = useTypedDispatch();
-  const [bigQRCode, setBigQRCode] = useState(false);
-  const store = useStore();
+
   const theme = useTheme();
-  const folder: Folder = folders.find(
+  const folder = folders.find(
     (folder) => route.params.folder.uid === folder.uid
   );
-  const address = folder.addresses.find(
+
+  const address = folder?.addresses.find(
     (address) => address.address === route.params.address.address
   );
 
-  if (!address) {
+  if (!address || !folder) {
     //Just before going to the previous screen after delete, react re-renders the component because the state has been updated
     //We return an empty element in order to not throw an error
     return <></>;
@@ -56,6 +52,9 @@ export default function AddressDetailsScreen({ navigation, route }) {
   const addressValue = addresses[address.address];
 
   useEffect(() => {
+    if (!address) {
+      return;
+    }
     navigation.setOptions({
       headerTitle: () => (
         <DynamicTitle
@@ -64,7 +63,7 @@ export default function AddressDetailsScreen({ navigation, route }) {
           onPress={() => setShowRenameModal(true)}
         />
       ),
-      headerLeft: (props) => (
+      headerLeft: () => (
         <Appbar.BackAction
           color={"white"}
           onPress={() => navigation.goBack()}
@@ -73,7 +72,7 @@ export default function AddressDetailsScreen({ navigation, route }) {
     });
   }, [navigation, address, balance]);
 
-  const submitRenameModal = (newName) => {
+  const submitRenameModal = (newName: string) => {
     dispatch(Actions.renameAddress(folder, address, newName));
   };
 
@@ -108,8 +107,6 @@ export default function AddressDetailsScreen({ navigation, route }) {
   const exportAddress = () => {
     Share.share({ message: address.address });
   };
-
-  let QRCodeRef = null;
 
   return (
     <View

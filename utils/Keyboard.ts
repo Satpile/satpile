@@ -1,4 +1,9 @@
-import { Keyboard, LayoutAnimation, Platform } from "react-native";
+import {
+  Keyboard,
+  KeyboardEventListener,
+  LayoutAnimation,
+  Platform,
+} from "react-native";
 import { useEffect, useState } from "react";
 
 export function useKeyBoardHeight(defaultHeight = 0) {
@@ -15,12 +20,12 @@ export function useKeyBoardHeight(defaultHeight = 0) {
       };
     }, []);
 
-    const _keyboardWillShow = (event) => {
+    const _keyboardWillShow: KeyboardEventListener = (event) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       updateKeyboardHeight(event.endCoordinates.height);
     };
 
-    const _keyboardDidHide = (event) => {
+    const _keyboardDidHide: KeyboardEventListener = (event) => {
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
       updateKeyboardHeight(defaultHeight);
     };

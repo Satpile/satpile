@@ -67,9 +67,16 @@ export default class BalanceFetcher {
     this.showNetworkActivity(fetchUUID, true);
     let networkState = await NetInfo.fetch();
     if (networkState.isConnected) {
-      const diff = await this.getExplorer(
-        store.getState().settings.explorer
-      ).fetchAndUpdate(addressesToFetch);
+      const explorer = this.getExplorer(store.getState().settings.explorer);
+      if (!explorer) {
+        Toast.showToast({
+          type: "top",
+          message: i18n.t("bad_custom_explorer"),
+          duration: 3000,
+        });
+        return null;
+      }
+      const diff = await explorer.fetchAndUpdate(addressesToFetch);
       BalanceFetcher.afterBalanceFetch(fetchUUID, showError);
       return diff;
     } else if (showError) {
@@ -83,7 +90,7 @@ export default class BalanceFetcher {
     return null;
   }
 
-  public static getExplorer(explorer: ExplorerApi): Explorer {
+  public static getExplorer(explorer: ExplorerApi): Explorer | null {
     switch (explorer) {
       case ExplorerApi.BLOCKSTREAM_INFO:
         return new Mempool("https://blockstream.info");
@@ -154,9 +161,11 @@ export default class BalanceFetcher {
                 branch,
                 DERIVATION_BATCH_SIZE
               );
-              store.dispatch(
-                Actions.addDerivedAddresses(folder, branch, newAddresses)
-              );
+              if (newAddresses) {
+                store.dispatch(
+                  Actions.addDerivedAddresses(folder, branch, newAddresses)
+                );
+              }
             }
           });
         }

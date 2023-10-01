@@ -9,7 +9,7 @@ import { FontAwesome } from "@expo/vector-icons";
 
 type Props = {
   value: string;
-  onChange(value: string);
+  onChange: (value: string) => void;
 };
 
 function generatePathsExample(startingPath: string) {

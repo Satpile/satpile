@@ -31,22 +31,25 @@ export function generateAddresses(
     const derived = address.derivePath(path);
     switch (xpub[0]) {
       case "x":
-        result.address = BTC.payments.p2pkh({
-          pubkey: derived.publicKey,
-          network,
-        }).address;
+        result.address =
+          BTC.payments.p2pkh({
+            pubkey: derived.publicKey,
+            network,
+          }).address || "";
         break;
       case "y":
-        result.address = BTC.payments.p2sh({
-          redeem: BTC.payments.p2wpkh({ pubkey: derived.publicKey, network }),
-          network,
-        }).address;
+        result.address =
+          BTC.payments.p2sh({
+            redeem: BTC.payments.p2wpkh({ pubkey: derived.publicKey, network }),
+            network,
+          }).address || "";
         break;
       case "z":
-        result.address = BTC.payments.p2wpkh({
-          pubkey: derived.publicKey,
-          network,
-        }).address;
+        result.address =
+          BTC.payments.p2wpkh({
+            pubkey: derived.publicKey,
+            network,
+          }).address || "";
         break;
     }
     return result;
@@ -55,7 +58,10 @@ export function generateAddresses(
 
 export function getNextNPaths(startingPath: string, count: number): string[] {
   const parts = startingPath.split("/");
-  const lastPartNumber = parseInt(parts.pop());
+  const lastPart = parts.pop();
+  if (!lastPart) return [];
+
+  const lastPartNumber = parseInt(lastPart);
   const paths: string[] = [];
   for (let i = 0; i < count; i++) {
     paths.push([...parts, lastPartNumber + i].join("/"));
@@ -68,6 +74,7 @@ export function initializeAddressesDerivation(
   branch: FolderXPubBranch
 ) {
   if (folder.type === FolderType.SIMPLE) return;
+  if (!folder.address) throw new Error("Folder address is not defined");
 
   const countToAdd = Math.max(
     DERIVATION_BATCH_SIZE - folder.addresses.length,
@@ -85,6 +92,8 @@ export function generateNextNAddresses(
   count: number
 ) {
   if (folder.type === FolderType.SIMPLE) return;
+  if (!folder.address) throw new Error("Folder address is not defined");
+
   const pathsToAdd = getNextNPaths(folderXPubBranch.nextPath, count);
 
   return generateAddresses(pathsToAdd, folder.address);
@@ -100,12 +109,15 @@ export function shouldDeriveMoreAddresses(
   addresses: AddressesList
 ) {
   if (folder.type === FolderType.SIMPLE) return false;
+  if (!folder.address) throw new Error("Folder address is not defined");
 
   const lastNDerived = folderXPubBranch.addresses.slice(-10);
   if (lastNDerived.length < 10) return true;
 
   return lastNDerived.some((folderAddress) => {
-    return addresses[folderAddress.address].transactionCount > 0;
+    const addressValue = addresses[folderAddress.address];
+    const txCount = addressValue.transactionCount || 0;
+    return txCount > 0;
   });
 }
 
@@ -126,7 +138,7 @@ export function convertPubToXPub(pubKey: string): string {
   try {
     var data = b58.decode(pubKey);
     data = data.slice(4);
-    data = Buffer.concat([Buffer.from(prefixes.get("xpub"), "hex"), data]);
+    data = Buffer.concat([Buffer.from(prefixes.get("xpub")!, "hex"), data]);
     return b58.encode(data);
   } catch (err) {
     console.error(err);

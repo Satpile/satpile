@@ -40,7 +40,7 @@ export interface ActionLoadData extends BaseAction<ActionType.LOAD_DATA> {
   state: {
     settings: Settings;
     folders: Folder[];
-    addresses: AddressValue;
+    addresses: AddressesList;
     lastReloadTime: string;
   };
 }

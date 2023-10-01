@@ -1,16 +1,22 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Platform } from "react-native";
 import RNFS from "react-native-fs";
+import { RootState } from "../store/store";
+import { defaultSettings } from "../store/reducers/settings";
 
 export default class AddressesStorage {
-  static defaultState = {
+  static defaultState: RootState = {
     folders: [],
     lastReloadTime: "",
     addresses: {},
+    loading: false,
+    settings: defaultSettings(),
   };
-  static enqueuedStateToSaveTimeout = null;
+
+  static enqueuedStateToSaveTimeout: number | null = null;
   static lastStateSavedAt = 0;
-  static async saveState(state) {
+
+  static async saveState(state: RootState) {
     console.log("Saving state");
     const save = async () => {
       AddressesStorage.lastStateSavedAt = Date.now();
@@ -54,14 +60,14 @@ export default class AddressesStorage {
     }
   }
 
-  static async loadState() {
+  static async loadState(): Promise<RootState> {
     try {
       const rawData =
         (await AsyncStorage.getItem("state")) ||
         (await this.retrieveOldStorage());
       if (rawData === null) return this.defaultState;
 
-      return JSON.parse(rawData);
+      return JSON.parse(rawData) as RootState;
     } catch (error) {
       console.log({ error });
       return this.defaultState;
