@@ -175,7 +175,7 @@ export default function SettingsScreen() {
             WebBrowser.openBrowserAsync(
               FEEDBACK_URL.replace(
                 "{version}",
-                Constants.manifest?.version || "unknown"
+                Constants.expoConfig?.version || "unknown"
               )
             ),
         },
@@ -233,7 +233,7 @@ export default function SettingsScreen() {
         },
         {
           title: i18n.t("settings.version"),
-          renderAccessory: () => <Text>{Constants.manifest?.version}</Text>,
+          renderAccessory: () => <Text>{Constants.expoConfig?.version}</Text>,
         },
         {
           title: i18n.t("settings.copyright"),

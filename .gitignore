@@ -79,3 +79,4 @@ dist/
 
 # @end expo-cliios/
 android/
+.env

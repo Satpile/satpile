@@ -72,7 +72,6 @@ export async function getPrivateKeyFromMnemonicAndPath({
   const derivedNode = bip32
     .fromSeed(seed)
     .derivePath(walletPath + "/" + addressPath);
-  console.log(walletPath + "/" + addressPath);
 
   return derivedNode;
 }
@@ -95,7 +94,6 @@ export function generateSeedQRDataFromMnemonic(mnemonic: string): string {
 export function generateMnemonicFromSeedQRData(
   seedQRData: string
 ): string | undefined {
-  console.log("generateMnemonicFromSeedQRData", seedQRData);
   const wordlistName = getDefaultWordlist();
   const wordlist = wordlists[wordlistName];
   if (!wordlist) {

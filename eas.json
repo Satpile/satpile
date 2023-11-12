@@ -11,6 +11,9 @@
       },
       "ios": {
         "buildConfiguration": "Debug"
+      },
+      "env": {
+        "APP_VARIANT": "development"
       }
     },
     "preview": {
