@@ -181,7 +181,8 @@ module.exports = {
     one: "1 adresse vide a été cachée",
     other: "%{count} adresses vides ont été cachées",
   },
-  seed_warning: "Attention, ne partagez jamais votre seed !",
+  seed_warning:
+    "Ne partagez pas ceci ! Ne la prenez pas en photo. Ne la lisez pas à voix haute. Ne la stockez pas sur un ordinateur ou dans le cloud. Ecrivez la avec un stylo sur du papier.",
   show_seed: "Afficher la seed et le SeedQR",
   hide_seed: "Cacher la seed et le SeedQR",
   change_wallet_passphrase: "Changer la passphrase du wallet",
@@ -190,4 +191,12 @@ module.exports = {
   change_wallet_passphrase_placeholder: "Nouvelle passphrase, peut être vide",
   duplicate_wallet: "Dupliquer et changer la passphrase",
   bad_custom_explorer: "La configuration de l'explorer est incorrecte",
+  signing: {
+    title: "Signer un message",
+    address: "Adresse",
+    message: "Message",
+    signature: "Signature",
+    sign: "Signer le message",
+    copied: "Signature copiée dans le presse-papier",
+  },
 };

@@ -1,11 +1,12 @@
 import * as Crypto from "expo-crypto";
 import {
-  mnemonicToSeed,
   entropyToMnemonic,
   getDefaultWordlist,
+  mnemonicToSeed,
   wordlists,
 } from "bip39";
 import { bip32 } from "./BitcoinJS";
+import { BIP32Interface } from "bip32";
 
 const bip84Constants = {
   bitcoin: {
@@ -51,6 +52,29 @@ export async function generateZpubFromMnemonic(
   const zpub = derivedNode.neutered().toBase58(bip84Constants.bitcoin.public);
 
   return zpub;
+}
+
+export async function getPrivateKeyFromMnemonicAndPath({
+  walletPath = bip84Constants.bitcoin.path,
+  addressPath,
+  mnemonic,
+  passphrase,
+}: {
+  mnemonic: string;
+  passphrase?: string;
+  walletPath?: string;
+  addressPath: string;
+}): Promise<BIP32Interface | undefined> {
+  const seed = await mnemonicToSeed(
+    mnemonic,
+    passphrase ? passphrase : undefined
+  );
+  const derivedNode = bip32
+    .fromSeed(seed)
+    .derivePath(walletPath + "/" + addressPath);
+  console.log(walletPath + "/" + addressPath);
+
+  return derivedNode;
 }
 
 export function generateSeedQRDataFromMnemonic(mnemonic: string): string {

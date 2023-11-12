@@ -137,7 +137,6 @@ export default function AddressDetailsScreen() {
               style={{
                 display: "flex",
                 alignContent: "center",
-                width: 140,
                 alignSelf: "center",
                 marginTop: 12,
               }}
@@ -157,6 +156,19 @@ export default function AddressDetailsScreen() {
                   text={i18n.t("delete")}
                   onPress={() => deleteAddress()}
                   color={"red"}
+                />
+              ) : null}
+              {folder.seed ? (
+                <ActionButton
+                  text={i18n.t("signing.title")}
+                  onPress={() =>
+                    navigation.navigate("MessageSigning", {
+                      folderId: folder.uid,
+                      folderAddress: address.address,
+                    })
+                  }
+                  icon={"file-sign"}
+                  color={"black"}
                 />
               ) : null}
             </View>

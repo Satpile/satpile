@@ -13,6 +13,7 @@ import SettingsEditScreen from "../screens/settings/SettingsEditScreen";
 import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import WalletSettingsScreen from "../screens/WalletSettingsScreen";
+import { MessageSigningScreen } from "../screens/MessageSigningScreen";
 
 const Stack = createStackNavigator();
 
@@ -20,6 +21,7 @@ export function Navigator() {
   return (
     <NavigationContainer>
       <Stack.Navigator
+        mode={"modal"}
         screenOptions={{
           ...TransitionPresets.SlideFromRightIOS,
           headerStyle: {
@@ -48,6 +50,7 @@ export function Navigator() {
         <Stack.Screen name="Settings" component={SettingsScreen} />
         <Stack.Screen name="AddressDetails" component={AddressDetailsScreen} />
         <Stack.Screen name="SettingsEdit" component={SettingsEditScreen} />
+        <Stack.Screen name="MessageSigning" component={MessageSigningScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

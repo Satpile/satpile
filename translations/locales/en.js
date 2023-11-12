@@ -193,7 +193,8 @@ module.exports = {
     other: "%{count} empty addresses were hidden",
   },
   generate: "Generate",
-  seed_warning: "Do not share this!",
+  seed_warning:
+    "Do not share this! Do not take a screenshot. Do not read aloud. Do not store on a computer file or in the cloud. Write down with pen on paper.",
   seed_derivation_path: "The zpub was generated according to bip84",
   address_error:
     "An error occured the last time this address was refreshed. You can wait or try to refresh again.",
@@ -205,4 +206,12 @@ module.exports = {
   change_wallet_passphrase_placeholder: "New passphrase, can be empty",
   duplicate_wallet: "Duplicate with new passphrase",
   bad_custom_explorer: "Bad custom explorer configuration",
+  signing: {
+    title: "Sign a message",
+    address: "Address",
+    message: "Message",
+    signature: "Signature",
+    sign: "Sign the message",
+    copied: "Copied signature into clipboard",
+  },
 };
