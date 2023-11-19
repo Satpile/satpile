@@ -11,7 +11,10 @@ export default ({ config }: ConfigContext): ExpoConfig => {
   invariant(slug, "No slug found in app.json");
   invariant(appVersion, "No app version found in env");
   const [version, buildNumber] = appVersion.split("+");
-
+  console.log("Generating app config with", {
+    version,
+    buildNumber,
+  });
   return {
     ...config,
     name: IS_DEV ? `${name} DEV` : name,
