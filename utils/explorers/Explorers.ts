@@ -10,6 +10,7 @@ let icons = {
   "blockcypher.com": require("../../assets/explorers/blockcypher.com.png"),
   "coinmarketcap.com": require("../../assets/explorers/coinmarketcap.com.png"),
   "blockchain.com": require("../../assets/explorers/blockchain.com.png"),
+  "bitinfocharts.com": require("../../assets/explorers/bitinfocharts.com.png"),
 } as const;
 
 export type Explorer = {
@@ -54,6 +55,10 @@ const explorers: Explorer[] = (
     {
       name: "blockchain.com",
       pattern: "https://www.blockchain.com/btc/address/{address}",
+    },
+    {
+      name: "bitinfocharts.com",
+      pattern: "https://bitinfocharts.com/bitcoin/address/{address}",
     },
   ] as const
 ).map((explorer) => ({ ...explorer, icon: icons[explorer.name] }));
