@@ -19,4 +19,18 @@ jobs:
         run: npm ci
       - name: Type check
         run: npx tsc --noEmit
-
+  check-translations:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: npm
+      - name: Check translations
+        run: npm run check:translations
+      - name: Save result
+        uses: actions/upload-artifact@v4
+        with:
+          name: translations-report
+          path: tmp/missingTranslations.json

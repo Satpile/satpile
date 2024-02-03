@@ -3,8 +3,9 @@
     "start": "expo start --dev-client",
     "postinstall": "npx patch-package && rn-nodeify --install crypto,buffer,events,process,stream,util,inherits,path,assert --hack;",
     "prettier": "prettier --write .",
-    "build-ios-dev-client": "eas build --platform ios --profile development --non-interactive --no-wait",
-    "eas-build": "eas build --platform ios  --non-interactive --no-wait"
+    "build-ios-dev-client": "eas build --platform ios --profile development --no-wait",
+    "eas-build": "eas build --platform ios  --non-interactive --no-wait",
+    "check:translations": "node ./tools/missingTranslations.js"
   },
   "dependencies": {
     "@expo/metro-config": "^0.10.7",
