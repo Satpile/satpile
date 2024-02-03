@@ -77,6 +77,7 @@ module.exports = {
   },
   no_network: "Erreur, réseau injoignable",
   connection_error: "Erreur de connexion au serveur \n{{server}}",
+  connection_success: "Connexion réussie",
   no_address: "Ce dossier est vide.\n Cliquez sur + pour ajouter une addresse",
   no_folder:
     "Vous n'avez pas encore créé de dossier. Cliquez sur + pour en ajouter un. Vous pouvez aussi ajouter des wallets XPUB",
@@ -181,10 +182,14 @@ module.exports = {
     one: "1 adresse vide a été cachée",
     other: "%{count} adresses vides ont été cachées",
   },
+  generate: "Générer",
   seed_warning:
     "Ne partagez pas ceci ! Ne la prenez pas en photo. Ne la lisez pas à voix haute. Ne la stockez pas sur un ordinateur ou dans le cloud. Ecrivez la avec un stylo sur du papier.",
   show_seed: "Afficher la seed et le SeedQR",
   hide_seed: "Cacher la seed et le SeedQR",
+  seed_derivation_path: "Le zpub a été généré en suivant bip84",
+  address_error:
+    "Une erreur est survenue la dernière fois que cette adresse a été rafraichie. Vous pouvez attendre ou rafraichir à nouveau.",
   change_wallet_passphrase: "Changer la passphrase du wallet",
   change_wallet_passphrase_description:
     "Cela dupliquera le wallet et changera la passphrase.",
@@ -198,5 +203,15 @@ module.exports = {
     signature: "Signature",
     sign: "Signer le message",
     copied: "Signature copiée dans le presse-papier",
+  },
+  tools: {
+    title: "Outils",
+    signing: {
+      title: "Signatures",
+      verify_message: "Vérifier une signature",
+      verify: "Vérifier",
+      invalid_signature: "Signature invalide",
+      valid_signature: "Signature valide",
+    },
   },
 };

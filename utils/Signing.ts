@@ -24,3 +24,15 @@ export const signMessage = async (
 
   return signature.toString("base64");
 };
+
+export const verifyMessage = async ({
+  message,
+  signature,
+  address,
+}: {
+  message: string;
+  signature: string;
+  address: string;
+}) => {
+  return bitcoinMessage.verify(message, address, signature, undefined, true);
+};

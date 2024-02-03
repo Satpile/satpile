@@ -171,6 +171,17 @@ export default function AddressDetailsScreen() {
                   color={"black"}
                 />
               ) : null}
+
+              <ActionButton
+                text={i18n.t("tools.signing.verify_message")}
+                onPress={() =>
+                  navigation.navigate("MessageVerify", {
+                    address: address.address,
+                  })
+                }
+                icon={"file-search"}
+                color={"black"}
+              />
             </View>
           </View>
           <View

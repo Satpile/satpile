@@ -34,6 +34,7 @@ const TopRightActions = ({
   folderCount,
   onClose,
 }: TopRightActionsProps) => {
+  const { navigate } = useNavigation();
   const ActionToolbar = () =>
     folderCount > 1 ? (
       <Appbar.Action
@@ -62,10 +63,22 @@ const TopRightActions = ({
     />
   );
 
+  const ActionMoreToolbar = () => (
+    <Appbar.Action
+      key={"more"}
+      color="white"
+      icon={"forwardburger"}
+      onPress={() => {
+        navigate("Tools");
+      }}
+    />
+  );
+
   return (
     <View style={{ display: "flex", flexDirection: "row" }}>
       {!showAddToolbar && <ActionToolbar />}
       {!showToolbar && <ActionAddToolbar />}
+      <ActionMoreToolbar />
     </View>
   );
 };

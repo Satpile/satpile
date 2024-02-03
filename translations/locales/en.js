@@ -214,4 +214,14 @@ module.exports = {
     sign: "Sign the message",
     copied: "Copied signature into clipboard",
   },
+  tools: {
+    title: "Tools",
+    signing: {
+      title: "Signing",
+      verify_message: "Verify message",
+      verify: "Verify",
+      invalid_signature: "Message signature is invalid",
+      valid_signature: "Message signature is valid",
+    },
+  },
 };

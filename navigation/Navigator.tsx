@@ -14,6 +14,8 @@ import { NavigationContainer } from "@react-navigation/native";
 import React from "react";
 import WalletSettingsScreen from "../screens/WalletSettingsScreen";
 import { MessageSigningScreen } from "../screens/MessageSigningScreen";
+import ToolsScreen from "../screens/ToolsScreen";
+import { MessageVerifyScreen } from "../screens/MessageVerifyScreen";
 
 const Stack = createStackNavigator();
 
@@ -51,6 +53,8 @@ export function Navigator() {
         <Stack.Screen name="AddressDetails" component={AddressDetailsScreen} />
         <Stack.Screen name="SettingsEdit" component={SettingsEditScreen} />
         <Stack.Screen name="MessageSigning" component={MessageSigningScreen} />
+        <Stack.Screen name="Tools" component={ToolsScreen} />
+        <Stack.Screen name="MessageVerify" component={MessageVerifyScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );
