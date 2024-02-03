@@ -44,6 +44,7 @@ Object.entries({ missingEn, missingFr, missingDe, missingCs }).forEach(
   }
 );
 
+fs.mkdirSync("tmp", { recursive: true });
 fs.writeFileSync(
   "tmp/missingTranslations.json",
   JSON.stringify({ missingEn, missingFr, missingDe, missingCs }, null, 2)
