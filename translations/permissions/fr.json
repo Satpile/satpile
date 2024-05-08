@@ -1,4 +1,4 @@
 {
   "NSCameraUsageDescription": "Autorisez Satpile à utiliser l'appareil photo pour scanner les QRCode et importer des adresses",
-  "NSFaceIDUsageDescription": "Autorisez Satpile à utilise FaceID pour déverrouiller l'application"
+  "NSFaceIDUsageDescription": "Autorisez Satpile à utiliser FaceID pour déverrouiller l'application"
 }
