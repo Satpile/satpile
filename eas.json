@@ -10,7 +10,8 @@
         "gradleCommand": ":app:assembleDebug"
       },
       "ios": {
-        "buildConfiguration": "Debug"
+        "buildConfiguration": "Debug",
+        "image": "macos-sequoia-15.3-xcode-16.2"
       },
       "env": {
         "APP_VARIANT": "development"
@@ -19,7 +20,11 @@
     "preview": {
       "distribution": "internal"
     },
-    "production": {}
+    "production": {
+      "ios": {
+        "image": "macos-sequoia-15.3-xcode-16.2"
+      }
+    }
   },
   "submit": {
     "production": {
