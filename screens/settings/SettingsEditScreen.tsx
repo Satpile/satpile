@@ -78,11 +78,7 @@ export default function SettingsEditScreen() {
               renderAccessory: () => {
                 if (settings.refresh === value.value) {
                   return (
-                    <Ionicons
-                      name={"md-checkmark"}
-                      color={"#f47c1c"}
-                      size={20}
-                    />
+                    <Ionicons name={"checkmark"} color={"#f47c1c"} size={20} />
                   );
                 }
                 return <></>;
@@ -119,11 +115,7 @@ export default function SettingsEditScreen() {
               renderAccessory: () => {
                 if (settings.explorer === explorer.explorerApi) {
                   return (
-                    <Ionicons
-                      name={"md-checkmark"}
-                      color={"#f47c1c"}
-                      size={20}
-                    />
+                    <Ionicons name={"checkmark"} color={"#f47c1c"} size={20} />
                   );
                 }
                 return <></>;
@@ -158,11 +150,7 @@ export default function SettingsEditScreen() {
               renderAccessory: () => {
                 if (settings.explorer === ExplorerApi.CUSTOM) {
                   return (
-                    <Ionicons
-                      name={"md-checkmark"}
-                      color={"#f47c1c"}
-                      size={20}
-                    />
+                    <Ionicons name={"checkmark"} color={"#f47c1c"} size={20} />
                   );
                 }
                 return <></>;
@@ -219,7 +207,7 @@ export default function SettingsEditScreen() {
               localeName === i18n.t("current_language")
             ) {
               return (
-                <Ionicons name={"md-checkmark"} color={"#f47c1c"} size={20} />
+                <Ionicons name={"checkmark"} color={"#f47c1c"} size={20} />
               );
             }
             return <></>;

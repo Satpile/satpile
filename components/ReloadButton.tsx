@@ -61,7 +61,7 @@ export default function ReloadButton() {
           ) : (
             <Ionicons
               style={{ paddingTop: 1, paddingLeft: 3 }}
-              name={"md-refresh-circle"}
+              name={"refresh-circle"}
               color={"gray"}
               size={20}
             />

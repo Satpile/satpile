@@ -60,9 +60,7 @@ export default function FolderContentScreen() {
       headerTitle: () => (
         <DynamicTitle
           title={folder.name}
-          icon={
-            folder.type === FolderType.XPUB_WALLET ? "md-wallet" : "md-folder"
-          }
+          icon={folder.type === FolderType.XPUB_WALLET ? "wallet" : "folder"}
           satAmount={folder.totalBalance}
           onPress={() => {
             setShowRenameModal(true);

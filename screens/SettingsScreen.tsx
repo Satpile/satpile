@@ -162,14 +162,14 @@ export default function SettingsScreen() {
         {
           title: i18n.t("settings.shop"),
           renderBeforeAccessory: () => (
-            <ItemIcon icon={"md-cart"} color={"#5d2eb4"} />
+            <ItemIcon icon={"cart"} color={"#5d2eb4"} />
           ),
           onPress: () => Linking.openURL(SHOP_URL),
         },
         {
           title: i18n.t("settings.feedback"),
           renderBeforeAccessory: () => (
-            <ItemIcon icon={"md-mail"} color={"#74b42e"} />
+            <ItemIcon icon={"mail"} color={"#74b42e"} />
           ),
           onPress: () =>
             WebBrowser.openBrowserAsync(
@@ -182,7 +182,7 @@ export default function SettingsScreen() {
         {
           title: i18n.t("settings.rate"),
           renderBeforeAccessory: () => (
-            <ItemIcon icon={"md-heart"} color={"#cf021a"} />
+            <ItemIcon icon={"heart"} color={"#cf021a"} />
           ),
           onPress: () => {
             let url = StoreReview.storeUrl();
@@ -203,7 +203,7 @@ export default function SettingsScreen() {
         {
           title: i18n.t("settings.website"),
           renderBeforeAccessory: () => (
-            <ItemIcon icon={"md-globe"} color="#3b5998" />
+            <ItemIcon icon={"globe"} color="#3b5998" />
           ),
           onPress: () => WebBrowser.openBrowserAsync(BLOG_URL),
         },

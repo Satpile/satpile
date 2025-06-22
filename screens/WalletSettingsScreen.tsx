@@ -134,9 +134,7 @@ export default function WalletSettingsScreen() {
         <DynamicTitle
           title={foundFolder.name}
           icon={
-            foundFolder.type === FolderType.XPUB_WALLET
-              ? "md-wallet"
-              : "md-folder"
+            foundFolder.type === FolderType.XPUB_WALLET ? "wallet" : "folder"
           }
           satAmount={foundFolder.totalBalance}
           onPress={() => {

@@ -47,9 +47,7 @@ export function MessageSigningScreen() {
       return;
     }
     navigation.setOptions({
-      headerTitle: () => (
-        <MainTitle title={data.folder.name} icon={"md-wallet"} />
-      ),
+      headerTitle: () => <MainTitle title={data.folder.name} icon={"wallet"} />,
       headerLeft: () => (
         <Appbar.BackAction
           color={"white"}
